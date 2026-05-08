@@ -4,7 +4,12 @@ const cors = require('cors');
 const path = require('path');
 const { MongoClient, ObjectId } = require('mongodb');
 require('dotenv').config();
+const stripeSecretKey = process.env.STRIPE_SECRET_KEY && process.env.STRIPE_SECRET_KEY.trim();
+const stripe = require('stripe')(stripeSecretKey);
 
+if (!stripeSecretKey) {
+    console.warn('⚠️ STRIPE_SECRET_KEY is not set. Payments will fail until the key is configured.');
+}
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -389,6 +394,97 @@ app.get('/api/admin/stats', async (req, res) => {
         const totalCapacity = allClasses.reduce((sum, c) => sum + c.maxCapacity, 0);
         const totalBooked = allClasses.reduce((sum, c) => sum + c.booked, 0);
         res.json({ totalClasses, totalBookings, fullClasses, totalCapacity, totalBooked });
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+});
+
+
+// PAYMENT ROUTES
+
+// Create payment intent
+app.post('/api/create-payment-intent', async (req, res) => {
+    try {
+        const { amount, currency = 'gbp', planId, userDetails } = req.body;
+
+        // Validate required fields
+        if (!amount || !planId) {
+            return res.status(400).json({ error: 'Amount and planId are required' });
+        }
+
+        // Convert amount to cents (Stripe expects smallest currency unit)
+        const amountInCents = Math.round(parseFloat(amount.replace('£', '')) * 100);
+
+        const paymentIntent = await stripe.paymentIntents.create({
+            amount: amountInCents,
+            currency: currency,
+            metadata: {
+                planId: planId,
+                userEmail: userDetails?.email || '',
+                userName: userDetails?.firstName + ' ' + userDetails?.lastName || ''
+            },
+            automatic_payment_methods: {
+                enabled: true,
+            },
+        });
+
+        res.json({
+            clientSecret: paymentIntent.client_secret,
+            paymentIntentId: paymentIntent.id
+        });
+    } catch (error) {
+        console.error('Payment intent creation error:', error);
+        res.status(500).json({ error: error.message });
+    }
+});
+
+// Confirm payment and create membership
+app.post('/api/confirm-payment', async (req, res) => {
+    try {
+        const { paymentIntentId, planId, userDetails } = req.body;
+
+        if (!paymentIntentId || !planId || !userDetails) {
+            return res.status(400).json({ error: 'Payment intent ID, plan ID, and user details are required' });
+        }
+
+        // Retrieve payment intent from Stripe
+        const paymentIntent = await stripe.paymentIntents.retrieve(paymentIntentId);
+
+        if (paymentIntent.status !== 'succeeded') {
+            return res.status(400).json({ error: 'Payment not successful' });
+        }
+
+        // Store payment and membership in database
+        const membership = {
+            planId: planId,
+            userDetails: userDetails,
+            paymentIntentId: paymentIntentId,
+            amount: paymentIntent.amount / 100, // Convert back to pounds
+            currency: paymentIntent.currency,
+            status: 'active',
+            startDate: new Date(),
+            createdAt: new Date()
+        };
+
+        const result = await db.collection('memberships').insertOne(membership);
+
+        res.json({
+            message: 'Payment confirmed and membership created',
+            membershipId: result.insertedId,
+            status: 'success'
+        });
+    } catch (error) {
+        console.error('Payment confirmation error:', error);
+        res.status(500).json({ error: error.message });
+    }
+});
+
+// Get user memberships
+app.get('/api/memberships/:userEmail', async (req, res) => {
+    try {
+        const { userEmail } = req.params;
+        const memberships = await db.collection('memberships').find({ 'userDetails.email': userEmail }).toArray();
+        res.json(memberships);
     } catch (error) {
         res.status(500).json({ error: error.message });
     }

@@ -1,6 +1,6 @@
 // auth.js - Role-based authentication for AuraAthletic (Backend Connected)
 
-const API_BASE = 'http://localhost:5000/api';
+const API_BASE = window.location.protocol === 'file:' ? 'http://localhost:5001/api' : '/api';
 
 // User roles
 const ROLES = {
