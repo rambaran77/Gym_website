@@ -258,8 +258,8 @@
     <a class="back-link" id="back-link" href="gym-plans.html">&#8592; Back</a>
     <header class="header">
       <p class="eyebrow">Checkout</p>
-      <h1>Complete your membership.</h1>
-      <p>Review the selected plan, enter your details, and continue to payment. This page is ready to act as the next step after any day, weekly, or monthly plan selection.</p>
+      <h1>Complete your Payment</h1>
+      
     </header>
 
     <section class="layout">
@@ -336,12 +336,12 @@
           <p class="price" id="plan-price">£8 <span>/ day</span></p>
         </div>
 
-        <h2 class="section-title">Your plan includes</h2>
+        <h2 class="section-title">Your order includes</h2>
         <ul class="summary-list" id="feature-list"></ul>
 
         <div class="totals">
           <div class="row">
-            <span>Plan</span>
+            <span>Subtotal</span>
             <span id="subtotal">£8</span>
           </div>
           <div class="row">
@@ -361,20 +361,20 @@
 
   <script>
     const plans = {
-      "single-day": {
-        family: "day-pass.html",
-        tag: "Day pass",
-        name: "Single day",
-        desc: "One-time gym access for solo training, cardio, or strength work.",
-        price: "£8",
-        per: "/ day",
-        note: "A quick one-visit pass with no recurring commitment.",
-        features: [
-          "Full gym access",
-          "Locker and shower",
-          "Fast check-in at reception"
-        ]
-      },
+      // "single-day": {
+      //   family: "day-pass.html",
+      //   tag: "Day pass",
+      //   name: "Single day",
+      //   desc: "One-time gym access for solo training, cardio, or strength work.",
+      //   price: "£8",
+      //   per: "/ day",
+      //   note: "A quick one-visit pass with no recurring commitment.",
+      //   features: [
+      //     "Full gym access",
+      //     "Locker and shower",
+      //     "Fast check-in at reception"
+      //   ]
+      // },
       "day-class": {
         family: "day-pass.html",
         tag: "Popular day pass",
@@ -477,19 +477,51 @@
 
     const params = new URLSearchParams(window.location.search);
     const selectedPlan = params.get("plan");
-    const plan = plans[selectedPlan] || plans["single-day"];
-    const planKey = selectedPlan || "single-day";
+    const isShopCheckout = params.get("source") === "shop";
+    const shopCheckout = JSON.parse(localStorage.getItem("shopCheckout") || "null");
 
-    document.getElementById("plan-tag").textContent = plan.tag;
-    document.getElementById("plan-name").textContent = plan.name;
-    document.getElementById("plan-desc").textContent = plan.desc;
-    document.getElementById("plan-price").innerHTML = `${plan.price} <span>${plan.per}</span>`;
-    document.getElementById("subtotal").textContent = plan.price;
-    document.getElementById("total-price").textContent = plan.price;
-    document.getElementById("plan-note").textContent = plan.note;
-    document.getElementById("feature-list").innerHTML = plan.features.map((feature) => `<li>${feature}</li>`).join("");
-    document.getElementById("back-link").href = `${plan.family}?plan=${encodeURIComponent(planKey)}`;
-    document.getElementById("change-plan-link").href = `${plan.family}?plan=${encodeURIComponent(planKey)}`;
+    function formatPrice(value) {
+      return `£${Number(value).toFixed(2)}`;
+    }
+
+    function renderPlanCheckout(planKey) {
+      const plan = plans[planKey];
+      if (!plan) return;
+      document.getElementById("plan-tag").textContent = plan.tag;
+      document.getElementById("plan-name").textContent = plan.name;
+      document.getElementById("plan-desc").textContent = plan.desc;
+      document.getElementById("plan-price").innerHTML = `${plan.price} <span>${plan.per}</span>`;
+      document.getElementById("subtotal").textContent = plan.price;
+      document.getElementById("total-price").textContent = plan.price;
+      document.getElementById("plan-note").textContent = plan.note;
+      document.getElementById("feature-list").innerHTML = plan.features.map((feature) => `<li>${feature}</li>`).join("");
+      document.getElementById("back-link").href = `${plan.family}?plan=${encodeURIComponent(planKey)}`;
+      document.getElementById("change-plan-link").href = `${plan.family}?plan=${encodeURIComponent(planKey)}`;
+    }
+
+    function renderShopCheckout(checkout) {
+      const orderItems = checkout.items || [];
+      const subtotal = checkout.total || 0;
+      document.getElementById("plan-tag").textContent = "Shop order";
+      document.getElementById("plan-name").textContent = "Cart checkout";
+      document.getElementById("plan-desc").textContent = "Complete your purchase for the products in your cart.";
+      document.getElementById("plan-price").innerHTML = `${formatPrice(subtotal)} <span>total</span>`;
+      document.getElementById("subtotal").textContent = formatPrice(subtotal);
+      document.getElementById("total-price").textContent = formatPrice(subtotal);
+      document.getElementById("plan-note").textContent = "Your product order total is ready for payment.";
+      document.getElementById("feature-list").innerHTML = orderItems.map(item => `<li>${item.name} x${item.qty} — ${formatPrice(item.price * item.qty)}</li>`).join("");
+      document.getElementById("back-link").href = "shop.html";
+      document.getElementById("change-plan-link").href = "shop.html";
+    }
+
+    if (isShopCheckout && shopCheckout && shopCheckout.items && shopCheckout.items.length) {
+      renderShopCheckout(shopCheckout);
+    } else if (selectedPlan && plans[selectedPlan]) {
+      renderPlanCheckout(selectedPlan);
+    } else {
+      const defaultPlanKey = Object.keys(plans)[0];
+      renderPlanCheckout(defaultPlanKey);
+    }
 
     const dateField = document.getElementById("start-date");
     const today = new Date();

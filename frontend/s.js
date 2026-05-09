@@ -4,7 +4,7 @@ let products = [
         name: "Whey Protein",
         price: 40,
         stock: true,
-        image: "1.png",
+        image: "img/1.png",
         desc: "Muscle recovery protein supplement",
         ingredients: "Whey isolate, amino acids",
         reviews: "4.5/5 ⭐"
@@ -14,7 +14,7 @@ let products = [
         name: "Gym Gloves",
         price: 15,
         stock: true,
-        image: "2.jpg",
+        image: "img/2.jpg",
         desc: "Grip gloves for weight training",
         ingredients: "Leather, foam",
         reviews: "4.2/5 ⭐"
@@ -24,7 +24,7 @@ let products = [
         name: "Resistance Bands",
         price: 25,
         stock: false,
-        image: "3.png",
+        image: "img/3.png",
         desc: "Full body resistance training kit",
         ingredients: "Latex rubber",
         reviews: "4.7/5 ⭐"
@@ -34,7 +34,7 @@ let products = [
         name: "Pre-Workout Powder",
         price: 30,
         stock: true,
-        image: "4.png",
+        image: "img/4.png",
         desc: "Energy boost before training",
         ingredients: "Caffeine, beta-alanine",
         reviews: "4.3/5 ⭐"
@@ -44,7 +44,7 @@ let products = [
         name: "BCAA Drink",
         price: 20,
         stock: true,
-        image: "5.jpg",
+        image: "img/5.jpg",
         desc: "Hydration and muscle recovery drink",
         ingredients: "BCAA, electrolytes",
         reviews: "4.4/5 ⭐"
@@ -54,7 +54,7 @@ let products = [
         name: "Gym Belt",
         price: 35,
         stock: true,
-        image: "6.png",
+        image: "img/6.png",
         desc: "Lower back support for lifting",
         ingredients: "Leather, steel buckle",
         reviews: "4.6/5 ⭐"
@@ -64,7 +64,7 @@ let products = [
         name: "Dumbbells Set",
         price: 60,
         stock: false,
-        image: "7.jfif",
+        image: "img/7.jfif",
         desc: "Adjustable dumbbells for home gym",
         ingredients: "Cast iron, rubber coating",
         reviews: "4.8/5 ⭐"
@@ -74,7 +74,7 @@ let products = [
         name: "Yoga Mat",
         price: 18,
         stock: true,
-        image: "8.png",
+        image: "img/8.png",
         desc: "Non-slip exercise mat",
         ingredients: "TPE foam",
         reviews: "4.5/5 ⭐"
@@ -84,7 +84,7 @@ let products = [
         name: "Skipping Rope",
         price: 10,
         stock: true,
-        image: "9.png",
+        image: "img/9.png",
         desc: "Cardio jump rope",
         ingredients: "Steel cable, plastic handles",
         reviews: "4.1/5 ⭐"
@@ -94,7 +94,7 @@ let products = [
         name: "Protein Bars",
         price: 12,
         stock: true,
-        image: "10.png",
+        image: "img/10.png",
         desc: "High protein snack bars",
         ingredients: "Oats, whey, chocolate",
         reviews: "4.3/5 ⭐"
@@ -104,7 +104,7 @@ let products = [
         name: "Shaker Bottle",
         price: 8,
         stock: true,
-        image: "11.png",
+        image: "img/11.png",
         desc: "Protein mixing bottle",
         ingredients: "BPA-free plastic",
         reviews: "4.2/5 ⭐"
@@ -114,7 +114,7 @@ let products = [
         name: "Creatine Powder",
         price: 28,
         stock: true,
-        image: "12.png",
+        image: "img/12.png",
         desc: "Strength and performance supplement",
         ingredients: "Creatine monohydrate",
         reviews: "4.6/5 ⭐"
@@ -124,7 +124,7 @@ let products = [
         name: "Foam Roller",
         price: 22,
         stock: true,
-        image: "13.png",
+        image: "img/13.png",
         desc: "Muscle recovery roller",
         ingredients: "EVA foam",
         reviews: "4.5/5 ⭐"
@@ -134,7 +134,7 @@ let products = [
         name: "Smart Fitness Watch",
         price: 120,
         stock: true,
-        image: "14.png",
+        image: "img/14.png",
         desc: "Track workouts and heart rate",
         ingredients: "Silicone, electronics",
         reviews: "4.7/5 ⭐"
@@ -144,7 +144,7 @@ let products = [
         name: "Gym Backpack",
         price: 45,
         stock: true,
-        image: "15.png",
+        image: "img/15.png",
         desc: "Storage for gym essentials",
         ingredients: "Polyester",
         reviews: "4.4/5 ⭐"
@@ -154,7 +154,7 @@ let products = [
         name: "Weight Plates",
         price: 80,
         stock: false,
-        image: "16.png",
+        image: "img/16.png",
         desc: "Barbell weight plates set",
         ingredients: "Cast iron",
         reviews: "4.6/5 ⭐"
@@ -164,7 +164,7 @@ let products = [
         name: "Pull-Up Bar",
         price: 25,
         stock: true,
-        image: "17.png",
+        image: "img/17.png",
         desc: "Door frame pull-up bar",
         ingredients: "Steel",
         reviews: "4.3/5 ⭐"
@@ -174,7 +174,7 @@ let products = [
         name: "Ankle Straps",
         price: 12,
         stock: true,
-        image: "18.png",
+        image: "img/18.png",
         desc: "Cable machine ankle straps",
         ingredients: "Neoprene, metal ring",
         reviews: "4.2/5 ⭐"
@@ -184,7 +184,7 @@ let products = [
         name: "Massage Gun",
         price: 90,
         stock: true,
-        image: "19.png",
+        image: "img/19.png",
         desc: "Deep tissue muscle massage device",
         ingredients: "Plastic, metal motor",
         reviews: "4.8/5 ⭐"
@@ -194,7 +194,7 @@ let products = [
         name: "Workout T-Shirt",
         price: 18,
         stock: true,
-        image: "20.png",
+        image: "img/20.png",
         desc: "Breathable gym shirt",
         ingredients: "Polyester blend",
         reviews: "4.4/5 ⭐"
@@ -204,7 +204,7 @@ let products = [
         name: "Workout Pants",
         price: 25,
         stock: true,
-        image: "21.png",
+        image: "img/21.png",
         desc: "Breathable and flexible gym pants",
         ingredients: "Polyester blend",
         reviews: "4.7/5 ⭐"
@@ -313,6 +313,17 @@ function checkout() {
     alert("Order placed successfully!");
     cart = [];
     saveCart();
+}
+
+function goToCheckout() {
+    saveCart();
+    const total = cart.reduce((sum, item) => sum + item.price * item.qty, 0);
+    localStorage.setItem("shopCheckout", JSON.stringify({
+        source: "shop",
+        items: cart,
+        total
+    }));
+    window.location.href = 'checkout.html?source=shop';
 }
 
 /* INIT */

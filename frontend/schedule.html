@@ -429,6 +429,7 @@
                 });
                 
                 if (response.ok) {
+                    publishBookingNotification(selectedClass, user);
                     alert(`✓ Booked: ${selectedClass.name}`);
                     await fetchClasses();
                     closeBookingModal();
@@ -439,6 +440,24 @@
             } catch (error) {
                 console.error('Booking error:', error);
                 alert('Network error. Make sure backend is running.');
+            }
+        }
+
+        function publishBookingNotification(cls, user) {
+            try {
+                const bookedBy = user?.name || 'Guest';
+                const payload = {
+                    id: Date.now(),
+                    notification: {
+                        type: 'trainerBooking',
+                        title: 'New Trainer Booking',
+                        message: `${bookedBy} booked ${cls.name} with ${cls.instructor || 'your trainer'}.`, 
+                        time: 'Just now'
+                    }
+                };
+                localStorage.setItem('gymNotifyEvent', JSON.stringify(payload));
+            } catch (error) {
+                console.error('Failed to publish booking notification', error);
             }
         }
 

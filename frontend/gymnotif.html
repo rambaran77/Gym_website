@@ -352,53 +352,7 @@ body{
      WEBSITE CONFIG
 ========================= -->
 
-<div class="config-panel">
 
-  <div class="config-title">
-    Website Connection Settings
-  </div>
-
-  <div class="input-group">
-    <label class="input-label">
-      Website URL
-    </label>
-
-    <input
-      type="text"
-      class="input"
-      id="website-url"
-      placeholder="https://yourwebsite.com">
-  </div>
-
-  <div class="input-group">
-    <label class="input-label">
-      API Endpoint
-    </label>
-
-    <input
-      type="text"
-      class="input"
-      id="api-url"
-      placeholder="https://yourwebsite.com/api/notifications">
-  </div>
-
-  <div class="input-group">
-    <label class="input-label">
-      WebSocket URL
-    </label>
-
-    <input
-      type="text"
-      class="input"
-      id="ws-url"
-      placeholder="wss://yourwebsite.com/ws">
-  </div>
-
-  <button class="save-btn" onclick="saveConfig()">
-    Save Connection
-  </button>
-
-</div>
 
 <div class="layout">
 
@@ -502,6 +456,12 @@ const CONFIG = {
 
 const TYPES = {
 
+  trainerBooking:{
+    icon:'ti-user-check',
+    bg:'#d1fae5',
+    color:'#047857'
+  },
+
   classReminder:{
     icon:'ti-calendar-event',
     bg:'#e0f2fe',
@@ -540,8 +500,13 @@ const TYPES = {
 
 let notifications = [];
 
+const LOCAL_STORAGE_PREFS = 'gymNotifyPrefs';
+const LOCAL_STORAGE_EVENT = 'gymNotifyEvent';
+
 let prefs = {
 
+  enabled:true,
+  trainerBooking:true,
   classReminder:true,
   classUpdate:true,
   inactivity:true,
@@ -549,6 +514,37 @@ let prefs = {
   promo:true
 
 };
+
+/* ===================================
+   SAVE PREFS
+=================================== */
+
+function savePrefs(){
+  localStorage.setItem(LOCAL_STORAGE_PREFS, JSON.stringify(prefs));
+}
+
+function loadPrefs(){
+  const saved = localStorage.getItem(LOCAL_STORAGE_PREFS);
+  if(!saved) return;
+  try{
+    const data = JSON.parse(saved);
+    prefs = { ...prefs, ...data };
+  }catch(e){
+    console.error('Failed to load notification prefs', e);
+  }
+}
+
+function handleStorageEvent(event){
+  if(event.key !== LOCAL_STORAGE_EVENT || !event.newValue) return;
+  try{
+    const payload = JSON.parse(event.newValue);
+    if(payload && payload.notification){
+      pushNotification(payload.notification);
+    }
+  }catch(e){
+    console.error('Invalid storage event payload', e);
+  }
+}
 
 /* ===================================
    SAVE CONFIG
@@ -610,11 +606,11 @@ function loadConfig(){
 
 function pushNotification(data){
 
-  if(prefs[data.type] === false){
-    return;
-  }
+  if(!prefs.enabled) return;
+  if(prefs[data.type] === false) return;
 
   const type = TYPES[data.type];
+  if(!type) return;
 
   const notif = {
 
@@ -644,6 +640,17 @@ function renderNotifications(){
   document.getElementById('notif-list');
 
   list.innerHTML = '';
+
+  if(!prefs.enabled){
+    const disabledNotice = document.createElement('div');
+    disabledNotice.style.padding = '16px';
+    disabledNotice.style.border = '1px solid rgba(0,0,0,0.08)';
+    disabledNotice.style.borderRadius = '12px';
+    disabledNotice.style.color = '#555';
+    disabledNotice.style.background = '#f8fafc';
+    disabledNotice.innerText = 'Notifications are turned off. Enable them in Preferences to receive new alerts.';
+    list.appendChild(disabledNotice);
+  }
 
   notifications.forEach(n => {
 
@@ -806,6 +813,18 @@ function renderPrefs(){
   const rows = [
 
     {
+      id:'enabled',
+      title:'Notifications Enabled',
+      sub:'Turn all gym notifications on or off'
+    },
+
+    {
+      id:'trainerBooking',
+      title:'Trainer Booking Alerts',
+      sub:'Notify when someone books a trainer-led class'
+    },
+
+    {
       id:'classReminder',
       title:'Class Reminders',
       sub:'Upcoming booked classes'
@@ -882,6 +901,8 @@ function renderPrefs(){
 function togglePref(key,val){
 
   prefs[key] = val;
+  savePrefs();
+  renderNotifications();
 
 }
 
@@ -1008,10 +1029,13 @@ function demoPromo(){
 =================================== */
 
 loadConfig();
+loadPrefs();
 
 renderPrefs();
 
 renderNotifications();
+
+window.addEventListener('storage', handleStorageEvent);
 
 fetchNotifications();
 

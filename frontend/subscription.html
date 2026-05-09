@@ -180,6 +180,7 @@ function setTab(tab, btn) {
   render(tab);
 }
 
+
 function render(tab) {
   const container = document.getElementById('plans-container');
   const items = plans[tab];
@@ -193,7 +194,7 @@ function render(tab) {
       <ul class="feature-list">
         ${p.features.map(f => `<li class="${f.yes ? 'yes' : 'no'}">${f.text}</li>`).join('')}
       </ul>
-      <button class="cta-btn ${p.featured ? 'primary' : ''}">${p.cta}</button>
+      <button class="cta-btn ${p.featured ? 'primary' : ''}" ${p.cta === 'Buy day pass' ? 'onclick="window.location.href=\'day-pass.html\'"' : ''}>${p.cta}</button>
       ${p.savings ? `<p class="savings-note">${p.savings}</p>` : ''}
     </div>`).join('')}
   </div>`;
