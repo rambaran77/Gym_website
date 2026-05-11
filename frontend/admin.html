@@ -481,12 +481,13 @@
     <script>
         let allClasses = [];
         let deleteId = null;
+        const apiBase = window.location.protocol === 'file:' ? 'http://localhost:5001' : '';
 
         function toggleMenu() { document.querySelector('.nav-links')?.classList.toggle('show'); }
 
         async function fetchStats() {
             try {
-                const res = await fetch('/api/admin/stats');
+                const res = await fetch(`${apiBase}/api/admin/stats`);
                 const stats = await res.json();
                 document.getElementById('totalClasses').innerText = stats.totalClasses || 0;
                 document.getElementById('totalBookings').innerText = stats.totalBookings || 0;
@@ -497,7 +498,7 @@
 
         async function fetchClasses() {
             try {
-                const res = await fetch('/api/classes');
+                const res = await fetch(`${apiBase}/api/classes`);
                 allClasses = await res.json();
                 renderClasses(allClasses);
                 await fetchStats();
@@ -579,7 +580,7 @@
                 tags: Array.from(document.querySelectorAll('.checkbox-group input:checked')).map(cb => cb.value),
                 status: 'active'
             };
-            const url = editId ? `/api/admin/classes/${editId}` : '/api/admin/classes';
+            const url = editId ? `${apiBase}/api/admin/classes/${editId}` : `${apiBase}/api/admin/classes`;
             const method = editId ? 'PUT' : 'POST';
             const res = await fetch(url, { method, headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(classData) });
             if (res.ok) {
@@ -609,7 +610,7 @@
 
         function deleteClass(id) { deleteId = id; document.getElementById('deleteModal').classList.add('show'); }
         async function confirmDelete() {
-            if (deleteId) { await fetch(`/api/admin/classes/${deleteId}`, { method: 'DELETE' }); fetchClasses(); }
+            if (deleteId) { await fetch(`${apiBase}/api/admin/classes/${deleteId}`, { method: 'DELETE' }); fetchClasses(); }
             closeDeleteModal();
         }
         function closeDeleteModal() { document.getElementById('deleteModal').classList.remove('show'); deleteId = null; }
@@ -619,7 +620,7 @@
             const trainerSelect = document.getElementById('assignTrainerSelect');
             if (classSelect) classSelect.innerHTML = '<option value="">Select Class</option>' + allClasses.map(c => `<option value="${c._id}">${c.name} (${c.date})</option>`).join('');
             try {
-                const res = await fetch('/api/trainers');
+                const res = await fetch(`${apiBase}/api/trainers`);
                 const trainers = await res.json();
                 if (trainerSelect) trainerSelect.innerHTML = '<option value="">Select Trainer</option>' + trainers.map(t => `<option value="${t.email}">${t.name} (${t.specialty || 'Trainer'})</option>`).join('');
             } catch(e) { console.error('Trainers error:', e); }
@@ -631,7 +632,7 @@
             const statusDiv = document.getElementById('assignStatus');
             if (!classId || !trainerEmail) { statusDiv.innerHTML = '<span style="color: orange;">Please select both class and trainer</span>'; return; }
             statusDiv.innerHTML = '<span style="color: var(--gold);">Assigning...</span>';
-            const res = await fetch('/api/admin/assign-trainer', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ classId, trainerEmail }) });
+            const res = await fetch(`${apiBase}/api/admin/assign-trainer`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ classId, trainerEmail }) });
             if (res.ok) statusDiv.innerHTML = '<span style="color: #10b981;">✅ Trainer assigned successfully!</span>';
             else statusDiv.innerHTML = '<span style="color: red;">❌ Assignment failed</span>';
         }
@@ -647,8 +648,6 @@
         }
 
         document.addEventListener('DOMContentLoaded', () => {
-            const user = getCurrentUser();
-            if (!user || user.role !== 'admin') { alert('Admin access only'); window.location.href = '/index.html'; return; }
             fetchClasses();
         });
     </script>
