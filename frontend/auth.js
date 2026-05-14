@@ -55,13 +55,27 @@ async function loginUser(email, password) {
         const data = await response.json();
 
         if (!response.ok) {
+            // Handle pending approval for trainers
+            if (data.status === 'pending_approval') {
+                return {
+                    success: false,
+                    message: data.error,
+                    status: 'pending_approval'
+                };
+            }
             return { success: false, message: data.error || 'Login failed' };
         }
 
         // Store user session in localStorage
         localStorage.setItem('auraUser', JSON.stringify(data.user));
 
-        return { success: true, message: 'Login successful', role: data.user.role, user: data.user };
+        return {
+            success: true,
+            message: 'Login successful',
+            role: data.user.role,
+            user: data.user,
+            approved: data.user.approved
+        };
     } catch (error) {
         console.error('Login error:', error);
         return { success: false, message: 'Network error. Make sure server is running.' };

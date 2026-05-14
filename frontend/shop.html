@@ -1,11 +1,36 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-<meta charset="UTF-8">
-<title>Gym Shop</title>
-<link rel="stylesheet" href="s.css">
+    <meta charset="UTF-8">
+    <title>Gym Shop</title>
+    <link rel="stylesheet" href="s.css">
 </head>
+
 <body>
+    <nav class="navbar" id="navbar">
+        <div class="nav-container">
+            <a href="/" class="logo">AURA ATHLETIC</a>
+
+            <ul class="nav-links" id="navLinks">
+                <li><a href="/" class="active">Home</a></li>
+                <li><a href="/trainers.html">Trainers</a></li>
+                <li><a href="/shop.html">Shop</a></li>
+                <li><a href="/gymnotif.html">Notifications</a></li>
+                <li><a href="/admin.html">Admin</a></li>
+            </ul>
+
+            <div class="nav-actions" id="navActions">
+                <!-- Dynamic content from auth.js -->
+            </div>
+
+            <button class="menu-btn" onclick="toggleMobileMenu()">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+        </div>
+    </nav>
 
     <header class="topbar">
 
@@ -17,54 +42,53 @@
                 font-size: 16px;
                 cursor: pointer;
                 padding: 6px 10px;
-            "
-            onmouseover="this.style.color='white'"
-            onmouseout="this.style.color='white'"
-            onclick="window.location.href='index.html'" >
-            🔙 Back
+            " onmouseover="this.style.color='white'" onmouseout="this.style.color='white'"
+                onclick="window.location.href='index.html'">
+                🔙 Back
             </button>
         </div>
 
-    <div class="logo">
-        AURA ATHLETICS
-        <span>train with intensity • rise with aura</span>
+        <div class="logo">
+            AURA ATHLETICS
+            <span>train with intensity • rise with aura</span>
+        </div>
+
+        <input type="text" id="search" placeholder="Search products..." oninput="filterProducts()">
+
+        <div class="cart-icon">
+            🛒 <span id="cartCount">0</span>
+        </div>
+    </header>
+
+    <div class="container">
+
+        <!-- PRODUCTS -->
+        <div class="products" id="productList"></div>
+
+        <!-- CART -->
+        <div class="cart">
+            <h3>Your Cart</h3>
+            <div id="cartItems"></div>
+
+            <div class="checkout">
+                <p>Total: $<span id="total">0</span></p>
+                <button onclick="goToCheckout()">Checkout</button>
+            </div>
+        </div>
+
     </div>
 
-    <input type="text" id="search" placeholder="Search products..." oninput="filterProducts()">
-
-    <div class="cart-icon">
-        🛒 <span id="cartCount">0</span>
-    </div>
-</header>
-
-<div class="container">
-
-    <!-- PRODUCTS -->
-    <div class="products" id="productList"></div>
-
-    <!-- CART -->
-    <div class="cart">
-        <h3>Your Cart</h3>
-        <div id="cartItems"></div>
-
-        <div class="checkout">
-            <p>Total: $<span id="total">0</span></p>
-            <button onclick="goToCheckout()" >Checkout</button>
+    <!-- PRODUCT MODAL -->
+    <div id="modal" class="modal">
+        <div class="modal-content">
+            <span onclick="closeModal()" class="close">&times;</span>
+            <div id="modalBody"></div>
         </div>
     </div>
 
-</div>
+    <script src="s.js"></script>
 
-<!-- PRODUCT MODAL -->
-<div id="modal" class="modal">
-    <div class="modal-content">
-        <span onclick="closeModal()" class="close">&times;</span>
-        <div id="modalBody"></div>
-    </div>
-</div>
-
-<script src="s.js"></script>
-
-<footer></footer>
+    <footer></footer>
 </body>
+
 </html>

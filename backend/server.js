@@ -14,6 +14,8 @@ if (!stripeSecretKey) {
 }
 
 const JWT_SECRET = process.env.JWT_SECRET || 'your-secret-key-change-in-production';
+const ADMIN_EMAIL = process.env.ADMIN_EMAIL || 'admin@aura.com';
+const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || 'AdminPass123';
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -124,6 +126,9 @@ app.post('/api/register', async (req, res) => {
             newUser.certifications = certifications || 'Certified Personal Trainer';
             newUser.profileImage = profileImage || null;
             newUser.isProfileComplete = false;
+            newUser.approved = false; // Trainers need admin approval
+            newUser.approvedAt = null;
+            newUser.approvedBy = null;
         }
 
         const userResult = await users.insertOne(newUser);
@@ -217,12 +222,12 @@ app.get('/api/trainer/:trainerId/profile', async (req, res) => {
         const { ObjectId } = require('mongodb');
 
         const trainer = await db.collection('users').findOne(
-            { _id: new ObjectId(trainerId), role: 'trainer' },
+            { _id: new ObjectId(trainerId), role: 'trainer', approved: true },
             { projection: { password: 0 } }
         );
 
         if (!trainer) {
-            return res.status(404).json({ error: 'Trainer not found' });
+            return res.status(404).json({ error: 'Trainer not found or not approved' });
         }
 
         res.json(trainer);
@@ -239,6 +244,27 @@ app.post('/api/login', async (req, res) => {
             return res.status(400).json({ error: 'Email and password required' });
         }
 
+        // Admin login using fixed credentials
+        if (email === ADMIN_EMAIL && password === ADMIN_PASSWORD) {
+            const token = jwt.sign(
+                { userId: 'admin', email: ADMIN_EMAIL, role: 'admin' },
+                JWT_SECRET,
+                { expiresIn: '24h' }
+            );
+
+            return res.json({
+                message: 'Login successful',
+                user: {
+                    _id: 'admin',
+                    name: 'Admin',
+                    email: ADMIN_EMAIL,
+                    role: 'admin',
+                    assignedClasses: [],
+                    token: token
+                }
+            });
+        }
+
         const db = getDatabase();
         const user = await db.collection('users').findOne({ email });
         if (!user) {
@@ -249,6 +275,14 @@ app.post('/api/login', async (req, res) => {
         const passwordMatch = await bcryptjs.compare(password, user.password);
         if (!passwordMatch) {
             return res.status(401).json({ error: 'Invalid credentials' });
+        }
+
+        // Check if trainer is approved (only for trainer role)
+        if (user.role === 'trainer' && !user.approved) {
+            return res.status(403).json({
+                error: 'Your trainer account is pending admin approval. Please contact an administrator.',
+                status: 'pending_approval'
+            });
         }
 
         // Generate JWT token
@@ -266,6 +300,12 @@ app.post('/api/login', async (req, res) => {
             assignedClasses: user.assignedClasses || [],
             token: token
         };
+
+        // Add approval status for trainers
+        if (user.role === 'trainer') {
+            userResponse.approved = user.approved;
+            userResponse.approvedAt = user.approvedAt;
+        }
 
         res.json({ message: 'Login successful', user: userResponse });
     } catch (error) {
@@ -463,6 +503,126 @@ app.get('/api/admin/stats', authenticateToken, async (req, res) => {
 });
 
 
+// TRAINER APPROVAL ROUTES (Admin Only)
+
+// Get all pending trainer approvals
+app.get('/api/admin/trainers/pending', authenticateToken, async (req, res) => {
+    try {
+        if (req.user.role !== 'admin') {
+            return res.status(403).json({ error: 'Admin access required' });
+        }
+
+        const db = getDatabase();
+        const pendingTrainers = await db.collection('users').find({
+            role: 'trainer',
+            approved: false
+        }).toArray();
+
+        // Remove passwords from response
+        const safeTrainers = pendingTrainers.map(t => {
+            const { password, ...safe } = t;
+            return safe;
+        });
+
+        res.json(safeTrainers);
+    } catch (error) {
+        console.error('Error fetching pending trainers:', error);
+        res.status(500).json({ error: error.message });
+    }
+});
+
+// Approve a trainer
+app.post('/api/admin/trainers/:trainerId/approve', authenticateToken, async (req, res) => {
+    try {
+        if (req.user.role !== 'admin') {
+            return res.status(403).json({ error: 'Admin access required' });
+        }
+
+        const { trainerId } = req.params;
+        const db = getDatabase();
+        const { ObjectId } = require('mongodb');
+
+        const result = await db.collection('users').updateOne(
+            { _id: new ObjectId(trainerId), role: 'trainer', approved: false },
+            {
+                $set: {
+                    approved: true,
+                    approvedAt: new Date(),
+                    approvedBy: req.user.userId
+                }
+            }
+        );
+
+        if (result.matchedCount === 0) {
+            return res.status(404).json({ error: 'Trainer not found or already approved' });
+        }
+
+        res.json({ message: 'Trainer approved successfully' });
+    } catch (error) {
+        console.error('Error approving trainer:', error);
+        res.status(500).json({ error: error.message });
+    }
+});
+
+// Reject a trainer (delete their account)
+app.delete('/api/admin/trainers/:trainerId/reject', authenticateToken, async (req, res) => {
+    try {
+        if (req.user.role !== 'admin') {
+            return res.status(403).json({ error: 'Admin access required' });
+        }
+
+        const { trainerId } = req.params;
+        const db = getDatabase();
+        const { ObjectId } = require('mongodb');
+
+        // First, remove any classes assigned to this trainer
+        await db.collection('classes').deleteMany({ instructor: { $exists: true } });
+
+        // Then delete the trainer account
+        const result = await db.collection('users').deleteOne({
+            _id: new ObjectId(trainerId),
+            role: 'trainer',
+            approved: false
+        });
+
+        if (result.deletedCount === 0) {
+            return res.status(404).json({ error: 'Trainer not found or already approved' });
+        }
+
+        res.json({ message: 'Trainer application rejected and account removed' });
+    } catch (error) {
+        console.error('Error rejecting trainer:', error);
+        res.status(500).json({ error: error.message });
+    }
+});
+
+// Get all approved trainers
+app.get('/api/admin/trainers/approved', authenticateToken, async (req, res) => {
+    try {
+        if (req.user.role !== 'admin') {
+            return res.status(403).json({ error: 'Admin access required' });
+        }
+
+        const db = getDatabase();
+        const approvedTrainers = await db.collection('users').find({
+            role: 'trainer',
+            approved: true
+        }).toArray();
+
+        // Remove passwords from response
+        const safeTrainers = approvedTrainers.map(t => {
+            const { password, ...safe } = t;
+            return safe;
+        });
+
+        res.json(safeTrainers);
+    } catch (error) {
+        console.error('Error fetching approved trainers:', error);
+        res.status(500).json({ error: error.message });
+    }
+});
+
+
 // PAYMENT ROUTES
 
 // Create payment intent
@@ -572,11 +732,14 @@ async function startServer() {
     });
 }
 
-// Get all trainers (for trainers page)
+// Get all approved trainers (for trainers page)
 app.get('/api/trainers', async (req, res) => {
     try {
         const db = getDatabase();
-        const trainers = await db.collection('users').find({ role: 'trainer' }).toArray();
+        const trainers = await db.collection('users').find({
+            role: 'trainer',
+            approved: true
+        }).toArray();
 
         // Remove passwords from response
         const safeTrainers = trainers.map(t => {
@@ -584,7 +747,7 @@ app.get('/api/trainers', async (req, res) => {
             return safe;
         });
 
-        console.log(`Sending ${safeTrainers.length} trainers`);
+        console.log(`Sending ${safeTrainers.length} approved trainers`);
         res.json(safeTrainers);
     } catch (error) {
         console.error('Error fetching trainers:', error);

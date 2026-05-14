@@ -125,6 +125,11 @@
             background: rgba(233,69,96,0.1);
             color: #e94560;
         }
+        .warning-msg {
+            background: rgba(255, 193, 7, 0.1);
+            color: #ffc107;
+            border: 1px solid rgba(255, 193, 7, 0.3);
+        }
         .success-msg {
             background: rgba(16,185,129,0.1);
             color: #10b981;
@@ -211,7 +216,7 @@
     </div>
 
     <script>
-        const API_BASE = window.location.protocol === 'file:' ? 'http://localhost:5001/api' : '/api';
+        const API_BASE = window.location.protocol === 'file:' ? 'http://localhost:5000/api' : '/api';
 
         // Tab switching
         const tabs = document.querySelectorAll('.tab');
@@ -262,7 +267,15 @@
                     body: JSON.stringify({ email, password })
                 });
                 const data = await res.json();
-                if (!res.ok) throw new Error(data.error || 'Login failed');
+                if (!res.ok) {
+                    // Handle pending approval for trainers
+                    if (data.status === 'pending_approval') {
+                        msgDiv.innerHTML = '⏳ ' + data.error + '<br><small style="color: #ffc107;">Please contact an administrator for approval.</small>';
+                        msgDiv.classList.add('warning-msg');
+                        return;
+                    }
+                    throw new Error(data.error || 'Login failed');
+                }
                 // Store user in localStorage
                 localStorage.setItem('auraUser', JSON.stringify(data.user));
                 msgDiv.innerHTML = '✅ Login successful! Redirecting...';
