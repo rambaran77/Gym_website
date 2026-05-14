@@ -1,0 +1,316 @@
+
+/* =========================
+   GYMSHARK-STYLE BASE
+========================= */
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+  }
+  
+  body{
+    font-family:'DM Sans',sans-serif;
+    background:
+      radial-gradient(circle at top left,#0f172a,#020617);
+    padding:40px;
+    color:#e5e7eb;
+  }
+  
+  /* =========================
+     LAYOUT
+  ========================= */
+  
+  .layout{
+    display:grid;
+    grid-template-columns:1fr 380px;
+    gap:24px;
+  }
+  
+  /* MAIN PANELS */
+  .panel{
+    background:rgba(255,255,255,0.03);
+    border:1px solid rgba(255,255,255,0.08);
+    border-radius:20px;
+    padding:24px;
+    backdrop-filter:blur(14px);
+    box-shadow:0 20px 50px rgba(0,0,0,0.5);
+  }
+  
+  /* =========================
+     HEADER
+  ========================= */
+  
+  .header{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin-bottom:24px;
+  }
+  
+  .header-left{
+    display:flex;
+    align-items:center;
+    gap:14px;
+  }
+  
+  .heading{
+    font-size:22px;
+    font-weight:800;
+    letter-spacing:-0.5px;
+    color:#fff;
+  }
+  
+  /* BACK BUTTON */
+  .back-btn{
+    color:#60a5fa;
+    font-weight:600;
+    text-decoration:none;
+    font-size:13px;
+    padding:6px 12px;
+    border-radius:10px;
+    background:rgba(96,165,250,0.08);
+    transition:0.2s;
+  }
+  
+  .back-btn:hover{
+    background:rgba(96,165,250,0.2);
+  }
+  
+  /* =========================
+     NOTIFICATION BELL
+  ========================= */
+  
+  .top-right{
+    position:relative;
+    display:flex;
+    align-items:center;
+  }
+  
+  .bell{
+    position:relative;
+    cursor:pointer;
+    padding:10px;
+    border-radius:12px;
+    background:rgba(255,255,255,0.04);
+    transition:0.2s;
+  }
+  
+  .bell:hover{
+    background:rgba(255,255,255,0.08);
+  }
+  
+  .bell i{
+    font-size:22px;
+    color:#fff;
+  }
+  
+  .badge{
+    position:absolute;
+    top:3px;
+    right:3px;
+    background:linear-gradient(135deg,#ef4444,#dc2626);
+    color:#fff;
+    font-size:10px;
+    min-width:18px;
+    height:18px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    border-radius:999px;
+    font-weight:800;
+  }
+  
+  /* =========================
+     DROPDOWN
+  ========================= */
+  
+  .dropdown{
+    position:absolute;
+    top:48px;
+    right:0;
+    width:320px;
+    background:rgba(15,23,42,0.95);
+    border:1px solid rgba(255,255,255,0.08);
+    border-radius:16px;
+    backdrop-filter:blur(20px);
+    box-shadow:0 20px 40px rgba(0,0,0,0.6);
+    display:none;
+    overflow:hidden;
+    z-index:999;
+  }
+  
+  .dropdown .item{
+    padding:12px;
+    font-size:12px;
+    color:#e5e7eb;
+    border-bottom:1px solid rgba(255,255,255,0.05);
+  }
+  
+  /* =========================
+     NOTIFICATIONS LIST
+  ========================= */
+  
+  .notif-list{
+    display:flex;
+    flex-direction:column;
+    gap:12px;
+  }
+  
+  .notif{
+    display:flex;
+    gap:14px;
+    padding:16px;
+    border-radius:16px;
+    background:rgba(255,255,255,0.03);
+    border:1px solid rgba(255,255,255,0.06);
+    cursor:pointer;
+    transition:0.25s;
+  }
+  
+  .notif:hover{
+    transform:translateY(-3px);
+    background:rgba(255,255,255,0.06);
+  }
+  
+  .notif.unread{
+    border-left:4px solid #60a5fa;
+    background:rgba(96,165,250,0.08);
+  }
+  
+  /* =========================
+     ACTION BUTTONS
+  ========================= */
+  
+  .actions{
+    display:flex;
+    gap:10px;
+    margin-bottom:16px;
+  }
+  
+  .small-btn{
+    padding:9px 14px;
+    font-size:12px;
+    border:none;
+    border-radius:12px;
+    cursor:pointer;
+    font-weight:600;
+    color:#fff;
+    background:linear-gradient(135deg,#2563eb,#1d4ed8);
+    transition:0.2s;
+  }
+  
+  .small-btn:hover{
+    transform:translateY(-2px);
+    filter:brightness(1.1);
+  }
+  
+  /* =========================
+     PREFERENCES
+  ========================= */
+  
+  .pref-row{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    padding:14px 0;
+    border-bottom:1px solid rgba(255,255,255,0.06);
+  }
+  
+  .pref-title{
+    font-weight:700;
+    font-size:14px;
+    color:#fff;
+  }
+  
+  .pref-sub{
+    font-size:12px;
+    color:#94a3b8;
+  }
+  
+  /* SWITCH */
+  .switch{
+    width:46px;
+    height:24px;
+    position:relative;
+  }
+  
+  .switch input{opacity:0;}
+  
+  .slider{
+    position:absolute;
+    inset:0;
+    background:#334155;
+    border-radius:999px;
+    cursor:pointer;
+    transition:0.2s;
+  }
+  
+  .slider:before{
+    content:'';
+    position:absolute;
+    width:18px;
+    height:18px;
+    top:3px;
+    left:3px;
+    background:#fff;
+    border-radius:50%;
+    transition:0.2s;
+  }
+  
+  .switch input:checked + .slider{
+    background:linear-gradient(135deg,#3b82f6,#2563eb);
+  }
+  
+  .switch input:checked + .slider:before{
+    transform:translateX(22px);
+  }
+  
+  /* =========================
+     DEMO CARDS (GYMSHARK STYLE)
+  ========================= */
+  
+  .demo-grid{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:12px;
+    margin-top:24px;
+  }
+  
+  .demo-card{
+    display:flex;
+    align-items:center;
+    gap:12px;
+    padding:14px;
+    border-radius:16px;
+    background:rgba(255,255,255,0.03);
+    border:1px solid rgba(255,255,255,0.06);
+    cursor:pointer;
+    color:#fff;
+    transition:0.25s;
+  }
+  
+  .demo-card:hover{
+    transform:translateY(-4px);
+    background:rgba(255,255,255,0.07);
+    box-shadow:0 20px 40px rgba(0,0,0,0.5);
+  }
+  
+  .demo-card .icon{
+    width:40px;
+    height:40px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    background:rgba(255,255,255,0.06);
+    border-radius:12px;
+  }
+  
+  /* =========================
+     MOBILE
+  ========================= */
+  
+  @media(max-width:900px){
+    body{padding:16px;}
+    .layout{grid-template-columns:1fr;}
+  }
