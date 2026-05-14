@@ -3,13 +3,17 @@ const express = require('express');
 const cors = require('cors');
 const path = require('path');
 const { MongoClient, ObjectId } = require('mongodb');
+const bcryptjs = require('bcryptjs');
+const jwt = require('jsonwebtoken');
 require('dotenv').config();
 const stripeSecretKey = process.env.STRIPE_SECRET_KEY && process.env.STRIPE_SECRET_KEY.trim();
-const stripe = require('stripe')(stripeSecretKey);
+const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
 
 if (!stripeSecretKey) {
     console.warn('⚠️ STRIPE_SECRET_KEY is not set. Payments will fail until the key is configured.');
 }
+
+const JWT_SECRET = process.env.JWT_SECRET || 'your-secret-key-change-in-production';
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -20,6 +24,24 @@ const PORT = process.env.PORT || 5000;
 app.use(cors());
 app.use(express.json({ limit: '10mb' })); // To handle larger payloads (e.g., trainer profile images)
 app.use(express.urlencoded({ extended: true, limit: '10mb' })); // For form data
+
+// JWT Authentication Middleware
+const authenticateToken = (req, res, next) => {
+    const authHeader = req.headers['authorization'];
+    const token = authHeader && authHeader.split(' ')[1];
+
+    if (!token) {
+        return res.status(401).json({ error: 'Access token required' });
+    }
+
+    jwt.verify(token, JWT_SECRET, (err, user) => {
+        if (err) {
+            return res.status(403).json({ error: 'Invalid or expired token' });
+        }
+        req.user = user;
+        next();
+    });
+};
 
 // Serve frontend files
 app.use(express.static(path.join(__dirname, '../frontend')));
@@ -68,6 +90,9 @@ app.post('/api/register', async (req, res) => {
         if (role !== 'member' && role !== 'trainer') {
             return res.status(400).json({ error: 'Role must be member or trainer' });
         }
+        if (password.length < 6) {
+            return res.status(400).json({ error: 'Password must be at least 6 characters' });
+        }
 
         const db = getDatabase();
         const users = db.collection('users');
@@ -78,11 +103,14 @@ app.post('/api/register', async (req, res) => {
             return res.status(409).json({ error: 'Email already registered' });
         }
 
+        // Hash password
+        const hashedPassword = await bcryptjs.hash(password, 10);
+
         // Build user object
         const newUser = {
             name,
             email,
-            password,
+            password: hashedPassword,
             role,
             createdAt: new Date(),
             assignedClasses: []
@@ -212,17 +240,31 @@ app.post('/api/login', async (req, res) => {
         }
 
         const db = getDatabase();
-        const user = await db.collection('users').findOne({ email, password });
+        const user = await db.collection('users').findOne({ email });
         if (!user) {
             return res.status(401).json({ error: 'Invalid credentials' });
         }
+
+        // Compare passwords using bcrypt
+        const passwordMatch = await bcryptjs.compare(password, user.password);
+        if (!passwordMatch) {
+            return res.status(401).json({ error: 'Invalid credentials' });
+        }
+
+        // Generate JWT token
+        const token = jwt.sign(
+            { userId: user._id, email: user.email, role: user.role },
+            JWT_SECRET,
+            { expiresIn: '24h' }
+        );
 
         const userResponse = {
             _id: user._id,
             name: user.name,
             email: user.email,
             role: user.role,
-            assignedClasses: user.assignedClasses || []
+            assignedClasses: user.assignedClasses || [],
+            token: token
         };
 
         res.json({ message: 'Login successful', user: userResponse });
@@ -256,8 +298,13 @@ app.get('/api/trainer/:trainerId/classes', async (req, res) => {
 });
 
 // Admin: assign a class to a trainer
-app.post('/api/admin/assign-trainer', async (req, res) => {
+app.post('/api/admin/assign-trainer', authenticateToken, async (req, res) => {
     try {
+        // Check if user is admin
+        if (req.user.role !== 'admin' && req.user.role !== 'trainer') {
+            return res.status(403).json({ error: 'Unauthorized access' });
+        }
+
         const { classId, trainerEmail } = req.body;
         const db = getDatabase();
 
@@ -299,8 +346,12 @@ app.get('/api/classes', async (req, res) => {
 });
 
 // Add a new class (admin)
-app.post('/api/admin/classes', async (req, res) => {
+app.post('/api/admin/classes', authenticateToken, async (req, res) => {
     try {
+        if (req.user.role !== 'admin') {
+            return res.status(403).json({ error: 'Admin access required' });
+        }
+        
         const newClass = {
             ...req.body,
             booked: 0,
@@ -315,8 +366,12 @@ app.post('/api/admin/classes', async (req, res) => {
 });
 
 // Update a class (admin)
-app.put('/api/admin/classes/:id', async (req, res) => {
+app.put('/api/admin/classes/:id', authenticateToken, async (req, res) => {
     try {
+        if (req.user.role !== 'admin') {
+            return res.status(403).json({ error: 'Admin access required' });
+        }
+        
         const updateData = { ...req.body, updatedAt: new Date() };
         const result = await db.collection('classes').updateOne(
             { _id: new ObjectId(req.params.id) },
@@ -330,8 +385,12 @@ app.put('/api/admin/classes/:id', async (req, res) => {
 });
 
 // Delete a class (admin)
-app.delete('/api/admin/classes/:id', async (req, res) => {
+app.delete('/api/admin/classes/:id', authenticateToken, async (req, res) => {
     try {
+        if (req.user.role !== 'admin') {
+            return res.status(403).json({ error: 'Admin access required' });
+        }
+        
         const result = await db.collection('classes').deleteOne({ _id: new ObjectId(req.params.id) });
         if (result.deletedCount === 0) return res.status(404).json({ error: 'Class not found' });
         res.json({ message: 'Class deleted successfully' });
@@ -383,8 +442,12 @@ app.get('/api/bookings', async (req, res) => {
 });
 
 // Get dashboard stats
-app.get('/api/admin/stats', async (req, res) => {
+app.get('/api/admin/stats', authenticateToken, async (req, res) => {
     try {
+        if (req.user.role !== 'admin') {
+            return res.status(403).json({ error: 'Admin access required' });
+        }
+        
         const totalClasses = await db.collection('classes').countDocuments();
         const totalBookings = await db.collection('bookings').countDocuments();
         const fullClasses = await db.collection('classes').countDocuments({

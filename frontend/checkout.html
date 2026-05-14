@@ -363,20 +363,20 @@
 
   <script>
     const plans = {
-      // "single-day": {
-      //   family: "day-pass.html",
-      //   tag: "Day pass",
-      //   name: "Single day",
-      //   desc: "One-time gym access for solo training, cardio, or strength work.",
-      //   price: "£8",
-      //   per: "/ day",
-      //   note: "A quick one-visit pass with no recurring commitment.",
-      //   features: [
-      //     "Full gym access",
-      //     "Locker and shower",
-      //     "Fast check-in at reception"
-      //   ]
-      // },
+      "single-day": {
+        family: "day-pass.html",
+        tag: "Day pass",
+        name: "Single day",
+        desc: "One-time gym access for solo training, cardio, or strength work.",
+        price: "£8",
+        per: "/ day",
+        note: "A quick one-visit pass with no recurring commitment.",
+        features: [
+          "Full gym access",
+          "Locker and shower",
+          "Fast check-in at reception"
+        ]
+      },
       "day-class": {
         family: "day-pass.html",
         tag: "Popular day pass",
@@ -476,7 +476,7 @@
         ]
       }
     };
-
+    const apiBase = 'http://localhost:5000'; 
     const params = new URLSearchParams(window.location.search);
     const selectedPlan = params.get("plan");
     const plan = plans[selectedPlan] || plans["single-day"];
@@ -500,7 +500,7 @@
     dateField.value = localDate;
 
     // Initialize Stripe
-    const stripe = Stripe('pk_test_51TUcIx3ijFJ1k2Yx3qyBVSOrrInFtOf1nKxIRHTMT1uqgY67ojwM1Mm9QktpQ4QsQ60xCUJyLz7L7GjGkDgvz8wk00TYuWjEoq'); // Replace with your publishable key
+    const stripe = Stripe('pk_test_51TUcIx3ijFJ1k2Yx3qyBVSOrrInFtOf1nKxIRHTMT1uqgY67ojwM1Mm9QktpQ4QsQ60xCUJyLz7L7GjGkDgvz8wk00TYuWjEoq'); 
     const elements = stripe.elements();
     const cardElement = elements.create('card', { hidePostalCode: true });
     cardElement.mount('#card-element');
