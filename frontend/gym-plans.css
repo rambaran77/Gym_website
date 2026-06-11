@@ -1,0 +1,237 @@
+/* Membership plans catalog (membership.html) */
+
+body.site-page.gym-plans-page {
+  display: block;
+  padding-bottom: 3rem;
+  color: var(--tgg-ink);
+  background: var(--tgg-bg);
+}
+
+body.site-page.gym-plans-page .plans-wrap {
+  max-width: 960px;
+  margin: 1.5rem auto 2rem;
+  padding: clamp(1.25rem, 3vw, 2rem);
+  background: var(--tgg-white);
+  border: 1px solid var(--tgg-line);
+  border-radius: 16px;
+  box-shadow: var(--tgg-shadow);
+}
+
+body.site-page.gym-plans-page .section-label {
+  font-size: 0.75rem;
+  color: var(--tgg-accent);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  font-weight: 700;
+  margin-bottom: 0.5rem;
+}
+
+body.site-page.gym-plans-page .section-title,
+body.site-page.membership-landing-page .section-title {
+  font-size: clamp(1.75rem, 4vw, 2.25rem);
+  font-weight: 800;
+  color: var(--tgg-ink);
+  margin: 0 0 0.35rem;
+  background: none;
+  -webkit-text-fill-color: unset;
+  line-height: 1.15;
+}
+
+body.site-page.gym-plans-page .section-sub {
+  font-size: 1rem;
+  color: var(--tgg-muted);
+  margin: 0 0 1.75rem;
+  line-height: 1.55;
+  max-width: 52ch;
+}
+
+body.site-page.gym-plans-page .tab-row {
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 1.5rem;
+  flex-wrap: wrap;
+}
+
+body.site-page.gym-plans-page .tab-btn {
+  padding: 0.55rem 1.15rem;
+  border-radius: 999px;
+  border: 2px solid var(--tgg-line);
+  background: var(--tgg-white);
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  color: var(--tgg-ink);
+  transition: border-color 0.15s ease, background 0.15s ease, color 0.15s ease;
+}
+
+body.site-page.gym-plans-page .tab-btn:hover {
+  border-color: var(--tgg-accent);
+  color: var(--tgg-accent);
+}
+
+body.site-page.gym-plans-page .tab-btn.active {
+  background: var(--tgg-accent);
+  color: #ffffff;
+  border-color: var(--tgg-accent);
+}
+
+body.site-page.gym-plans-page .plans-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 1rem;
+}
+
+body.site-page.gym-plans-page .plan-card {
+  background: var(--tgg-bg);
+  border: 1px solid var(--tgg-line);
+  border-radius: 14px;
+  padding: 1.35rem;
+  color: var(--tgg-ink);
+  transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+  display: flex;
+  flex-direction: column;
+}
+
+body.site-page.gym-plans-page .plan-card:hover {
+  transform: translateY(-3px);
+  box-shadow: var(--tgg-shadow);
+  border-color: rgba(233, 69, 96, 0.35);
+}
+
+body.site-page.gym-plans-page .plan-card.featured {
+  border-color: var(--tgg-accent);
+  background: linear-gradient(180deg, rgba(233, 69, 96, 0.06) 0%, var(--tgg-bg) 35%);
+  box-shadow: 0 8px 24px rgba(233, 69, 96, 0.12);
+}
+
+body.site-page.gym-plans-page .badge {
+  display: inline-block;
+  font-size: 0.7rem;
+  font-weight: 700;
+  padding: 0.35rem 0.75rem;
+  border-radius: 999px;
+  background: rgba(233, 69, 96, 0.12);
+  color: var(--tgg-accent);
+  margin-bottom: 0.65rem;
+  align-self: flex-start;
+}
+
+body.site-page.gym-plans-page .plan-name {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--tgg-ink);
+  margin: 0 0 0.35rem;
+}
+
+body.site-page.gym-plans-page .plan-desc {
+  font-size: 0.9rem;
+  color: var(--tgg-muted);
+  margin: 0 0 1rem;
+  line-height: 1.5;
+}
+
+body.site-page.gym-plans-page .plan-price {
+  font-size: 2rem;
+  font-weight: 800;
+  color: var(--tgg-ink);
+  margin: 0;
+  line-height: 1.1;
+}
+
+body.site-page.gym-plans-page .plan-price span {
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: var(--tgg-muted);
+}
+
+body.site-page.gym-plans-page .divider {
+  border: none;
+  border-top: 1px solid var(--tgg-line);
+  margin: 1rem 0;
+}
+
+body.site-page.gym-plans-page .feature-list {
+  list-style: none;
+  margin: 0 0 1.25rem;
+  flex: 1;
+}
+
+body.site-page.gym-plans-page .feature-list li {
+  font-size: 0.9rem;
+  color: var(--tgg-ink);
+  padding: 0.4rem 0;
+  display: flex;
+  align-items: flex-start;
+  gap: 0.65rem;
+  line-height: 1.45;
+}
+
+body.site-page.gym-plans-page .feature-list li::before {
+  content: "";
+  width: 8px;
+  height: 8px;
+  margin-top: 0.4rem;
+  border-radius: 50%;
+  background: var(--tgg-accent);
+  flex-shrink: 0;
+}
+
+body.site-page.gym-plans-page .feature-list li.no {
+  color: var(--tgg-muted);
+  opacity: 0.85;
+}
+
+body.site-page.gym-plans-page .feature-list li.no::before {
+  background: var(--tgg-line);
+}
+
+body.site-page.gym-plans-page .cta-btn {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  border-radius: 999px;
+  border: 2px solid var(--tgg-line);
+  background: var(--tgg-white);
+  font-size: 0.9rem;
+  font-weight: 700;
+  cursor: pointer;
+  color: var(--tgg-ink);
+  transition: background 0.15s ease, border-color 0.15s ease, color 0.15s ease, transform 0.15s ease;
+}
+
+body.site-page.gym-plans-page .cta-btn:hover {
+  border-color: var(--tgg-accent);
+  color: var(--tgg-accent);
+  transform: translateY(-1px);
+}
+
+body.site-page.gym-plans-page .cta-btn.primary {
+  background: var(--tgg-accent);
+  color: #ffffff;
+  border-color: var(--tgg-accent);
+  box-shadow: 0 4px 14px rgba(233, 69, 96, 0.35);
+}
+
+body.site-page.gym-plans-page .cta-btn.primary:hover {
+  background: var(--tgg-accent-dark);
+  border-color: var(--tgg-accent-dark);
+  color: #ffffff;
+}
+
+body.site-page.gym-plans-page .savings-note {
+  font-size: 0.75rem;
+  color: var(--tgg-muted);
+  margin-top: 0.5rem;
+  text-align: center;
+  font-weight: 600;
+}
+
+@media (max-width: 640px) {
+  body.site-page.gym-plans-page .plans-wrap {
+    margin: 1rem auto 2rem;
+    padding: 1.15rem;
+  }
+
+  body.site-page.gym-plans-page .plans-grid {
+    grid-template-columns: 1fr;
+  }
+}

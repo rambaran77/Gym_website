@@ -1,0 +1,313 @@
+/* Membership landing page (membership.html) */
+
+body.site-page.membership-landing-page {
+  display: block;
+  padding-bottom: 0;
+  color: var(--tgg-ink);
+  background: var(--tgg-bg);
+}
+
+.membership-landing {
+  max-width: var(--site-max);
+  margin: 0 auto;
+  padding: 0 var(--site-gutter) 3rem;
+}
+
+.membership-hero {
+  display: grid;
+  grid-template-columns: 1.1fr 0.9fr;
+  gap: 2rem;
+  align-items: center;
+  margin: 1rem 0 2.5rem;
+  padding: clamp(1.5rem, 3vw, 2.5rem);
+  border-radius: 16px;
+  background: linear-gradient(135deg, var(--tgg-dark) 0%, #1a2035 55%, #2a1f35 100%);
+  color: #fff;
+  overflow: hidden;
+  position: relative;
+  box-shadow: var(--tgg-shadow);
+}
+
+.membership-hero::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at 85% 20%, rgba(233, 69, 96, 0.25), transparent 45%);
+  pointer-events: none;
+}
+
+.membership-hero-copy,
+.membership-hero-visual {
+  position: relative;
+  z-index: 1;
+}
+
+.membership-hero-copy .eyebrow {
+  display: inline-block;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--tgg-gold);
+  margin-bottom: 0.75rem;
+}
+
+.membership-hero-copy h1 {
+  font-size: clamp(1.85rem, 4vw, 2.75rem);
+  font-weight: 800;
+  line-height: 1.12;
+  color: #fff !important;
+  margin: 0 0 0.75rem;
+}
+
+.membership-hero-copy .lead {
+  font-size: 1rem;
+  line-height: 1.6;
+  color: rgba(255, 255, 255, 0.82);
+  max-width: 36ch;
+  margin: 0 0 1.25rem;
+}
+
+.membership-hero-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.65rem;
+}
+
+.membership-hero-actions .btn-primary-lg {
+  padding: 0.7rem 1.35rem;
+  font-size: 0.9rem;
+}
+
+.membership-hero-actions .btn-outline-lg {
+  padding: 0.65rem 1.25rem;
+  font-size: 0.88rem;
+  border-color: rgba(255, 255, 255, 0.45);
+  color: #fff;
+}
+
+.membership-hero-promo {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-top: 1rem;
+  padding: 0.4rem 0.75rem;
+  border-radius: 8px;
+  background: rgba(212, 175, 55, 0.15);
+  border: 1px dashed rgba(212, 175, 55, 0.55);
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--tgg-gold);
+}
+
+.membership-hero-visual {
+  border-radius: 12px;
+  overflow: hidden;
+  min-height: 220px;
+  background: #111;
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.35);
+}
+
+.membership-hero-visual img {
+  width: 100%;
+  height: 100%;
+  min-height: 220px;
+  object-fit: cover;
+  display: block;
+}
+
+.membership-perks {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1rem;
+  margin-bottom: 2.5rem;
+}
+
+.membership-perk {
+  background: var(--tgg-white);
+  border: 1px solid var(--tgg-line);
+  border-radius: var(--tgg-radius);
+  padding: 1.15rem 1rem;
+  text-align: center;
+}
+
+.membership-perk .icon {
+  font-size: 1.65rem;
+  margin-bottom: 0.35rem;
+}
+
+.membership-perk h3 {
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: var(--tgg-ink);
+  margin: 0 0 0.25rem;
+}
+
+.membership-perk p {
+  font-size: 0.8rem;
+  color: var(--tgg-muted);
+  margin: 0;
+  line-height: 1.45;
+}
+
+.membership-plans-section {
+  scroll-margin-top: calc(var(--site-header-h) + 1rem);
+}
+
+.membership-plans-section .plans-wrap {
+  max-width: none;
+  margin: 0;
+  padding: clamp(1.25rem, 3vw, 2rem);
+}
+
+.membership-steps {
+  margin: 2.5rem 0;
+  padding: 2rem;
+  background: var(--tgg-white);
+  border: 1px solid var(--tgg-line);
+  border-radius: 16px;
+}
+
+.membership-steps h2 {
+  font-size: 1.5rem;
+  font-weight: 800;
+  color: var(--tgg-ink);
+  margin: 0 0 1.25rem;
+  text-align: center;
+}
+
+.membership-steps-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.25rem;
+}
+
+.membership-step {
+  text-align: center;
+  padding: 0.5rem;
+}
+
+.membership-step .num {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2rem;
+  height: 2rem;
+  border-radius: 50%;
+  background: rgba(233, 69, 96, 0.12);
+  color: var(--tgg-accent);
+  font-weight: 800;
+  font-size: 0.9rem;
+  margin-bottom: 0.65rem;
+}
+
+.membership-step h3 {
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--tgg-ink);
+  margin: 0 0 0.35rem;
+}
+
+.membership-step p {
+  font-size: 0.85rem;
+  color: var(--tgg-muted);
+  margin: 0;
+  line-height: 1.5;
+}
+
+.membership-faq {
+  margin-bottom: 2rem;
+}
+
+.membership-faq h2 {
+  font-size: 1.5rem;
+  font-weight: 800;
+  margin: 0 0 1rem;
+  color: var(--tgg-ink);
+}
+
+.membership-faq-list {
+  display: grid;
+  gap: 0.65rem;
+}
+
+.membership-faq-item {
+  background: var(--tgg-white);
+  border: 1px solid var(--tgg-line);
+  border-radius: var(--tgg-radius);
+  padding: 1rem 1.15rem;
+}
+
+.membership-faq-item h3 {
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: var(--tgg-ink);
+  margin: 0 0 0.35rem;
+}
+
+.membership-faq-item p {
+  font-size: 0.88rem;
+  color: var(--tgg-muted);
+  margin: 0;
+  line-height: 1.55;
+}
+
+.membership-bottom-cta {
+  text-align: center;
+  padding: 2.5rem 1.5rem;
+  border-radius: 16px;
+  background: linear-gradient(135deg, var(--tgg-accent) 0%, var(--tgg-accent-dark) 100%);
+  color: #fff;
+}
+
+.membership-bottom-cta h2 {
+  font-size: clamp(1.35rem, 3vw, 1.85rem);
+  font-weight: 800;
+  color: #fff;
+  margin: 0 0 0.5rem;
+}
+
+.membership-bottom-cta p {
+  color: rgba(255, 255, 255, 0.92);
+  margin: 0 0 1.25rem;
+  font-size: 0.95rem;
+}
+
+.membership-bottom-cta .btn-primary-lg {
+  background: #fff;
+  color: var(--tgg-accent) !important;
+  box-shadow: none;
+}
+
+@media (max-width: 900px) {
+  .membership-hero {
+    grid-template-columns: 1fr;
+  }
+
+  .membership-hero-visual {
+    order: -1;
+    min-height: 180px;
+  }
+
+  .membership-hero-visual img {
+    min-height: 180px;
+  }
+
+  .membership-perks {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .membership-steps-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 480px) {
+  .membership-perks {
+    grid-template-columns: 1fr;
+  }
+
+  .membership-landing {
+    padding-bottom: 2rem;
+  }
+}

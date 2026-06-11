@@ -1,94 +1,149 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-    <meta charset="UTF-8">
-    <title>Gym Shop</title>
-    <link rel="stylesheet" href="s.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Gym Shop — Supplements &amp; Gear | Aura Athletic</title>
+  <meta name="description" content="Shop protein, pre-workout, gym equipment, apparel and accessories at Aura Athletic. Add to cart and checkout online." />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,500;14..32,600;14..32,700;14..32,800&family=Montserrat:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+  <link rel="stylesheet" href="site-theme.css" />
+  <link rel="stylesheet" href="shop.css" />
+  <script src="auth.js"></script>
+  <script src="site-chrome.js" defer></script>
 </head>
-
-<body>
-    <nav class="navbar" id="navbar">
-        <div class="nav-container">
-            <a href="/" class="logo">AURA ATHLETIC</a>
-
-            <ul class="nav-links" id="navLinks">
-                <li><a href="/" class="active">Home</a></li>
-                <li><a href="/trainers.html">Trainers</a></li>
-                <li><a href="/shop.html">Shop</a></li>
-                <li><a href="/gymnotif.html">Notifications</a></li>
-                <li><a href="/admin.html">Admin</a></li>
-            </ul>
-
-            <div class="nav-actions" id="navActions">
-                <!-- Dynamic content from auth.js -->
-            </div>
-
-            <button class="menu-btn" onclick="toggleMobileMenu()">
-                <span></span>
-                <span></span>
-                <span></span>
-            </button>
+<body class="site-page shop-page shop-landing-page" data-page="shop">
+  <main class="shop-landing">
+    <section class="shop-hero" aria-labelledby="shop-hero-title">
+      <div class="shop-hero-copy">
+        <span class="eyebrow">Aura Athletic shop</span>
+        <h1 id="shop-hero-title">Fuel your training.<br />Wear the brand.</h1>
+        <p class="lead">Supplements, equipment, apparel and recovery gear — curated for members who train hard. Tap to add, checkout in minutes.</p>
+        <div class="shop-hero-actions">
+          <a href="#catalog" class="btn-primary-lg">Browse products</a>
+          <button type="button" class="btn-outline-lg shop-hero-cart-btn" onclick="openCartDrawer()">View cart (<span id="heroCartCount">0</span>)</button>
         </div>
-    </nav>
+      </div>
+      <div class="shop-hero-visual">
+        <img src="images/bb.png" alt="Aura Athletic gym gear and supplements" onerror="this.src='images/modern-gym.jpg'" />
+      </div>
+    </section>
 
-    <header class="topbar">
+    <section class="shop-highlights" aria-label="Shop highlights">
+      <article class="shop-highlight">
+        <strong id="highlightInStock">—</strong>
+        <span>Items in stock now</span>
+      </article>
+      <article class="shop-highlight">
+        <strong>21+</strong>
+        <span>Products to choose from</span>
+      </article>
+      <article class="shop-highlight">
+        <strong>Free</strong>
+        <span>Click &amp; collect at club*</span>
+      </article>
+      <article class="shop-highlight">
+        <strong>Secure</strong>
+        <span>Online checkout</span>
+      </article>
+    </section>
 
-        <div class="nav-left" style="display: flex; gap: 22px; align-items: center;">
-            <button style="
-                background: #FF4A1C;
-                border: none;
-                color: white;
-                font-size: 16px;
-                cursor: pointer;
-                padding: 6px 10px;
-            " onmouseover="this.style.color='white'" onmouseout="this.style.color='white'"
-                onclick="window.location.href='index.html'">
-                🔙 Back
-            </button>
+    <section class="shop-how" aria-labelledby="shop-how-title">
+      <h2 id="shop-how-title">How it works</h2>
+      <p class="sub">From browse to bag in three taps.</p>
+      <ol class="shop-steps">
+        <li class="shop-step">
+          <span class="shop-step-num">1</span>
+          <h3>Browse &amp; add</h3>
+          <p>Tap any product row or use Add to cart — watch it fly to your bag.</p>
+        </li>
+        <li class="shop-step">
+          <span class="shop-step-num">2</span>
+          <h3>Review cart</h3>
+          <p>Open the cart drawer to adjust quantities before checkout.</p>
+        </li>
+        <li class="shop-step">
+          <span class="shop-step-num">3</span>
+          <h3>Checkout</h3>
+          <p>Pay securely online — members can sign in for a faster experience.</p>
+        </li>
+      </ol>
+    </section>
+
+    <section class="shop-catalog" id="catalog" aria-labelledby="catalog-title">
+      <div class="shop-catalog-head">
+        <div>
+          <h2 id="catalog-title">Product catalog</h2>
+          <p class="sub">Filter by category or search by name</p>
         </div>
+        <button type="button" class="shop-cart-toggle" id="cartToggleBtn" onclick="openCartDrawer()" aria-label="Open cart">
+          <svg class="cart-icon-svg" width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+            <path d="M6 6h15l-1.5 9H7.5L6 6z"></path>
+            <path d="M6 6L5 3H2"></path>
+            <circle cx="9" cy="20" r="1.5"></circle>
+            <circle cx="18" cy="20" r="1.5"></circle>
+          </svg>
+          <span class="cart-count-badge" id="cartCount">0</span>
+        </button>
+      </div>
 
-        <div class="logo">
-            AURA ATHLETICS
-            <span>train with intensity • rise with aura</span>
+      <div class="shop-category-pills" id="categoryPills" role="tablist" aria-label="Product categories">
+        <button type="button" class="shop-category-btn active" data-category="all" role="tab" aria-selected="true">All</button>
+        <button type="button" class="shop-category-btn" data-category="supplements" role="tab" aria-selected="false">Supplements</button>
+        <button type="button" class="shop-category-btn" data-category="equipment" role="tab" aria-selected="false">Equipment</button>
+        <button type="button" class="shop-category-btn" data-category="apparel" role="tab" aria-selected="false">Apparel</button>
+        <button type="button" class="shop-category-btn" data-category="accessories" role="tab" aria-selected="false">Accessories</button>
+      </div>
+
+      <div class="shop-toolbar">
+        <div class="shop-search-wrap">
+          <label class="visually-hidden" for="search">Search products</label>
+          <input type="search" id="search" placeholder="Search by product name…" autocomplete="off" />
         </div>
+        <span class="shop-filter-hint" id="productCountHint">21 products</span>
+      </div>
 
-        <input type="text" id="search" placeholder="Search products..." oninput="filterProducts()">
+      <div class="shop-products-full" aria-label="Products">
+        <div class="products-list" id="productList"></div>
+      </div>
+    </section>
 
-        <div class="cart-icon">
-            🛒 <span id="cartCount">0</span>
-        </div>
-    </header>
+    <section class="shop-bottom-cta" aria-labelledby="shop-cta-title">
+      <h2 id="shop-cta-title">Train smarter with Aura Athletic</h2>
+      <p>Pair your gear with a membership — 24/7 access, coached classes, and plans that fit your schedule.</p>
+      <a href="membership.html" class="btn-primary-lg">View memberships</a>
+    </section>
+  </main>
 
-    <div class="container">
+  <div id="cartBackdrop" class="cart-backdrop" onclick="closeCartDrawer()" hidden></div>
 
-        <!-- PRODUCTS -->
-        <div class="products" id="productList"></div>
-
-        <!-- CART -->
-        <div class="cart">
-            <h3>Your Cart</h3>
-            <div id="cartItems"></div>
-
-            <div class="checkout">
-                <p>Total: $<span id="total">0</span></p>
-                <button onclick="goToCheckout()">Checkout</button>
-            </div>
-        </div>
-
+  <aside id="cartDrawer" class="cart-drawer" aria-label="Shopping cart" hidden>
+    <div class="cart-drawer-header">
+      <h2>Your cart</h2>
+      <button type="button" class="cart-drawer-close" onclick="closeCartDrawer()" aria-label="Close cart">&times;</button>
     </div>
-
-    <!-- PRODUCT MODAL -->
-    <div id="modal" class="modal">
-        <div class="modal-content">
-            <span onclick="closeModal()" class="close">&times;</span>
-            <div id="modalBody"></div>
-        </div>
+    <div id="cartItems" class="cart-drawer-items">
+      <p class="cart-empty-msg">Your cart is empty. Tap a product to add it here.</p>
     </div>
+    <div class="shop-checkout cart-drawer-footer">
+      <div class="shop-checkout-total">
+        <span>Subtotal</span>
+        <strong>£<span id="total">0.00</span></strong>
+      </div>
+      <button type="button" id="checkoutBtn" onclick="goToCheckout()" disabled>Go to checkout</button>
+    </div>
+  </aside>
 
-    <script src="s.js"></script>
+  <div id="cartToast" class="cart-toast" role="status" aria-live="polite" hidden></div>
+  <div id="flyLayer" class="fly-layer" aria-hidden="true"></div>
 
-    <footer></footer>
+  <div id="modal" class="shop-modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle" hidden>
+    <div class="shop-modal-content">
+      <button type="button" class="shop-modal-close" onclick="closeModal()" aria-label="Close">&times;</button>
+      <div id="modalBody"></div>
+    </div>
+  </div>
+
+  <script src="s.js"></script>
 </body>
-
 </html>

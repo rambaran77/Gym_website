@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Billing &amp; Receipts — Aura Athletic</title>
+  <!-- Jira MB-17, MB-18 -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,500;14..32,600;14..32,700;14..32,800&family=Montserrat:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+  <link rel="stylesheet" href="site-theme.css" />
+  <link rel="stylesheet" href="member-billing.css" />
+  <script src="auth.js"></script>
+  <script src="site-chrome.js" defer></script>
+</head>
+<body class="site-page member-billing-page" data-page="members">
+  <main class="billing-wrap">
+    <h1>Billing history &amp; receipts</h1>
+    <p class="billing-lead" id="user-line">Loading…</p>
+
+    <div id="active-membership" class="billing-card billing-card--active" style="display:none;">
+      <h2>Current membership</h2>
+      <p id="active-plan-line" class="muted"></p>
+    </div>
+
+    <div class="billing-card">
+      <h2>Payment history</h2>
+      <div id="summary" class="summary-row" style="display:none;"></div>
+      <div id="content" class="billing-table-wrap">
+        <p class="muted">Loading billing history…</p>
+      </div>
+    </div>
+
+    <div class="billing-actions">
+      <a class="btn" href="member-dashboard.html">Member hub</a>
+      <a class="btn btn-ghost" href="membership.html">Buy a plan</a>
+    </div>
+  </main>
+
+  <script>
+    const apiBase = window.location.protocol === 'file:' ? 'http://localhost:5001' : '';
+
+    function formatMoney(amount, currency) {
+      const sym = (currency || 'GBP') === 'GBP' ? '£' : '';
+      return `${sym}${Number(amount || 0).toFixed(2)}`;
+    }
+
+    function formatDate(d) {
+      return d ? new Date(d).toLocaleString('en-GB', { dateStyle: 'medium', timeStyle: 'short' }) : '—';
+    }
+
+    function receiptCell(row) {
+      if (row.receiptUrl) {
+        return `<a class="receipt-link" href="${row.receiptUrl}" target="_blank" rel="noopener">View receipt</a>`;
+      }
+      if (row.kind === 'membership' && row.paymentIntentId && row.status !== 'failed') {
+        return `<a class="receipt-link" href="#" data-pi="${row.paymentIntentId}">Get receipt</a>`;
+      }
+      if (row.kind === 'payment_failed') {
+        return '<span class="muted">—</span>';
+      }
+      return '<span class="muted">—</span>';
+    }
+
+    async function fetchReceiptLink(email, paymentIntentId, anchor) {
+      anchor.textContent = 'Loading…';
+      try {
+        const res = await fetch(`${apiBase}/api/memberships/${encodeURIComponent(email)}/receipt/${encodeURIComponent(paymentIntentId)}`);
+        const data = await res.json();
+        if (data.receiptUrl) {
+          anchor.href = data.receiptUrl;
+          anchor.target = '_blank';
+          anchor.rel = 'noopener';
+          anchor.textContent = 'View receipt';
+          anchor.removeAttribute('data-pi');
+        } else {
+          anchor.textContent = 'Receipt unavailable';
+        }
+      } catch {
+        anchor.textContent = 'Error loading receipt';
+      }
+    }
+
+    async function load() {
+      if (typeof requireMember === 'function' && !requireMember()) return;
+
+      const user = getCurrentUser();
+      const el = document.getElementById('content');
+      const summaryEl = document.getElementById('summary');
+      document.getElementById('user-line').textContent = user.email;
+
+      try {
+        const res = await fetch(`${apiBase}/api/memberships/${encodeURIComponent(user.email)}/billing-history`);
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.error || 'Failed to load');
+
+        const active = data.history.find((h) => h.isActive);
+        if (active) {
+          const box = document.getElementById('active-membership');
+          box.style.display = 'block';
+          document.getElementById('active-plan-line').innerHTML =
+            `<span class="active-plan-name">${active.planLabel}</span> · ` +
+            `access until ${active.endDate ? new Date(active.endDate).toLocaleDateString('en-GB') : '—'}`;
+        }
+
+        if (!data.history.length) {
+          el.innerHTML = '<p class="muted">No billing history yet. <a class="text-link" href="membership.html">Purchase a plan</a>.</p>';
+          return;
+        }
+
+        summaryEl.style.display = 'flex';
+        summaryEl.innerHTML = `
+          <div class="stat"><strong>${data.count}</strong><span>Transactions</span></div>
+          <div class="stat"><strong>${formatMoney(data.totalPaid, 'GBP')}</strong><span>Total paid</span></div>
+        `;
+
+        el.innerHTML = `
+          <table>
+            <thead>
+              <tr>
+                <th>Date</th>
+                <th>Description</th>
+                <th>Amount</th>
+                <th>Status</th>
+                <th>Receipt</th>
+              </tr>
+            </thead>
+            <tbody>
+              ${data.history.map((row) => `
+                <tr>
+                  <td>${formatDate(row.date)}</td>
+                  <td>${row.planLabel}${row.kind === 'payment_failed' ? '<br><small class="muted">Payment failed</small>' : ''}</td>
+                  <td>${formatMoney(row.amount, row.currency)}</td>
+                  <td class="status-${row.status}">${row.isActive ? 'active' : row.status}</td>
+                  <td>${receiptCell(row)}</td>
+                </tr>
+              `).join('')}
+            </tbody>
+          </table>
+        `;
+
+        el.querySelectorAll('[data-pi]').forEach((a) => {
+          a.addEventListener('click', (e) => {
+            e.preventDefault();
+            fetchReceiptLink(user.email, a.getAttribute('data-pi'), a);
+          });
+        });
+      } catch (e) {
+        el.innerHTML = `<p class="billing-error">${e.message || 'Could not load billing history. Is the server running?'}</p>`;
+      }
+    }
+
+    document.addEventListener('DOMContentLoaded', load);
+  </script>
+</body>
+</html>

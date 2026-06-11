@@ -1,0 +1,210 @@
+/* Billing history & receipts (my-membership.html) */
+
+body.site-page.member-billing-page {
+  display: block;
+  padding-bottom: 3rem;
+  color: var(--tgg-ink);
+  background: var(--tgg-bg);
+}
+
+body.site-page.member-billing-page .billing-wrap {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 1.5rem 1.25rem 2.5rem;
+}
+
+body.site-page.member-billing-page .billing-wrap > h1 {
+  font-size: clamp(1.5rem, 4vw, 2rem);
+  font-weight: 800;
+  color: var(--tgg-ink);
+  margin-bottom: 0.35rem;
+  background: none;
+  -webkit-text-fill-color: unset;
+}
+
+body.site-page.member-billing-page .billing-lead {
+  color: var(--tgg-muted);
+  font-size: 0.95rem;
+  margin-bottom: 1.5rem;
+}
+
+body.site-page.member-billing-page .billing-card {
+  background: var(--tgg-white);
+  border: 1px solid var(--tgg-line);
+  border-radius: var(--tgg-radius);
+  padding: 1.35rem;
+  margin-bottom: 1rem;
+  box-shadow: var(--tgg-shadow);
+}
+
+body.site-page.member-billing-page .billing-card h2 {
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: var(--tgg-ink);
+  margin: 0 0 0.85rem;
+}
+
+body.site-page.member-billing-page .billing-card--active {
+  border-color: rgba(61, 214, 140, 0.45);
+  background: linear-gradient(180deg, rgba(61, 214, 140, 0.08) 0%, var(--tgg-white) 40%);
+}
+
+body.site-page.member-billing-page .active-plan-name {
+  color: #1a8f5c;
+  font-weight: 700;
+}
+
+body.site-page.member-billing-page .muted {
+  color: var(--tgg-muted);
+  font-size: 0.9rem;
+  line-height: 1.55;
+}
+
+body.site-page.member-billing-page .summary-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  margin-bottom: 1.25rem;
+}
+
+body.site-page.member-billing-page .stat {
+  background: var(--tgg-bg);
+  border: 1px solid var(--tgg-line);
+  padding: 0.85rem 1.1rem;
+  border-radius: 10px;
+  min-width: 130px;
+}
+
+body.site-page.member-billing-page .stat strong {
+  display: block;
+  color: var(--tgg-ink);
+  font-size: 1.35rem;
+  font-weight: 800;
+  line-height: 1.2;
+}
+
+body.site-page.member-billing-page .stat span {
+  font-size: 0.75rem;
+  color: var(--tgg-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  font-weight: 600;
+}
+
+body.site-page.member-billing-page .billing-table-wrap {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+body.site-page.member-billing-page table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.9rem;
+  background: transparent;
+}
+
+body.site-page.member-billing-page th {
+  color: var(--tgg-ink);
+  font-weight: 700;
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  border-bottom: 2px solid var(--tgg-line);
+  padding: 0.65rem 0.5rem;
+  white-space: nowrap;
+}
+
+body.site-page.member-billing-page td {
+  color: var(--tgg-ink);
+  padding: 0.75rem 0.5rem;
+  border-bottom: 1px solid var(--tgg-line);
+  vertical-align: top;
+  line-height: 1.45;
+}
+
+body.site-page.member-billing-page td small.muted {
+  font-size: 0.8rem;
+}
+
+body.site-page.member-billing-page .status-active {
+  color: #1a8f5c;
+  font-weight: 600;
+  text-transform: capitalize;
+}
+
+body.site-page.member-billing-page .status-expired,
+body.site-page.member-billing-page .status-failed {
+  color: var(--tgg-accent);
+  font-weight: 600;
+  text-transform: capitalize;
+}
+
+body.site-page.member-billing-page .status-cancelled {
+  color: var(--tgg-muted);
+  text-transform: capitalize;
+}
+
+body.site-page.member-billing-page a.receipt-link,
+body.site-page.member-billing-page a.text-link {
+  color: var(--tgg-accent);
+  font-weight: 600;
+  text-decoration: none;
+}
+
+body.site-page.member-billing-page a.receipt-link:hover,
+body.site-page.member-billing-page a.text-link:hover {
+  text-decoration: underline;
+  color: var(--tgg-accent-dark);
+}
+
+body.site-page.member-billing-page .billing-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  margin-top: 1.25rem;
+}
+
+body.site-page.member-billing-page a.btn {
+  display: inline-block;
+  padding: 0.75rem 1.25rem;
+  background: var(--tgg-accent);
+  color: #ffffff;
+  border-radius: 999px;
+  text-decoration: none;
+  font-weight: 700;
+  font-size: 0.9rem;
+  box-shadow: 0 4px 14px rgba(233, 69, 96, 0.3);
+}
+
+body.site-page.member-billing-page a.btn:hover {
+  background: var(--tgg-accent-dark);
+}
+
+body.site-page.member-billing-page a.btn-ghost {
+  background: var(--tgg-white);
+  color: var(--tgg-ink);
+  border: 2px solid var(--tgg-line);
+  box-shadow: none;
+}
+
+body.site-page.member-billing-page a.btn-ghost:hover {
+  border-color: var(--tgg-accent);
+  color: var(--tgg-accent);
+}
+
+body.site-page.member-billing-page .billing-error {
+  color: var(--tgg-accent);
+  font-weight: 600;
+}
+
+@media (max-width: 640px) {
+  body.site-page.member-billing-page .billing-wrap {
+    padding: 1rem 1rem 2rem;
+  }
+
+  body.site-page.member-billing-page th,
+  body.site-page.member-billing-page td {
+    padding: 0.6rem 0.35rem;
+    font-size: 0.85rem;
+  }
+}

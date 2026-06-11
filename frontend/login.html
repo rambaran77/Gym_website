@@ -1,352 +1,257 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AuraAthletic – Login / Register</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-        body {
-            background: #0a0b10;
-            font-family: 'Inter', 'Segoe UI', sans-serif;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-            padding: 1rem;
-        }
-        .auth-card {
-            background: rgba(20, 22, 28, 0.95);
-            backdrop-filter: blur(12px);
-            border-radius: 32px;
-            padding: 2rem;
-            width: 100%;
-            max-width: 500px;
-            border: 1px solid rgba(212, 175, 55, 0.3);
-            box-shadow: 0 25px 45px rgba(0,0,0,0.5);
-        }
-        .logo {
-            text-align: center;
-            font-size: 2rem;
-            font-weight: 800;
-            background: linear-gradient(135deg, #fff, #d4af37);
-            -webkit-background-clip: text;
-            background-clip: text;
-            color: transparent;
-            margin-bottom: 0.5rem;
-        }
-        .gold-tag {
-            text-align: center;
-            color: #d4af37;
-            font-size: 0.8rem;
-            letter-spacing: 2px;
-            margin-bottom: 2rem;
-        }
-        .tab-bar {
-            display: flex;
-            gap: 1rem;
-            margin-bottom: 2rem;
-            border-bottom: 1px solid rgba(212,175,55,0.2);
-        }
-        .tab {
-            background: none;
-            border: none;
-            color: #aaa;
-            font-size: 1.2rem;
-            font-weight: 600;
-            padding: 0.5rem 1rem;
-            cursor: pointer;
-            transition: 0.3s;
-        }
-        .tab.active {
-            color: #d4af37;
-            border-bottom: 2px solid #d4af37;
-        }
-        .form-panel {
-            display: none;
-        }
-        .form-panel.active {
-            display: block;
-        }
-        .form-group {
-            margin-bottom: 1.2rem;
-        }
-        .form-group input, .form-group select, .form-group textarea {
-            width: 100%;
-            padding: 0.8rem 1rem;
-            background: rgba(0,0,0,0.5);
-            border: 1px solid rgba(212,175,55,0.3);
-            border-radius: 50px;
-            color: white;
-            font-size: 1rem;
-        }
-        .form-group textarea {
-            border-radius: 20px;
-            resize: vertical;
-        }
-        .trainer-fields {
-            display: none;
-            margin-top: 1rem;
-            padding-top: 1rem;
-            border-top: 1px solid rgba(212,175,55,0.2);
-        }
-        .trainer-fields.show {
-            display: block;
-        }
-        button[type="submit"] {
-            background: linear-gradient(135deg, #e94560, #b6304b);
-            width: 100%;
-            padding: 0.8rem;
-            border: none;
-            border-radius: 50px;
-            color: white;
-            font-weight: 700;
-            font-size: 1rem;
-            cursor: pointer;
-            transition: 0.3s;
-            margin-top: 0.5rem;
-        }
-        button[type="submit"]:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(233,69,96,0.4);
-        }
-        .msg {
-            margin-top: 1rem;
-            padding: 0.6rem;
-            border-radius: 50px;
-            text-align: center;
-            font-size: 0.85rem;
-        }
-        .error-msg {
-            background: rgba(233,69,96,0.1);
-            color: #e94560;
-        }
-        .warning-msg {
-            background: rgba(255, 193, 7, 0.1);
-            color: #ffc107;
-            border: 1px solid rgba(255, 193, 7, 0.3);
-        }
-        .success-msg {
-            background: rgba(16,185,129,0.1);
-            color: #10b981;
-        }
-        .note {
-            text-align: center;
-            font-size: 0.75rem;
-            color: #888;
-            margin-top: 1.5rem;
-        }
-        @media (max-width: 500px) {
-            .auth-card { padding: 1.5rem; }
-        }
-    </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Sign in — Aura Athletic</title>
+  <meta name="description" content="Sign in to Aura Athletic — member access or admin staff portal." />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,500;14..32,600;14..32,700;14..32,800&family=Montserrat:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+  <link rel="stylesheet" href="site-theme.css" />
+  <link rel="stylesheet" href="auth.css" />
+  <script src="auth.js"></script>
+  <script src="site-chrome.js" defer></script>
 </head>
-<body>
-    <div class="auth-card">
-        <div class="logo">AURA ATHLETIC</div>
-        <div class="gold-tag">ELITE ACCESS PORTAL</div>
+<body class="site-page auth-page" data-no-footer="true" data-page="login">
+  <div class="auth-layout">
+    <aside class="auth-visual auth-visual-member" aria-label="Member sign-in">
+      <img
+        src="https://images.unsplash.com/photo-1675026918756-3413844ea9e5?auto=format&amp;fit=crop&amp;w=1600&amp;q=85"
+        alt="Member training with a barbell at Aura Athletic"
+        width="1600"
+        height="1067"
+        loading="eager"
+        decoding="async"
+      />
+      <div class="auth-visual-overlay" aria-hidden="true"></div>
+      <div class="auth-visual-content">
+        <p class="auth-visual-eyebrow">Real training. Real results.</p>
+        <h2>Your membership starts here.</h2>
+        <p class="auth-visual-quote">
+          Join thousands training across Birmingham &amp; the West Midlands — 24/7 access, coached classes, and plans that fit your life.
+        </p>
+        <div class="auth-visual-pills">
+          <span>24/7 gym access</span>
+          <span>Group classes</span>
+          <span>No long contracts</span>
+        </div>
+        <p class="auth-photo-credit">
+          Photo by <a href="https://unsplash.com/@natejohnston?utm_source=aura_athletic&amp;utm_medium=referral" target="_blank" rel="noopener noreferrer">Nate Johnston</a> on
+          <a href="https://unsplash.com/photos/a-woman-squats-on-a-barbell-in-a-gym-Jx81mPHWnts?utm_source=aura_athletic&amp;utm_medium=referral" target="_blank" rel="noopener noreferrer">Unsplash</a>
+        </p>
+      </div>
+    </aside>
 
-        <div class="tab-bar">
-            <button class="tab active" data-tab="login">Login</button>
-            <button class="tab" data-tab="register">Register</button>
+    <aside class="auth-visual auth-visual-member-hub" aria-label="Member hub portal">
+      <div class="member-login-brand-panel">
+        <div class="member-login-brand-glow" aria-hidden="true"></div>
+        <div class="member-login-brand-inner">
+          <div class="member-login-brand-top">
+            <span class="member-login-badge">Member hub</span>
+            <a href="index.html" class="member-login-back auth-member-hub-only">← Public site</a>
+          </div>
+          <h1 class="member-login-title">
+            Your training<br />
+            <span>starts here.</span>
+          </h1>
+          <p class="member-login-lead">
+            Book classes, track your membership, view receipts, and shop gear — everything you need to stay on plan, in one place.
+          </p>
+          <div class="member-login-modules">
+            <article class="member-login-module">
+              <span class="member-login-module-icon" aria-hidden="true">💳</span>
+              <strong>Membership</strong>
+              <span>Plans &amp; status</span>
+            </article>
+            <article class="member-login-module">
+              <span class="member-login-module-icon" aria-hidden="true">📅</span>
+              <strong>Classes</strong>
+              <span>Book your spot</span>
+            </article>
+            <article class="member-login-module">
+              <span class="member-login-module-icon" aria-hidden="true">🧾</span>
+              <strong>Billing</strong>
+              <span>History &amp; receipts</span>
+            </article>
+            <article class="member-login-module">
+              <span class="member-login-module-icon" aria-hidden="true">🛍️</span>
+              <strong>Shop</strong>
+              <span>Supplements &amp; gear</span>
+            </article>
+          </div>
+        </div>
+        <div class="member-login-brand-footer">
+          <span>Aura Athletic Members</span>
+          <span class="member-login-brand-dot" aria-hidden="true"></span>
+          <span>24/7 access</span>
+        </div>
+      </div>
+    </aside>
+
+    <aside class="auth-visual auth-visual-admin" aria-label="Admin staff portal">
+      <div class="admin-login-brand-panel">
+        <div class="admin-login-brand-glow" aria-hidden="true"></div>
+        <div class="admin-login-brand-inner">
+          <div class="admin-login-brand-top">
+            <span class="admin-login-badge">Staff portal</span>
+            <a href="index.html" class="admin-login-back auth-admin-only">← Public site</a>
+          </div>
+          <h1 class="admin-login-title">
+            Run your club<br />
+            <span>from one place.</span>
+          </h1>
+          <p class="admin-login-lead">
+            Memberships, class schedules, trainer rosters, and billing — everything your team needs to keep Aura Athletic moving.
+          </p>
+          <div class="admin-login-modules">
+            <article class="admin-login-module">
+              <span class="admin-login-module-icon" aria-hidden="true">👥</span>
+              <strong>Members</strong>
+              <span>Plans &amp; status</span>
+            </article>
+            <article class="admin-login-module">
+              <span class="admin-login-module-icon" aria-hidden="true">📅</span>
+              <strong>Classes</strong>
+              <span>Schedule &amp; capacity</span>
+            </article>
+            <article class="admin-login-module">
+              <span class="admin-login-module-icon" aria-hidden="true">🏋️</span>
+              <strong>Trainers</strong>
+              <span>Assign &amp; manage</span>
+            </article>
+            <article class="admin-login-module">
+              <span class="admin-login-module-icon" aria-hidden="true">💳</span>
+              <strong>Billing</strong>
+              <span>Revenue &amp; receipts</span>
+            </article>
+          </div>
+        </div>
+        <div class="admin-login-brand-footer">
+          <span>Aura Athletic Admin</span>
+          <span class="admin-login-brand-dot" aria-hidden="true"></span>
+          <span>Secure access</span>
+        </div>
+      </div>
+    </aside>
+
+    <div class="auth-main">
+      <div class="auth-card" id="authCard">
+        <header class="auth-card-header">
+          <a href="index.html" class="logo">AURA ATHLETIC</a>
+          <p class="gold-tag" id="authCardTag">Member access</p>
+          <p class="auth-card-sub" id="authCardSub">Sign in or create an account to book classes, manage your membership, and checkout online.</p>
+        </header>
+
+        <p id="login-hint" class="auth-alert" role="status"></p>
+
+        <!-- Sign in -->
+        <div id="loginView" class="auth-view auth-view-active">
+          <form id="loginForm">
+            <div class="form-group">
+              <label for="loginEmail">Email</label>
+              <input type="email" id="loginEmail" name="email" autocomplete="email" placeholder="you@example.com" required />
+            </div>
+            <div class="form-group">
+              <label for="loginPassword">Password</label>
+              <input type="password" id="loginPassword" name="password" autocomplete="current-password" placeholder="Your password" required />
+            </div>
+            <button type="submit" id="loginSubmitBtn">Sign in</button>
+            <div id="loginMsg" class="msg"></div>
+          </form>
+          <p class="auth-switch-line auth-member-only" id="registerSwitchLine">
+            New here?
+            <button
+              type="button"
+              class="auth-switch-btn"
+              id="openRegisterBtn"
+              onclick="document.getElementById('loginView').hidden=true;document.getElementById('registerView').hidden=false;document.getElementById('authCard')?.classList.add('auth-card-register');if(window.showRegisterView)window.showRegisterView();"
+            >Create an account</button>
+          </p>
+          <p class="auth-admin-note auth-admin-only" hidden>
+            Admin accounts are provisioned by your club manager. Need help? Contact <a href="mailto:support@auraathletic.co.uk">support@auraathletic.co.uk</a>.
+          </p>
         </div>
 
-        <!-- Login Form -->
-        <div id="loginPanel" class="form-panel active">
-            <form id="loginForm">
-                <div class="form-group">
-                    <input type="email" id="loginEmail" placeholder="Email" required>
-                </div>
-                <div class="form-group">
-                    <input type="password" id="loginPassword" placeholder="Password" required>
-                </div>
-                <button type="submit">Login</button>
-                <div id="loginMsg" class="msg"></div>
-            </form>
+        <!-- Register (hidden until opened) -->
+        <div id="registerView" class="auth-view" hidden>
+          <div class="auth-view-heading">
+            <h2>Create your account</h2>
+            <p>Join as a member to checkout, book classes, and manage your membership.</p>
+          </div>
+          <form id="registerForm">
+            <div class="form-group">
+              <label for="regName">Full name</label>
+              <input type="text" id="regName" name="name" autocomplete="name" placeholder="Alex Morgan" required />
+            </div>
+            <div class="form-group">
+              <label for="regEmail">Email</label>
+              <input type="email" id="regEmail" name="email" autocomplete="email" placeholder="you@example.com" required />
+            </div>
+            <div class="form-group">
+              <label for="regPassword">Password</label>
+              <input type="password" id="regPassword" name="password" autocomplete="new-password" placeholder="At least 6 characters" required minlength="6" />
+            </div>
+            <div class="form-group">
+              <label for="regRole">I am joining as</label>
+              <select id="regRole" name="role" required>
+                <option value="">Choose role</option>
+                <option value="member">Member — train &amp; book classes</option>
+                <option value="trainer">Trainer — coach &amp; manage sessions</option>
+              </select>
+            </div>
+            <div id="trainerFields" class="trainer-fields">
+              <p class="trainer-fields-title">Trainer profile</p>
+              <div class="form-group">
+                <label for="regSpecialty">Specialty</label>
+                <input type="text" id="regSpecialty" placeholder="e.g. HIIT, Yoga, Strength" />
+              </div>
+              <div class="form-group">
+                <label for="regExperience">Experience</label>
+                <input type="text" id="regExperience" placeholder="e.g. 5+ years" />
+              </div>
+              <div class="form-group">
+                <label for="regCertifications">Certifications</label>
+                <input type="text" id="regCertifications" placeholder="e.g. Level 3 PT" />
+              </div>
+              <div class="form-group">
+                <label for="regBio">Short bio</label>
+                <textarea id="regBio" rows="3" placeholder="Tell members about your coaching style…"></textarea>
+              </div>
+            </div>
+            <button type="submit">Create account</button>
+            <div id="registerMsg" class="msg"></div>
+          </form>
+          <p class="auth-switch-line">
+            Already have an account?
+            <button
+              type="button"
+              class="auth-switch-btn"
+              id="showLoginBtn"
+              onclick="document.getElementById('registerView').hidden=true;document.getElementById('loginView').hidden=false;document.getElementById('authCard')?.classList.remove('auth-card-register');if(window.showLoginView)window.showLoginView();"
+            >Sign in</button>
+          </p>
         </div>
 
-        <!-- Register Form -->
-        <div id="registerPanel" class="form-panel">
-            <form id="registerForm">
-                <div class="form-group">
-                    <input type="text" id="regName" placeholder="Full Name" required>
-                </div>
-                <div class="form-group">
-                    <input type="email" id="regEmail" placeholder="Email" required>
-                </div>
-                <div class="form-group">
-                    <input type="password" id="regPassword" placeholder="Password (min 6 characters)" required>
-                </div>
-                <div class="form-group">
-                    <select id="regRole" required>
-                        <option value="">Select Role</option>
-                        <option value="member">Member</option>
-                        <option value="trainer">Trainer</option>
-                        
-                    </select>
-                </div>
-
-                <!-- Trainer-specific fields (hidden initially) -->
-                <div id="trainerFields" class="trainer-fields">
-                    <div class="form-group">
-                        <input type="text" id="regSpecialty" placeholder="Specialty (e.g., Yoga, HIIT)">
-                    </div>
-                    <div class="form-group">
-                        <input type="text" id="regExperience" placeholder="Experience (e.g., 5+ years)">
-                    </div>
-                    <div class="form-group">
-                        <input type="text" id="regCertifications" placeholder="Certifications">
-                    </div>
-                    <div class="form-group">
-                        <textarea id="regBio" rows="2" placeholder="Short bio..."></textarea>
-                    </div>
-                </div>
-
-                <button type="submit">Create Account</button>
-                <div id="registerMsg" class="msg"></div>
-            </form>
-        </div>
-        <div class="note">
-            🔐 Trainers: After registration, a default class will be created for you.
-        </div>
+          <p class="auth-footer-note auth-member-only auth-member-hub-hide">Trainers: a default class is created for you after registration so you can start scheduling right away.</p>
+          <p class="auth-footer-links auth-member-only auth-member-hub-hide">
+          <a href="membership.html">View membership plans</a>
+          ·
+          <a href="index.html">Back to home</a>
+        </p>
+          <p class="auth-footer-links auth-member-hub-only" hidden>
+            <a href="membership.html">View plans</a>
+            ·
+            <a href="schedule.html">Class schedule</a>
+            ·
+            <a href="index.html">Back to home</a>
+          </p>
+        <p class="auth-footer-links auth-admin-only" hidden>
+          <a href="index.html">Back to public site</a>
+        </p>
+      </div>
     </div>
+  </div>
 
-    <script>
-        const API_BASE = window.location.protocol === 'file:' ? 'http://localhost:5000/api' : '/api';
-
-        // Tab switching
-        const tabs = document.querySelectorAll('.tab');
-        const loginPanel = document.getElementById('loginPanel');
-        const registerPanel = document.getElementById('registerPanel');
-
-        tabs.forEach(tab => {
-            tab.addEventListener('click', () => {
-                const target = tab.getAttribute('data-tab');
-                tabs.forEach(t => t.classList.remove('active'));
-                tab.classList.add('active');
-                if (target === 'login') {
-                    loginPanel.classList.add('active');
-                    registerPanel.classList.remove('active');
-                } else {
-                    loginPanel.classList.remove('active');
-                    registerPanel.classList.add('active');
-                }
-                // Clear messages
-                document.getElementById('loginMsg').innerHTML = '';
-                document.getElementById('registerMsg').innerHTML = '';
-            });
-        });
-
-        // Show/hide trainer fields based on role selection
-        const roleSelect = document.getElementById('regRole');
-        const trainerFieldsDiv = document.getElementById('trainerFields');
-        roleSelect.addEventListener('change', () => {
-            if (roleSelect.value === 'trainer') {
-                trainerFieldsDiv.classList.add('show');
-            } else {
-                trainerFieldsDiv.classList.remove('show');
-            }
-        });
-
-        // Login handler
-        document.getElementById('loginForm').addEventListener('submit', async (e) => {
-            e.preventDefault();
-            const email = document.getElementById('loginEmail').value.trim();
-            const password = document.getElementById('loginPassword').value;
-            const msgDiv = document.getElementById('loginMsg');
-
-            msgDiv.innerHTML = 'Logging in...';
-            try {
-                const res = await fetch(`${API_BASE}/login`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ email, password })
-                });
-                const data = await res.json();
-                if (!res.ok) {
-                    // Handle pending approval for trainers
-                    if (data.status === 'pending_approval') {
-                        msgDiv.innerHTML = '⏳ ' + data.error + '<br><small style="color: #ffc107;">Please contact an administrator for approval.</small>';
-                        msgDiv.classList.add('warning-msg');
-                        return;
-                    }
-                    throw new Error(data.error || 'Login failed');
-                }
-                // Store user in localStorage
-                localStorage.setItem('auraUser', JSON.stringify(data.user));
-                msgDiv.innerHTML = '✅ Login successful! Redirecting...';
-                // Redirect based on role
-                if (data.user.role === 'trainer') {
-                    window.location.href = '/trainer-dashboard.html';
-                } else {
-                    window.location.href = '/index.html';
-                }
-            } catch (err) {
-                msgDiv.innerHTML = '❌ ' + err.message;
-                msgDiv.classList.add('error-msg');
-            }
-        });
-
-        // Registration handler
-        document.getElementById('registerForm').addEventListener('submit', async (e) => {
-            e.preventDefault();
-            const name = document.getElementById('regName').value.trim();
-            const email = document.getElementById('regEmail').value.trim();
-            const password = document.getElementById('regPassword').value;
-            const role = document.getElementById('regRole').value;
-            const msgDiv = document.getElementById('registerMsg');
-
-            // Basic validation
-            if (!name || !email || !password || !role) {
-                msgDiv.innerHTML = '❌ All fields are required.';
-                return;
-            }
-            if (password.length < 6) {
-                msgDiv.innerHTML = '❌ Password must be at least 6 characters.';
-                return;
-            }
-
-            const payload = { name, email, password, role };
-            if (role === 'trainer') {
-                payload.specialty = document.getElementById('regSpecialty').value || 'Fitness Trainer';
-                payload.experience = document.getElementById('regExperience').value || '0+ years';
-                payload.certifications = document.getElementById('regCertifications').value || 'Certified Trainer';
-                payload.bio = document.getElementById('regBio').value || 'Passionate about fitness.';
-            }
-
-            msgDiv.innerHTML = 'Creating account...';
-            try {
-                const res = await fetch(`${API_BASE}/register`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(payload)
-                });
-                const data = await res.json();
-                if (!res.ok) throw new Error(data.error || 'Registration failed');
-                msgDiv.innerHTML = '✅ Registration successful! Please login.';
-                // Switch to login tab after 1.5 seconds
-                setTimeout(() => {
-                    // Clear form
-                    document.getElementById('regName').value = '';
-                    document.getElementById('regEmail').value = '';
-                    document.getElementById('regPassword').value = '';
-                    document.getElementById('regRole').value = '';
-                    trainerFieldsDiv.classList.remove('show');
-                    // Switch tab
-                    tabs.forEach(t => t.classList.remove('active'));
-                    tabs[0].classList.add('active');
-                    loginPanel.classList.add('active');
-                    registerPanel.classList.remove('active');
-                    msgDiv.innerHTML = '';
-                }, 1500);
-            } catch (err) {
-                msgDiv.innerHTML = '❌ ' + err.message;
-            }
-        });
-    </script>
+  <script src="login-page.js"></script>
 </body>
 </html>

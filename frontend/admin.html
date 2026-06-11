@@ -6,6 +6,8 @@
     <title>AuraAthletic – Admin Dashboard</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,500;14..32,600;14..32,700;14..32,800&family=Montserrat:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="site-theme.css">
+    <script src="site-chrome.js" defer></script>
     <script src="auth.js"></script>
     <style>
         /* Admin Panel Premium Styles */
@@ -163,136 +165,6 @@
             border-radius: 50px;
         }
         
-        /* Trainer Approval Section */
-        .trainer-approval-section {
-            background: rgba(20, 22, 28, 0.7);
-            backdrop-filter: blur(10px);
-            border-radius: 24px;
-            padding: 1.5rem;
-            margin-bottom: 2rem;
-            border: 1px solid rgba(212, 175, 55, 0.2);
-        }
-
-        .approval-tabs {
-            display: flex;
-            gap: 0.5rem;
-            margin-bottom: 1rem;
-        }
-
-        .tab-btn {
-            background: rgba(0,0,0,0.5);
-            border: 1px solid rgba(212,175,55,0.3);
-            color: rgba(255,255,255,0.7);
-            padding: 0.5rem 1rem;
-            border-radius: 12px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-
-        .tab-btn.active {
-            background: rgba(212, 175, 55, 0.2);
-            color: var(--gold);
-            border-color: var(--gold);
-        }
-
-        .tab-btn:hover {
-            background: rgba(212, 175, 55, 0.1);
-            color: var(--gold);
-        }
-
-        .trainers-list {
-            max-height: 400px;
-            overflow-y: auto;
-        }
-
-        .trainers-list.hidden {
-            display: none;
-        }
-
-        .trainer-card {
-            background: rgba(0,0,0,0.3);
-            border-radius: 16px;
-            padding: 1rem;
-            margin-bottom: 1rem;
-            border: 1px solid rgba(212,175,55,0.2);
-        }
-
-        .trainer-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 0.5rem;
-        }
-
-        .trainer-name {
-            font-weight: 600;
-            color: var(--gold);
-        }
-
-        .trainer-status {
-            padding: 0.2rem 0.5rem;
-            border-radius: 12px;
-            font-size: 0.7rem;
-            font-weight: 600;
-        }
-
-        .status-pending {
-            background: rgba(255, 193, 7, 0.2);
-            color: #ffc107;
-        }
-
-        .status-approved {
-            background: rgba(40, 167, 69, 0.2);
-            color: #28a745;
-        }
-
-        .trainer-details {
-            color: rgba(255,255,255,0.7);
-            font-size: 0.85rem;
-            margin-bottom: 0.5rem;
-        }
-
-        .trainer-actions {
-            display: flex;
-            gap: 0.5rem;
-        }
-
-        .btn-approve {
-            background: rgba(40, 167, 69, 0.2);
-            color: #28a745;
-            border: 1px solid #28a745;
-            padding: 0.3rem 0.8rem;
-            border-radius: 8px;
-            cursor: pointer;
-            font-size: 0.8rem;
-            transition: all 0.3s ease;
-        }
-
-        .btn-approve:hover {
-            background: rgba(40, 167, 69, 0.4);
-        }
-
-        .btn-reject {
-            background: rgba(220, 53, 69, 0.2);
-            color: #dc3545;
-            border: 1px solid #dc3545;
-            padding: 0.3rem 0.8rem;
-            border-radius: 8px;
-            cursor: pointer;
-            font-size: 0.8rem;
-            transition: all 0.3s ease;
-        }
-
-        .btn-reject:hover {
-            background: rgba(220, 53, 69, 0.4);
-        }
-
-        .no-trainers {
-            text-align: center;
-            color: rgba(255,255,255,0.5);
-            padding: 2rem;
-        }
-
         /* Assign Trainer Section */
         .assign-section {
             background: rgba(20, 22, 28, 0.7);
@@ -432,6 +304,21 @@
         }
         
         .modal.show { display: flex; }
+
+        .membership-actions {
+            display: flex;
+            flex-direction: column;
+            gap: 0.35rem;
+            align-items: flex-start;
+        }
+
+        .membership-btn {
+            padding: 0.35rem 0.65rem;
+            font-size: 0.75rem;
+            border-radius: 8px;
+            border: none;
+            cursor: pointer;
+        }
         
         .modal-content {
             background: rgba(20,22,28,0.95);
@@ -454,23 +341,8 @@
         }
     </style>
 </head>
-<body>
-    <nav class="navbar">
-        <div class="nav-container">
-            <a href="/" class="logo">AURA ATHLETIC</a>
-            <ul class="nav-links">
-                <li><a href="/">Home</a></li>
-                <li><a href="/subscription.html">Membership</a></li>
-                <li><a href="/schedule.html">Schedule</a></li>
-                <li><a href="/trainers.html">Trainers</a></li>
-                <li><a href="/admin.html" class="active">Admin</a></li>
-            </ul>
-            <div class="nav-actions"></div>
-            <button class="menu-btn" onclick="toggleMenu()">☰</button>
-        </div>
-    </nav>
-
-    <div class="admin-container">
+<body class="site-page" data-page="admin">
+<div class="admin-container">
         <!-- Header -->
         <div class="admin-header">
             <span class="admin-badge">⚡ ADMIN DASHBOARD</span>
@@ -484,6 +356,38 @@
             <div class="stat-card"><div class="stat-icon">📅</div><div class="stat-number" id="totalBookings">-</div><div class="stat-label">Total Bookings</div></div>
             <div class="stat-card"><div class="stat-icon">⚠️</div><div class="stat-number" id="fullClasses">-</div><div class="stat-label">Full Classes</div></div>
             <div class="stat-card"><div class="stat-icon">👥</div><div class="stat-number" id="totalCapacity">-</div><div class="stat-label">Total Capacity</div></div>
+            <div class="stat-card"><div class="stat-icon">✅</div><div class="stat-number" id="activeMemberships">-</div><div class="stat-label">Active memberships (MB-20)</div></div>
+            <div class="stat-card"><div class="stat-icon">💳</div><div class="stat-number" id="totalMemberships">-</div><div class="stat-label">All memberships</div></div>
+            <div class="stat-card"><div class="stat-icon">£</div><div class="stat-number" id="billingRevenue">-</div><div class="stat-label">Revenue (MB-22)</div></div>
+        </div>
+
+        <!-- Jira Epic 6: MB-20, MB-21 -->
+        <div class="form-section" style="margin-bottom: 2rem;">
+            <h3 style="color: var(--gold); margin-bottom: 0.5rem;">Active memberships</h3>
+            <p style="color: rgba(255,255,255,0.5); font-size: 0.85rem; margin-bottom: 1rem;">MB-20 — view all members with a currently valid plan (status active and not past end date).</p>
+            <div class="form-row">
+                <div class="form-group">
+                    <select id="membershipStatusFilter" onchange="fetchMemberships()">
+                        <option value="active" selected>Active only</option>
+                        <option value="">All statuses</option>
+                        <option value="expired">Expired</option>
+                        <option value="cancelled">Cancelled</option>
+                    </select>
+                </div>
+                <div class="form-group"><input type="text" id="membershipPlanFilter" placeholder="Filter planId" oninput="fetchMemberships()" /></div>
+                <div class="form-group"><input type="text" id="membershipSearchFilter" placeholder="Search name or email" oninput="fetchMemberships()" /></div>
+            </div>
+            <div class="action-buttons" style="margin-bottom: 1rem;">
+                <button type="button" class="btn-gold" onclick="showActiveMemberships()">Show active only</button>
+                <button type="button" class="btn-secondary" onclick="exportMembershipsCSV()">Export CSV</button>
+            </div>
+            <p id="membership-count-line" style="color: var(--gold); font-size: 0.85rem; margin-bottom: 0.75rem;"></p>
+            <div class="table-container">
+                <table class="admin-table">
+                    <thead><tr><th>Member</th><th>Plan</th><th>Location</th><th>Amount</th><th>Start</th><th>End</th><th>Status</th><th>Actions</th></tr></thead>
+                    <tbody id="membershipsTableBody"><tr><td colspan="8">Loading memberships...</td></tr></tbody>
+                </table>
+            </div>
         </div>
 
         <!-- Action Buttons -->
@@ -546,21 +450,6 @@
             </form>
         </div>
 
-        <!-- Trainer Approval Section -->
-        <div class="trainer-approval-section">
-            <h3 style="color: var(--gold); margin-bottom: 1rem;">✅ Trainer Approvals</h3>
-            <div class="approval-tabs">
-                <button class="tab-btn active" onclick="showPendingTrainers()">⏳ Pending Approval</button>
-                <button class="tab-btn" onclick="showApprovedTrainers()">✅ Approved Trainers</button>
-            </div>
-            <div id="pendingTrainersList" class="trainers-list">
-                <div class="loading">Loading pending trainers...</div>
-            </div>
-            <div id="approvedTrainersList" class="trainers-list hidden">
-                <div class="loading">Loading approved trainers...</div>
-            </div>
-        </div>
-
         <!-- Assign Trainer Section -->
         <div class="assign-section">
             <h3 style="color: var(--gold); margin-bottom: 1rem;">👨‍🏫 Assign Trainer to Class</h3>
@@ -621,48 +510,193 @@
         </div>
     </div>
 
-    <footer class="footer"><p>© 2025 AURA ATHLETIC — Admin Dashboard</p></footer>
-
-    <script>
+    <div id="membershipActionModal" class="modal">
+        <div class="modal-content">
+            <h3 id="membershipActionTitle">Update membership</h3>
+            <p id="membershipActionDesc"></p>
+            <div class="form-group" style="margin: 1rem 0;">
+                <input type="text" id="membershipActionReason" placeholder="Reason (optional)" />
+            </div>
+            <div class="action-buttons" style="justify-content: center;">
+                <button type="button" class="btn-primary" id="membershipActionConfirmBtn" onclick="confirmMembershipAction()">Confirm</button>
+                <button type="button" class="btn-secondary" onclick="closeMembershipActionModal()">Close</button>
+            </div>
+        </div>
+    </div>
+<script>
         let allClasses = [];
         let deleteId = null;
-        const apiBase = window.location.protocol === 'file:' ? 'http://localhost:5000' : '';
+        const apiBase = window.location.protocol === 'file:' ? 'http://localhost:5001' : '';
 
-        // Get auth token
-        function getAuthToken() {
-            const user = JSON.parse(localStorage.getItem('auraUser') || '{}');
-            return user.token;
-        }
-
-        // Helper function to make authenticated requests
-        async function authenticatedFetch(url, options = {}) {
-            const token = getAuthToken();
-            if (!token) {
-                alert('Authentication required. Please login again.');
-                window.location.href = '/login.html';
-                return;
-            }
-
-            const defaultOptions = {
-                headers: {
-                    'Authorization': `Bearer ${token}`,
-                    'Content-Type': 'application/json',
-                    ...options.headers
-                }
-            };
-
-            return fetch(url, { ...defaultOptions, ...options });
-        }
+        function toggleMenu() { document.querySelector('.nav-links')?.classList.toggle('show'); }
 
         async function fetchStats() {
             try {
-                const res = await authenticatedFetch(`${apiBase}/api/admin/stats`);
+                const res = await fetch(`${apiBase}/api/admin/stats`);
                 const stats = await res.json();
                 document.getElementById('totalClasses').innerText = stats.totalClasses || 0;
                 document.getElementById('totalBookings').innerText = stats.totalBookings || 0;
                 document.getElementById('fullClasses').innerText = stats.fullClasses || 0;
                 document.getElementById('totalCapacity').innerText = stats.totalCapacity || 0;
             } catch(e) { console.error('Stats error:', e); }
+            try {
+                const b = await fetch(`${apiBase}/api/admin/billing/stats`);
+                const billing = await b.json();
+                document.getElementById('activeMemberships').innerText = billing.activeMemberships ?? 0;
+                document.getElementById('totalMemberships').innerText = billing.totalMemberships ?? 0;
+                document.getElementById('billingRevenue').innerText = '£' + (billing.totalRevenue ?? 0);
+            } catch (e) { console.error('Billing stats error:', e); }
+        }
+
+        let lastMembershipRows = [];
+        let pendingMembershipAction = { id: null, action: null };
+
+        function membershipIdStr(m) {
+            const id = m._id;
+            if (!id) return '';
+            if (typeof id === 'string') return id;
+            if (id.$oid) return id.$oid;
+            return String(id);
+        }
+
+        function membershipActions(m) {
+            const id = membershipIdStr(m);
+            if (!id) return '—';
+            const parts = [];
+            if (!m.isActive) {
+                parts.push(`<button type="button" class="btn-gold membership-btn" onclick="openMembershipAction('${id}','activate')">Activate</button>`);
+            }
+            if (m.isActive || m.status === 'active') {
+                parts.push(`<button type="button" class="btn-danger membership-btn" onclick="openMembershipAction('${id}','cancel')">Cancel</button>`);
+            }
+            return parts.length ? `<div class="membership-actions">${parts.join('')}</div>` : '—';
+        }
+
+        function statusBadge(m) {
+            if (m.isActive) return '<span class="status-badge status-active">Active</span>';
+            if (m.status === 'expired') return '<span class="status-badge status-full">Expired</span>';
+            if (m.status === 'cancelled') return '<span class="status-badge" style="background:rgba(255,255,255,0.1);">Cancelled</span>';
+            return `<span class="status-badge">${m.status || '—'}</span>`;
+        }
+
+        async function fetchMemberships() {
+            const tbody = document.getElementById('membershipsTableBody');
+            const countLine = document.getElementById('membership-count-line');
+            try {
+                const status = document.getElementById('membershipStatusFilter')?.value ?? 'active';
+                const planId = document.getElementById('membershipPlanFilter')?.value || '';
+                const search = document.getElementById('membershipSearchFilter')?.value || '';
+                const qs = new URLSearchParams();
+                if (status) qs.set('status', status);
+                if (planId) qs.set('planId', planId);
+                if (search) qs.set('search', search);
+                if (status === 'active') qs.set('activeOnly', 'true');
+
+                const res = await fetch(`${apiBase}/api/admin/memberships?${qs}`);
+                const data = await res.json();
+                const rows = data.memberships || (Array.isArray(data) ? data : []);
+                lastMembershipRows = rows;
+
+                countLine.textContent = `${data.count ?? rows.length} shown · ${data.activeCount ?? 0} currently active`;
+
+                if (!rows.length) {
+                    tbody.innerHTML = '<tr><td colspan="8">No memberships match this filter</td></tr>';
+                    return;
+                }
+                tbody.innerHTML = rows.map((m) => {
+                    const u = m.userDetails || {};
+                    const start = m.startDate ? new Date(m.startDate).toLocaleDateString() : '-';
+                    const end = m.endDate ? new Date(m.endDate).toLocaleDateString() : '-';
+                    return `<tr>
+                        <td><strong>${m.memberName || `${u.firstName || ''} ${u.lastName || ''}`}</strong><br><small>${m.memberEmail || u.email || ''}</small></td>
+                        <td>${m.planLabel || m.planId}<br><small>${m.planId || ''}</small></td>
+                        <td>${u.location || '—'}</td>
+                        <td>£${m.amount ?? 0}</td>
+                        <td>${start}</td>
+                        <td>${end}</td>
+                        <td>${statusBadge(m)}</td>
+                        <td>${membershipActions(m)}</td>
+                    </tr>`;
+                }).join('');
+            } catch (e) {
+                tbody.innerHTML = '<tr><td colspan="8">Failed to load memberships</td></tr>';
+                countLine.textContent = '';
+            }
+        }
+
+        function showActiveMemberships() {
+            document.getElementById('membershipStatusFilter').value = 'active';
+            document.getElementById('membershipPlanFilter').value = '';
+            document.getElementById('membershipSearchFilter').value = '';
+            fetchMemberships();
+        }
+
+        function openMembershipAction(id, action) {
+            pendingMembershipAction = { id, action };
+            const row = lastMembershipRows.find((m) => membershipIdStr(m) === id);
+            const name = row?.memberName || row?.userDetails?.email || 'this member';
+            const plan = row?.planLabel || row?.planId || 'plan';
+            const title = document.getElementById('membershipActionTitle');
+            const desc = document.getElementById('membershipActionDesc');
+            const btn = document.getElementById('membershipActionConfirmBtn');
+            document.getElementById('membershipActionReason').value = '';
+
+            if (action === 'activate') {
+                title.textContent = 'Activate membership';
+                desc.textContent = `Reactivate ${plan} for ${name}? If the previous period ended, a new start/end date will be set from today.`;
+                btn.className = 'btn-gold';
+                btn.textContent = 'Activate';
+            } else {
+                title.textContent = 'Cancel membership';
+                desc.textContent = `Cancel ${plan} for ${name}? They will lose active access immediately.`;
+                btn.className = 'btn-danger';
+                btn.textContent = 'Cancel membership';
+            }
+            document.getElementById('membershipActionModal').classList.add('show');
+        }
+
+        function closeMembershipActionModal() {
+            document.getElementById('membershipActionModal').classList.remove('show');
+            pendingMembershipAction = { id: null, action: null };
+        }
+
+        async function confirmMembershipAction() {
+            const { id, action } = pendingMembershipAction;
+            if (!id || !action) return;
+            const reason = document.getElementById('membershipActionReason').value.trim();
+            const btn = document.getElementById('membershipActionConfirmBtn');
+            btn.disabled = true;
+            try {
+                const res = await fetch(`${apiBase}/api/admin/memberships/${id}`, {
+                    method: 'PATCH',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ action, reason })
+                });
+                const data = await res.json();
+                if (!res.ok) throw new Error(data.error || 'Update failed');
+                closeMembershipActionModal();
+                await fetchMemberships();
+                await fetchStats();
+                alert(data.message || 'Membership updated');
+            } catch (e) {
+                alert(e.message || 'Could not update membership');
+            } finally {
+                btn.disabled = false;
+            }
+        }
+
+        function exportMembershipsCSV() {
+            if (!lastMembershipRows.length) { alert('No data to export'); return; }
+            let csv = 'Name,Email,Plan,PlanId,Location,Amount,Start,End,Status,Active\n';
+            lastMembershipRows.forEach((m) => {
+                const u = m.userDetails || {};
+                csv += `"${m.memberName || ''}","${m.memberEmail || u.email || ''}","${m.planLabel || ''}",${m.planId || ''},"${u.location || ''}",${m.amount ?? 0},${m.startDate || ''},${m.endDate || ''},${m.status},${m.isActive ? 'yes' : 'no'}\n`;
+            });
+            const blob = new Blob([csv], { type: 'text/csv' });
+            const a = document.createElement('a');
+            a.href = URL.createObjectURL(blob);
+            a.download = `memberships_${new Date().toISOString().split('T')[0]}.csv`;
+            a.click();
         }
 
         async function fetchClasses() {
@@ -751,10 +785,7 @@
             };
             const url = editId ? `${apiBase}/api/admin/classes/${editId}` : `${apiBase}/api/admin/classes`;
             const method = editId ? 'PUT' : 'POST';
-            const res = await authenticatedFetch(url, {
-                method,
-                body: JSON.stringify(classData)
-            });
+            const res = await fetch(url, { method, headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(classData) });
             if (res.ok) {
                 alert(editId ? 'Class updated!' : 'Class added!');
                 hideForm();
@@ -782,16 +813,7 @@
 
         function deleteClass(id) { deleteId = id; document.getElementById('deleteModal').classList.add('show'); }
         async function confirmDelete() {
-            if (deleteId) {
-                const res = await authenticatedFetch(`${apiBase}/api/admin/classes/${deleteId}`, {
-                    method: 'DELETE'
-                });
-                if (res.ok) {
-                    fetchClasses();
-                } else {
-                    alert('Failed to delete class');
-                }
-            }
+            if (deleteId) { await fetch(`${apiBase}/api/admin/classes/${deleteId}`, { method: 'DELETE' }); fetchClasses(); }
             closeDeleteModal();
         }
         function closeDeleteModal() { document.getElementById('deleteModal').classList.remove('show'); deleteId = null; }
@@ -813,10 +835,7 @@
             const statusDiv = document.getElementById('assignStatus');
             if (!classId || !trainerEmail) { statusDiv.innerHTML = '<span style="color: orange;">Please select both class and trainer</span>'; return; }
             statusDiv.innerHTML = '<span style="color: var(--gold);">Assigning...</span>';
-            const res = await authenticatedFetch(`${apiBase}/api/admin/assign-trainer`, {
-                method: 'POST',
-                body: JSON.stringify({ classId, trainerEmail })
-            });
+            const res = await fetch(`${apiBase}/api/admin/assign-trainer`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ classId, trainerEmail }) });
             if (res.ok) statusDiv.innerHTML = '<span style="color: #10b981;">✅ Trainer assigned successfully!</span>';
             else statusDiv.innerHTML = '<span style="color: red;">❌ Assignment failed</span>';
         }
@@ -831,149 +850,10 @@
             a.click(); URL.revokeObjectURL(url);
         }
 
-        function exportToCSV() {
-            let csv = 'Class,Instructor,Date,Time,Location,Capacity,Booked,Status\n';
-            allClasses.forEach(c => csv += `"${c.name}",${c.instructor},${c.date},${c.time},${c.location},${c.maxCapacity},${c.booked},${c.booked >= c.maxCapacity ? 'Full' : 'Active'}\n`);
-            const blob = new Blob([csv], { type: 'text/csv' });
-            const url = URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = url; a.download = `classes_${new Date().toISOString().split('T')[0]}.csv`;
-            a.click(); URL.revokeObjectURL(url);
-        }
-
-        // Trainer Approval Functions
-        async function fetchPendingTrainers() {
-            try {
-                const res = await authenticatedFetch(`${apiBase}/api/admin/trainers/pending`);
-                if (res.ok) {
-                    const trainers = await res.json();
-                    renderTrainersList(trainers, 'pending');
-                } else {
-                    document.getElementById('pendingTrainersList').innerHTML = '<div class="no-trainers">Failed to load pending trainers</div>';
-                }
-            } catch(e) {
-                console.error('Pending trainers error:', e);
-                document.getElementById('pendingTrainersList').innerHTML = '<div class="no-trainers">Error loading pending trainers</div>';
-            }
-        }
-
-        async function fetchApprovedTrainers() {
-            try {
-                const res = await authenticatedFetch(`${apiBase}/api/admin/trainers/approved`);
-                if (res.ok) {
-                    const trainers = await res.json();
-                    renderTrainersList(trainers, 'approved');
-                } else {
-                    document.getElementById('approvedTrainersList').innerHTML = '<div class="no-trainers">Failed to load approved trainers</div>';
-                }
-            } catch(e) {
-                console.error('Approved trainers error:', e);
-                document.getElementById('approvedTrainersList').innerHTML = '<div class="no-trainers">Error loading approved trainers</div>';
-            }
-        }
-
-        function renderTrainersList(trainers, type) {
-            const containerId = type === 'pending' ? 'pendingTrainersList' : 'approvedTrainersList';
-            const container = document.getElementById(containerId);
-
-            if (!trainers || trainers.length === 0) {
-                container.innerHTML = `<div class="no-trainers">No ${type} trainers found</div>`;
-                return;
-            }
-
-            let html = '';
-            trainers.forEach(trainer => {
-                const statusClass = type === 'pending' ? 'status-pending' : 'status-approved';
-                const statusText = type === 'pending' ? 'Pending Approval' : 'Approved';
-                const actions = type === 'pending' ?
-                    `<button class="btn-approve" onclick="approveTrainer('${trainer._id}')">✅ Approve</button>
-                     <button class="btn-reject" onclick="rejectTrainer('${trainer._id}')">❌ Reject</button>` :
-                    '';
-
-                html += `
-                    <div class="trainer-card">
-                        <div class="trainer-header">
-                            <div class="trainer-name">${trainer.name}</div>
-                            <div class="trainer-status ${statusClass}">${statusText}</div>
-                        </div>
-                        <div class="trainer-details">
-                            <div><strong>Email:</strong> ${trainer.email}</div>
-                            <div><strong>Specialty:</strong> ${trainer.specialty || 'Not specified'}</div>
-                            <div><strong>Experience:</strong> ${trainer.experience || 'Not specified'}</div>
-                            <div><strong>Registered:</strong> ${new Date(trainer.createdAt).toLocaleDateString()}</div>
-                        </div>
-                        <div class="trainer-actions">
-                            ${actions}
-                        </div>
-                    </div>
-                `;
-            });
-            container.innerHTML = html;
-        }
-
-        function showPendingTrainers() {
-            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
-            document.querySelectorAll('.trainers-list').forEach(list => list.classList.add('hidden'));
-            document.querySelector('.tab-btn:first-child').classList.add('active');
-            document.getElementById('pendingTrainersList').classList.remove('hidden');
-            fetchPendingTrainers();
-        }
-
-        function showApprovedTrainers() {
-            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
-            document.querySelectorAll('.trainers-list').forEach(list => list.classList.add('hidden'));
-            document.querySelector('.tab-btn:last-child').classList.add('active');
-            document.getElementById('approvedTrainersList').classList.remove('hidden');
-            fetchApprovedTrainers();
-        }
-
-        async function approveTrainer(trainerId) {
-            if (!confirm('Are you sure you want to approve this trainer?')) return;
-
-            try {
-                const res = await authenticatedFetch(`${apiBase}/api/admin/trainers/${trainerId}/approve`, {
-                    method: 'POST'
-                });
-
-                if (res.ok) {
-                    alert('Trainer approved successfully!');
-                    fetchPendingTrainers();
-                    fetchApprovedTrainers();
-                } else {
-                    const error = await res.json();
-                    alert('Failed to approve trainer: ' + (error.error || 'Unknown error'));
-                }
-            } catch(e) {
-                console.error('Approve trainer error:', e);
-                alert('Error approving trainer');
-            }
-        }
-
-        async function rejectTrainer(trainerId) {
-            if (!confirm('Are you sure you want to reject this trainer? This will permanently delete their account.')) return;
-
-            try {
-                const res = await authenticatedFetch(`${apiBase}/api/admin/trainers/${trainerId}/reject`, {
-                    method: 'DELETE'
-                });
-
-                if (res.ok) {
-                    alert('Trainer application rejected and account removed.');
-                    fetchPendingTrainers();
-                    fetchApprovedTrainers();
-                } else {
-                    const error = await res.json();
-                    alert('Failed to reject trainer: ' + (error.error || 'Unknown error'));
-                }
-            } catch(e) {
-                console.error('Reject trainer error:', e);
-                alert('Error rejecting trainer');
-            }
-        }
-
         document.addEventListener('DOMContentLoaded', () => {
+            if (typeof requireAdmin === 'function' && !requireAdmin()) return;
             fetchClasses();
-            fetchPendingTrainers(); // Load pending trainers on page load
+            fetchMemberships();
         });
     </script>
 </body>

@@ -3,229 +3,57 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Day Pass Details</title>
-  <style>
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-    :root {
-      --bg: #0a0b10;
-      --panel: rgba(20, 22, 28, 0.95);
-      --panel-soft: rgba(255, 255, 255, 0.05);
-      --ink: #ffffff;
-      --muted: #b7b0a1;
-      --accent: #d4af37;
-      --accent-soft: rgba(212, 175, 55, 0.15);
-      --line: rgba(212, 175, 55, 0.18);
-    }
-    body {
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-      background: linear-gradient(135deg, #0a0b10 0%, #14161c 100%);
-      color: var(--ink);
-      min-height: 100vh;
-      padding: 2rem 1rem;
-      display: grid;
-      place-items: center;
-    }
-    .page {
-      width: min(100%, 760px);
-      background: var(--panel);
-      border: 1px solid rgba(212, 175, 55, 0.12);
-      border-radius: 22px;
-      padding: 1.5rem;
-      box-shadow: 0 24px 60px rgba(0, 0, 0, 0.45);
-      backdrop-filter: blur(10px);
-    }
-    .back-link {
-      display: inline-flex;
-      align-items: center;
-      gap: 0.4rem;
-      text-decoration: none;
-      color: var(--accent);
-      font-size: 14px;
-      margin-bottom: 1.25rem;
-    }
-    .eyebrow {
-      font-size: 12px;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-      color: var(--accent);
-      margin-bottom: 0.6rem;
-    }
-    .hero {
-      display: grid;
-      grid-template-columns: 1.3fr 0.9fr;
-      gap: 1rem;
-      align-items: stretch;
-      margin-bottom: 1.5rem;
-    }
-    .hero-copy, .hero-card {
-      border-radius: 18px;
-      padding: 1.4rem;
-    }
-    .hero-copy {
-      background: rgba(255, 255, 255, 0.05);
-      border: 1px solid rgba(212, 175, 55, 0.12);
-    }
-    .hero-copy h1 {
-      font-size: clamp(2rem, 4vw, 3rem);
-      line-height: 1;
-      margin-bottom: 0.8rem;
-      font-weight: 600;
-      color: #fff;
-    }
-    .hero-copy p {
-      color: var(--muted);
-      font-size: 15px;
-      line-height: 1.6;
-      max-width: 46ch;
-    }
-    .hero-card {
-      background: rgba(0, 0, 0, 0.45);
-      color: #fff;
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-      gap: 1rem;
-      border: 1px solid rgba(212, 175, 55, 0.14);
-    }
-    .price {
-      font-size: 2.5rem;
-      font-weight: 600;
-      line-height: 1;
-      color: #fff;
-    }
-    .price span {
-      font-size: 0.95rem;
-      color: rgba(255, 255, 255, 0.75);
-      font-weight: 400;
-    }
-    .card-note {
-      font-size: 14px;
-      color: rgba(255, 255, 255, 0.8);
-      line-height: 1.5;
-    }
-    .content {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 1rem;
-    }
-    .panel {
-      background: rgba(255, 255, 255, 0.05);
-      border: 1px solid rgba(212, 175, 55, 0.12);
-      border-radius: 18px;
-      padding: 1.25rem;
-    }
-    .panel h2 {
-      font-size: 1rem;
-      margin-bottom: 0.85rem;
-      color: #fff;
-    }
-    .feature-list {
-      list-style: none;
-      display: grid;
-      gap: 0.7rem;
-      color: rgba(255, 255, 255, 0.8);
-      font-size: 14px;
-    }
-    .feature-list li {
-      display: flex;
-      align-items: center;
-      gap: 0.65rem;
-    }
-    .feature-list li::before {
-      content: "";
-      width: 10px;
-      height: 10px;
-      border-radius: 999px;
-      background: var(--accent);
-      flex-shrink: 0;
-    }
-    .summary {
-      display: grid;
-      gap: 0.8rem;
-      color: var(--muted);
-      font-size: 14px;
-      line-height: 1.6;
-    }
-    .cta-row {
-      display: flex;
-      gap: 0.8rem;
-      margin-top: 1rem;
-      flex-wrap: wrap;
-    }
-    .button {
-      appearance: none;
-      border: 0;
-      border-radius: 999px;
-      padding: 0.95rem 1.2rem;
-      cursor: pointer;
-      font-size: 14px;
-      text-decoration: none;
-      text-align: center;
-    }
-    .button.primary {
-      background: linear-gradient(135deg, #d4af37, #b8960c);
-      color: #0a0b10;
-      flex: 1 1 220px;
-    }
-    .button.secondary {
-      background: rgba(255, 255, 255, 0.08);
-      color: #fff;
-      border: 1px solid rgba(212, 175, 55, 0.2);
-      flex: 1 1 180px;
-    }
-    .pill {
-      display: inline-flex;
-      align-items: center;
-      gap: 0.45rem;
-      background: rgba(212, 175, 55, 0.12);
-      color: #d4af37;
-      border-radius: 999px;
-      padding: 0.45rem 0.75rem;
-      font-size: 12px;
-      margin-bottom: 1rem;
-    }
-    @media (max-width: 720px) {
-      .hero, .content { grid-template-columns: 1fr; }
-      .page { padding: 1rem; }
-    }
-  </style>
+  <title>Day Pass — Aura Athletic</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,500;14..32,600;14..32,700;14..32,800&family=Montserrat:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+  <link rel="stylesheet" href="site-theme.css" />
+  <link rel="stylesheet" href="plan-detail.css" />
+  <script src="auth.js"></script>
+  <script src="site-chrome.js" defer></script>
 </head>
-<body>
+<body class="site-page plan-detail-page" data-page="daypass">
   <main class="page">
-    <a class="back-link" href="gym-plans.html">&#8592; Back to plans</a>
-    <p class="eyebrow">Day Pass</p>
-    <div class="hero">
-      <section class="hero-copy">
-        <div class="pill" id="pass-tag">Selected pass</div>
-        <h1 id="plan-name">Single day</h1>
-        <p id="plan-desc">One-time gym access for training when it suits you.</p>
-      </section>
-      <aside class="hero-card">
-        <div>
-          <p class="eyebrow" style="color: rgba(255,255,255,0.65); margin-bottom: 0.9rem;">Today’s access</p>
-          <p class="price" id="plan-price">£8 <span>/ day</span></p>
-        </div>
-        <p class="card-note" id="plan-note">A simple pass for a focused workout with no ongoing commitment.</p>
-      </aside>
-    </div>
+    <a class="back-link" href="membership.html">&#8592; Back to plans</a>
 
-    <section class="content">
-      <div class="panel">
-        <h2>What’s included</h2>
-        <ul class="feature-list" id="feature-list"></ul>
-      </div>
-      <div class="panel">
-        <h2>Next step</h2>
-        <div class="summary">
-          <p id="summary-copy">You selected a flexible day pass with one-time access to the gym floor and changing facilities.</p>
-          <p>Use this page as your follow-up step for payment, member details, or booking confirmation.</p>
+    <div class="plan-detail-shell">
+      <div class="plan-detail-top">
+        <div class="plan-detail-intro">
+          <p class="eyebrow">Day pass</p>
+          <div class="pill" id="pass-tag">Selected pass</div>
+          <h1 id="plan-name">Single day</h1>
+          <p id="plan-desc">One-time gym access for training when it suits you.</p>
         </div>
-        <div class="cta-row">
-          <a class="button primary" id="checkout-link" href="checkout.html?plan=single-day">Continue to checkout</a>
-          <a class="button secondary" href="gym-plans.html">Choose another plan</a>
+        <aside class="plan-price-card">
+          <div>
+            <p class="eyebrow">Today&rsquo;s access</p>
+            <p class="price" id="plan-price">£8 <span>/ day</span></p>
+          </div>
+          <p class="card-note" id="plan-note">A simple pass for a focused workout with no ongoing commitment.</p>
+          <div class="plan-price-meta">
+            <span>No contract</span>
+            <span>Instant access</span>
+          </div>
+        </aside>
+      </div>
+
+      <div class="plan-detail-body">
+        <div class="panel">
+          <h2>What&rsquo;s included</h2>
+          <ul class="feature-list" id="feature-list"></ul>
+        </div>
+        <div class="panel">
+          <h2>Next step</h2>
+          <div class="summary">
+            <p id="summary-copy">You selected a flexible day pass with one-time access to the gym floor and changing facilities.</p>
+            <p>Continue to secure checkout — sign in or register as a member to complete payment.</p>
+          </div>
+          <div class="cta-row">
+            <a class="button primary" id="checkout-link" href="checkout.html?plan=single-day">Continue to checkout</a>
+            <a class="button secondary" href="membership.html">Choose another plan</a>
+          </div>
         </div>
       </div>
-    </section>
+    </div>
   </main>
 
   <script>

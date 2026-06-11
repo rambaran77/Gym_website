@@ -1,41 +1,36 @@
-// auth.js - Role-based authentication for AuraAthletic (Backend Connected)
+// auth.js - Role-based authentication for AuraAthletic
 
-const API_BASE = window.location.protocol === 'file:' ? 'http://localhost:5000/api' : '/api';
+const API_BASE = window.location.protocol === 'file:' ? 'http://localhost:5001/api' : '/api';
 
-// User roles
 const ROLES = {
     MEMBER: 'member',
     TRAINER: 'trainer',
     ADMIN: 'admin'
 };
 
+const PAGES = {
+    MEMBER: ['member-dashboard.html', 'my-membership.html'],
+    TRAINER: ['trainer-dashboard.html'],
+    ADMIN: ['admin.html']
+};
 
-// BACKEND AUTHENTICATION
+function getDashboardPath(role) {
+    if (role === ROLES.TRAINER) return '/trainer-dashboard.html';
+    if (role === ROLES.ADMIN) return '/admin.html';
+    return '/member-dashboard.html';
+}
 
-
-// Register new user (sends to backend MongoDB)
 async function registerUser(name, email, password, role, trainerDetails = {}) {
     try {
-        const requestBody = {
-            name,
-            email,
-            password,
-            role,
-            ...trainerDetails
-        };
-
         const response = await fetch(`${API_BASE}/register`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(requestBody)
+            body: JSON.stringify({ name, email, password, role, ...trainerDetails })
         });
-
         const data = await response.json();
-
         if (!response.ok) {
             return { success: false, message: data.error || 'Registration failed' };
         }
-
         return { success: true, message: 'Registration successful', user: data.user };
     } catch (error) {
         console.error('Registration error:', error);
@@ -43,7 +38,6 @@ async function registerUser(name, email, password, role, trainerDetails = {}) {
     }
 }
 
-// Login user (checks backend MongoDB)
 async function loginUser(email, password) {
     try {
         const response = await fetch(`${API_BASE}/login`, {
@@ -51,198 +45,209 @@ async function loginUser(email, password) {
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ email, password })
         });
-
         const data = await response.json();
-
         if (!response.ok) {
-            // Handle pending approval for trainers
-            if (data.status === 'pending_approval') {
-                return {
-                    success: false,
-                    message: data.error,
-                    status: 'pending_approval'
-                };
-            }
             return { success: false, message: data.error || 'Login failed' };
         }
-
-        // Store user session in localStorage
         localStorage.setItem('auraUser', JSON.stringify(data.user));
-
-        return {
-            success: true,
-            message: 'Login successful',
-            role: data.user.role,
-            user: data.user,
-            approved: data.user.approved
-        };
+        return { success: true, message: 'Login successful', role: data.user.role, user: data.user };
     } catch (error) {
         console.error('Login error:', error);
         return { success: false, message: 'Network error. Make sure server is running.' };
     }
 }
 
-// Logout user
 function logoutUser() {
     localStorage.removeItem('auraUser');
-    // Redirect to home page
     window.location.href = '/index.html';
 }
 
-// Get current logged-in user from localStorage
 function getCurrentUser() {
     const user = localStorage.getItem('auraUser');
     return user ? JSON.parse(user) : null;
 }
 
-// Check if user is logged in
 function isLoggedIn() {
     return getCurrentUser() !== null;
 }
 
-// Check if user is admin
 function isAdmin() {
     const user = getCurrentUser();
     return user && user.role === ROLES.ADMIN;
 }
 
-// Check if user is trainer
 function isTrainer() {
     const user = getCurrentUser();
     return user && user.role === ROLES.TRAINER;
 }
 
-// Check if user is member
 function isMember() {
     const user = getCurrentUser();
     return user && user.role === ROLES.MEMBER;
 }
 
-// Redirect based on role
+function pathIncludes(fileName) {
+    return window.location.pathname.includes(fileName);
+}
+
 function redirectBasedOnRole() {
     const user = getCurrentUser();
-    const currentPath = window.location.pathname;
+    const path = window.location.pathname;
 
     if (!user) {
-        // Not logged in, allow access to public pages only
-        if (currentPath.includes('admin.html')) {
-            window.location.href = '/login.html';
-        }
-        if (currentPath.includes('trainer-dashboard.html')) {
-            window.location.href = '/login.html';
+        if (pathIncludes('admin.html') || pathIncludes('trainer-dashboard.html') ||
+            pathIncludes('member-dashboard.html') || pathIncludes('checkout.html')) {
+            const dest = pathIncludes('checkout.html')
+                ? `login.html?redirect=${encodeURIComponent(getCheckoutReturnUrl())}&reason=checkout`
+                : 'login.html';
+            window.location.href = dest;
         }
         return;
     }
 
-    // Admin can access everything
-    if (user.role === ROLES.ADMIN) {
-        return;
-    }
+    if (user.role === ROLES.ADMIN) return;
 
-    // Trainer can access trainer dashboard but not admin panel
     if (user.role === ROLES.TRAINER) {
-        if (currentPath.includes('admin.html') && !currentPath.includes('schedule.html')) {
-            alert('Access denied. Admin only area.');
+        if (pathIncludes('admin.html')) {
+            window.location.href = '/trainer-dashboard.html';
+            return;
+        }
+        if (pathIncludes('member-dashboard.html') || pathIncludes('my-membership.html') ||
+            pathIncludes('checkout.html')) {
             window.location.href = '/trainer-dashboard.html';
         }
         return;
     }
 
-    // Member cannot access admin panel or trainer dashboard
     if (user.role === ROLES.MEMBER) {
-        if (currentPath.includes('admin.html') || currentPath.includes('trainer-dashboard.html')) {
-            alert('Access denied. Members only area.');
-            window.location.href = '/index.html';
+        if (pathIncludes('admin.html') || pathIncludes('trainer-dashboard.html')) {
+            window.location.href = '/member-dashboard.html';
         }
     }
 }
 
-// ========================================
-// NAVBAR AUTHENTICATION UI
-// ========================================
-
-// Update navbar based on login status
-function updateNavbarAuth() {
+/** Call on member-only pages */
+function requireMember() {
     const user = getCurrentUser();
+    if (!user) {
+        window.location.href = '/login.html?redirect=member-dashboard.html';
+        return false;
+    }
+    if (user.role === ROLES.TRAINER) {
+        window.location.href = '/trainer-dashboard.html';
+        return false;
+    }
+    if (user.role === ROLES.ADMIN) {
+        window.location.href = '/admin.html';
+        return false;
+    }
+    return true;
+}
 
-    // Find or create nav-actions container
-    let actionsDiv = document.querySelector('.nav-actions');
-    const navContainer = document.querySelector('.nav-container');
+/**
+ * MB-16: Members must be logged in before checkout (verified account email).
+ * Returns logged-in user or redirects to login with return URL.
+ */
+function getCheckoutReturnUrl() {
+    const params = new URLSearchParams(window.location.search);
+    const qs = params.toString();
+    return 'checkout.html' + (qs ? `?${qs}` : '');
+}
 
-    if (!actionsDiv && navContainer) {
-        actionsDiv = document.createElement('div');
-        actionsDiv.className = 'nav-actions';
-        navContainer.appendChild(actionsDiv);
+function requireMemberForCheckout() {
+    const user = getCurrentUser();
+    const returnUrl = getCheckoutReturnUrl();
+
+    if (!user) {
+        window.location.href = `login.html?redirect=${encodeURIComponent(returnUrl)}&reason=checkout`;
+        return null;
     }
 
+    if (user.role === ROLES.TRAINER) {
+        alert('Membership checkout is for member accounts. Use a member login or register as a member.');
+        window.location.href = 'trainer-dashboard.html';
+        return null;
+    }
+
+    return user;
+}
+
+/** Call on admin-only pages (MB-20) */
+function requireAdmin() {
+    const user = getCurrentUser();
+    if (!user) {
+        window.location.href = 'login.html?redirect=admin.html';
+        return false;
+    }
+    if (user.role !== ROLES.ADMIN) {
+        window.location.href = getDashboardPath(user.role);
+        return false;
+    }
+    return true;
+}
+
+/** Call on trainer-only pages */
+function requireTrainer() {
+    const user = getCurrentUser();
+    if (!user) {
+        window.location.href = '/login.html?redirect=trainer-dashboard.html';
+        return false;
+    }
+    if (user.role === ROLES.MEMBER) {
+        window.location.href = '/member-dashboard.html';
+        return false;
+    }
+    if (user.role === ROLES.ADMIN) {
+        window.location.href = '/admin.html';
+        return false;
+    }
+    return user.role === ROLES.TRAINER;
+}
+
+function updateNavbarAuth() {
+    const user = getCurrentUser();
+    let actionsDiv = document.querySelector('.nav-actions');
+    const navLinks = document.querySelector('.nav-links');
+
+    if (!actionsDiv && document.querySelector('.nav-container')) {
+        actionsDiv = document.createElement('div');
+        actionsDiv.className = 'nav-actions';
+        document.querySelector('.nav-container').appendChild(actionsDiv);
+    }
     if (!actionsDiv) return;
 
     if (user) {
-        // User is logged in - show user name and logout button
         let dashboardLink = '';
         if (user.role === ROLES.TRAINER) {
-            dashboardLink = `<a href="/trainer-dashboard.html" style="color: var(--gold); margin-right: 1rem; text-decoration: none;">📊 Dashboard</a>`;
+            dashboardLink = '<a href="/trainer-dashboard.html" class="nav-dash-link">Trainer hub</a>';
         } else if (user.role === ROLES.ADMIN) {
-            dashboardLink = `<a href="/admin.html" style="color: var(--gold); margin-right: 1rem; text-decoration: none;">⚙️ Admin</a>`;
-        }
-
-        actionsDiv.innerHTML = `
-            ${dashboardLink}
-            <span style="color: var(--gold); margin-right: 1rem;">👋 ${user.name}</span>
-            <button onclick="logoutUser()" class="btn-logout" style="background: rgba(233,69,96,0.15); color: var(--crimson); border: 1px solid rgba(233,69,96,0.3); padding: 0.5rem 1.2rem; border-radius: 50px; cursor: pointer; transition: all 0.3s ease;">Logout</button>
-        `;
-    } else {
-        // User is logged out - show login button
-        actionsDiv.innerHTML = `
-            <a href="/login.html" class="btn-member" style="background: transparent; color: white; border: 2px solid rgba(255,255,255,0.3); padding: 0.5rem 1.2rem; border-radius: 50px; text-decoration: none; transition: all 0.3s ease;">Login</a>
-        `;
-    }
-    // Add to your existing auth.js, inside updateNavbarAuth function
-
-    function updateNavbarAuth() {
-        const user = getCurrentUser();
-        let actionsDiv = document.querySelector('.nav-actions');
-        const navLinks = document.querySelector('.nav-links');
-
-        if (!actionsDiv && document.querySelector('.nav-container')) {
-            actionsDiv = document.createElement('div');
-            actionsDiv.className = 'nav-actions';
-            document.querySelector('.nav-container').appendChild(actionsDiv);
-        }
-
-        if (!actionsDiv) return;
-
-        // Check if Join Now button already exists
-        let joinBtn = document.querySelector('.btn-join');
-
-        if (user) {
-            // Remove Join Now button if exists
-            if (joinBtn) joinBtn.remove();
-
-            // Show user menu
-            let dashboardLink = '';
-            if (user.role === 'trainer') {
-                dashboardLink = `<a href="/trainer-dashboard.html" style="color: var(--gold); margin-right: 1rem; text-decoration: none;">📊 Dashboard</a>`;
-            } else if (user.role === 'admin') {
-                dashboardLink = `<a href="/admin.html" style="color: var(--gold); margin-right: 1rem; text-decoration: none;">⚙️ Admin</a>`;
-            }
-
-            actionsDiv.innerHTML = `
-            ${dashboardLink}
-            <div class="user-greeting">
-                <span class="user-name">👋 ${user.name}</span>
-                <button onclick="logoutUser()" class="btn-logout">Logout</button>
-            </div>
-        `;
+            dashboardLink = '<a href="/admin.html" class="nav-dash-link">Admin</a>';
         } else {
-            // Show login and join buttons
-            actionsDiv.innerHTML = `
-            <a href="/login.html" class="btn-login">Login</a>
+            dashboardLink = '<a href="/member-dashboard.html" class="nav-dash-link">My hub</a>';
+        }
+
+        actionsDiv.innerHTML = `
+            ${dashboardLink}
+            <span class="user-greeting">👋 ${user.name}</span>
+            <button type="button" onclick="logoutUser()" class="btn-logout">Logout</button>
         `;
 
-            // Add Join Now button next to nav links
-            if (navLinks && !joinBtn) {
+        if (navLinks && user.role === ROLES.MEMBER) {
+            const memberOnly = navLinks.querySelector('[data-member-nav]');
+            if (!memberOnly) {
+                const li = document.createElement('li');
+                li.setAttribute('data-member-nav', '1');
+                li.innerHTML = '<a href="/member-dashboard.html">Member hub</a>';
+                navLinks.insertBefore(li, navLinks.children[1] || null);
+            }
+        }
+    } else {
+        actionsDiv.innerHTML = '<a href="/login.html" class="btn-login">Login</a>';
+        if (navLinks) {
+            const joinBtn = navLinks.querySelector('.btn-join-li');
+            if (!joinBtn) {
                 const joinLi = document.createElement('li');
+                joinLi.className = 'btn-join-li';
                 joinLi.innerHTML = '<a href="/schedule.html" class="btn-join">Join Now →</a>';
                 navLinks.appendChild(joinLi);
             }
@@ -250,8 +255,10 @@ function updateNavbarAuth() {
     }
 }
 
-// Call this on every page load
-document.addEventListener('DOMContentLoaded', () => {
+function initAuthUI() {
     updateNavbarAuth();
     redirectBasedOnRole();
-});
+}
+
+document.addEventListener('DOMContentLoaded', initAuthUI);
+document.addEventListener('aura-chrome-ready', updateNavbarAuth);

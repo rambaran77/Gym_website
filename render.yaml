@@ -1,0 +1,30 @@
+# Render Blueprint — Aura Athletic (free tier)
+# Deploy: https://dashboard.render.com → New → Blueprint → connect GitHub repo
+# Free URL: https://aura-athletic.onrender.com (or your custom domain later)
+services:
+  - type: web
+    name: aura-athletic
+    runtime: node
+    rootDir: backend
+    buildCommand: npm install
+    startCommand: npm start
+    plan: free
+    healthCheckPath: /api/health
+    autoDeploy: true
+    envVars:
+      - key: NODE_VERSION
+        value: "20"
+      - key: APP_NAME
+        value: Aura Athletic
+      # Set these in Render Dashboard → Environment (copy from backend/.env):
+      - key: MONGODB_URI
+        sync: false
+      - key: STRIPE_SECRET_KEY
+        sync: false
+      - key: STRIPE_PUBLISHABLE_KEY
+        sync: false
+      - key: STRIPE_WEBHOOK_SECRET
+        sync: false
+      # Optional — Render sets RENDER_EXTERNAL_URL automatically; override if using custom domain:
+      - key: APP_BASE_URL
+        sync: false

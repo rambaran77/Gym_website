@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Member Hub - Aura Athletics</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+    <link rel="stylesheet" href="site-theme.css">
+    <script src="site-chrome.js" defer></script>
+  <script src="auth.js"></script>
+  <style>
+    .member-wrap { max-width: 1000px; margin: 6rem auto 2rem; padding: 0 1.5rem; }
+    .hero-card {
+      background: linear-gradient(135deg, rgba(212,175,55,0.12), rgba(20,22,28,0.95));
+      border: 1px solid rgba(212,175,55,0.25);
+      border-radius: 24px;
+      padding: 2rem;
+      margin-bottom: 1.5rem;
+    }
+    .hero-card h1 { color: #fff; margin-bottom: 0.35rem; }
+    .badge { display: inline-block; padding: 0.35rem 0.9rem; border-radius: 999px; font-size: 12px; font-weight: 600; }
+    .badge-active { background: rgba(61,214,140,0.15); color: #3dd68c; }
+    .badge-none { background: rgba(240,113,120,0.12); color: #f07178; }
+    .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1rem; margin-top: 1.5rem; }
+    .tile {
+      background: rgba(20,22,28,0.9);
+      border: 1px solid rgba(212,175,55,0.15);
+      border-radius: 18px;
+      padding: 1.25rem;
+      text-decoration: none;
+      color: #fff;
+      transition: transform 0.2s, border-color 0.2s;
+    }
+    .tile:hover { transform: translateY(-3px); border-color: rgba(212,175,55,0.4); }
+    .tile h3 { color: #d4af37; font-size: 1rem; margin-bottom: 0.35rem; }
+    .tile p { color: #b7b0a1; font-size: 13px; line-height: 1.5; }
+    .access-list { margin-top: 1rem; padding-left: 1.1rem; color: #e8e4dc; font-size: 14px; }
+    .access-list li { margin-bottom: 0.35rem; }
+    .cta-row { display: flex; flex-wrap: wrap; gap: 0.75rem; margin-top: 1.25rem; }
+    .btn-gold {
+      display: inline-block; padding: 0.75rem 1.35rem; border-radius: 999px;
+      background: linear-gradient(135deg, #d4af37, #b8960c); color: #0a0b10;
+      font-weight: 700; text-decoration: none; font-size: 14px;
+    }
+    .btn-ghost {
+      display: inline-block; padding: 0.75rem 1.35rem; border-radius: 999px;
+      border: 1px solid rgba(212,175,55,0.3); color: #fff; text-decoration: none; font-size: 14px;
+    }
+    .nav-dash-link { color: var(--gold, #d4af37); margin-right: 1rem; text-decoration: none; font-weight: 600; }
+  </style>
+</head>
+<body class="site-page" data-page="members">
+<main class="member-wrap">
+    <section class="hero-card">
+      <p style="color:#d4af37;font-size:12px;text-transform:uppercase;letter-spacing:0.08em;">Member area</p>
+      <h1 id="welcome-name">Welcome</h1>
+      <p id="welcome-email" style="color:#b7b0a1;margin-bottom:0.75rem;"></p>
+      <span id="status-badge" class="badge badge-none">Checking membership...</span>
+      <div id="active-plan-box" style="margin-top:1rem;"></div>
+      <div class="cta-row" id="cta-row">
+        <a class="btn-gold" href="membership.html">Browse &amp; buy plans</a>
+        <a class="btn-ghost" href="schedule.html">Book a class</a>
+      </div>
+    </section>
+
+    <section class="grid">
+      <a class="tile" href="membership.html">
+        <h3>Membership plans</h3>
+        <p>Day, weekly, and monthly options. Buy the plan that fits your training.</p>
+      </a>
+      <a class="tile" href="my-membership.html">
+        <h3>Billing &amp; history</h3>
+        <p>View active membership, dates, and past payments.</p>
+      </a>
+      <a class="tile" href="schedule.html">
+        <h3>Class schedule</h3>
+        <p>Book group classes included with your plan (where applicable).</p>
+      </a>
+      <a class="tile" href="checkout.html?plan=standard-monthly">
+        <h3>Upgrade checkout</h3>
+        <p>Go straight to checkout for a popular monthly plan.</p>
+      </a>
+    </section>
+  </main>
+
+  <script>
+    const apiBase = window.location.protocol === 'file:' ? 'http://localhost:5001' : '';
+
+    async function loadMemberHub() {
+      if (!requireMember()) return;
+
+      const user = getCurrentUser();
+      document.getElementById('welcome-name').textContent = `Welcome, ${user.name}`;
+      document.getElementById('welcome-email').textContent = user.email;
+
+      const badge = document.getElementById('status-badge');
+      const planBox = document.getElementById('active-plan-box');
+
+      try {
+        const res = await fetch(`${apiBase}/api/memberships/${encodeURIComponent(user.email)}`);
+        const list = await res.json();
+        const active = list.find((m) => m.status === 'active' && (!m.endDate || new Date(m.endDate) >= new Date()));
+
+        if (active) {
+          badge.textContent = 'Active membership';
+          badge.className = 'badge badge-active';
+          const start = active.startDate ? new Date(active.startDate).toLocaleDateString() : '—';
+          const end = active.endDate ? new Date(active.endDate).toLocaleDateString() : '—';
+          const period = active.billingPeriod ? ` (${active.billingPeriod})` : '';
+          const features = active.planId ? await loadPlanFeatures(active.planId) : [];
+          planBox.innerHTML = `
+            <h2 style="color:#d4af37;font-size:1.15rem;margin-top:0.5rem;">${active.planLabel || active.planId}${period}</h2>
+            <p style="color:#b7b0a1;font-size:14px;">Access <strong style="color:#fff">${start}</strong> → <strong style="color:#fff">${end}</strong> · Paid £${active.amount ?? 0}</p>
+            ${features.length ? `<ul class="access-list">${features.map((f) => `<li>${f}</li>`).join('')}</ul>` : ''}
+            <p style="color:#3dd68c;font-size:13px;margin-top:0.75rem;">You have full member access for this plan.</p>
+          `;
+        } else {
+          badge.textContent = 'No active plan';
+          badge.className = 'badge badge-none';
+          planBox.innerHTML = '<p style="color:#b7b0a1;margin-top:0.75rem;">Purchase a plan to unlock gym access, classes, and member benefits.</p>';
+        }
+      } catch (e) {
+        badge.textContent = 'Could not load membership';
+        planBox.innerHTML = '<p style="color:#f07178;">Start the backend server and refresh.</p>';
+      }
+    }
+
+    async function loadPlanFeatures(planId) {
+      try {
+        const res = await fetch(`${apiBase}/api/plans`);
+        const plans = await res.json();
+        const p = plans.find((x) => x.id === planId);
+        return p?.features || [];
+      } catch {
+        return [];
+      }
+    }
+
+    document.addEventListener('DOMContentLoaded', loadMemberHub);
+  </script>
+</body>
+</html>

@@ -3,179 +3,408 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AuraAthletic</title>
+    <title>Aura Athletic | 24 Hour Gyms | No Contract Memberships</title>
+    <meta name="description" content="Aura Athletic — affordable 24-hour gyms across Birmingham & the West Midlands. No contract, top equipment, free classes. Join online today.">
     <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,500;14..32,600;14..32,700;14..32,800&family=Montserrat:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="styles.css">
-
+    <link rel="stylesheet" href="site-theme.css">
     <script src="auth.js"></script>
-    <style>
-        /* Additional inline styles for video fallback */
-        .hero-video-fallback {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            z-index: 0;
-            background: linear-gradient(135deg, #0a0b10 0%, #14161c 100%);
-        }
-        
-        .featured-classes-section {
-            background: var(--obsidian);
-            padding: 4rem 0;
-        }
-        
-        .section-title {
-            text-align: center;
-            margin-bottom: 3rem;
-        }
-        
-        .section-title h2 {
-            font-size: 2.5rem;
-            background: linear-gradient(135deg, #fff, #aaa);
-            -webkit-background-clip: text;
-            background-clip: text;
-            color: transparent;
-        }
-        
-        .section-title p {
-            color: rgba(255,255,255,0.5);
-            margin-top: 0.5rem;
-        }
-    </style>
+    <script src="site-chrome.js" defer></script>
 </head>
-<body>
-    <!-- Premium Navigation Bar -->
+<body class="site-page" data-page="home">
+
+    <!-- promo + nav provided by index; site-chrome.js skips if present -->
+    <div class="promo-strip">
+        <strong>50% off your 1st month</strong> — Use code: <strong>AURA50</strong> · No joining fee this week
+    </div>
     <nav class="navbar" id="navbar">
         <div class="nav-container">
-            <a href="/" class="logo">AURA ATHLETIC</a>
-            
+            <a href="index.html" class="logo">AURA ATHLETIC</a>
             <ul class="nav-links" id="navLinks">
-                <li><a href="/" class="active">Home</a></li>                
-                <li><a href="/trainers.html">Trainers</a></li>
-                <li><a href="/shop.html">Shop</a></li>
-                <li><a href="/gymnotif.html">Notifications</a></li>
-                <li><a href="/admin.html">Admin</a></li>
+                <li><a href="index.html" class="active">Home</a></li>
+                <li><a href="membership.html">Memberships</a></li>
+                <li><a href="classes.html">Classes</a></li>
+                <li><a href="schedule.html">Timetable</a></li>
+                <li><a href="trainers.html">Trainers</a></li>
+                <li><a href="day-pass.html">Day passes</a></li>
+                <li><a href="shop.html">Shop</a></li>
             </ul>
-            
-            <div class="nav-actions" id="navActions">
-                <!-- Dynamic content from auth.js -->
-            </div>
-            
-            <button class="menu-btn" onclick="toggleMobileMenu()">
-                <span></span>
-                <span></span>
-                <span></span>
+            <div class="nav-actions" id="navActions"></div>
+            <button class="menu-btn" type="button" id="mobileMenuBtn" aria-label="Open menu" aria-expanded="false" aria-controls="navLinks">
+                <span></span><span></span><span></span>
             </button>
         </div>
     </nav>
 
-    <!-- Hero Section with Video Background -->
-    <section class="hero">
-        
-        <video class="hero-video" autoplay loop muted playsinline poster="images/hero-gym.jpg">
-            <source src="images/hero-video.mp4" type="video/mp4">
-            <!-- Fallback image if video doesn't load -->
-            <img class="hero-video-fallback" src="images/hero-gym.jpg" alt="AuraAthletic Gym">
-        </video>
-        <div class="hero-overlay"></div>
-        
-        <div class="hero-content">
-            <div class="hero-badge">🔥 LIMITED TIME OFFER</div>
-            <h1>Claim Your Free<br>7-Day Performance Pass</h1>
-            <p class="hero-description">Experience elite training, world-class coaches, and a community that pushes you to be your best. No commitment, no hidden fees.</p>
-            <a href="/schedule.html" class="hero-cta">Join Now</a>
-            <a href="gym-plans.html" class="hero-cta">View Subscription Plans</a>
-            
-            <div class="hero-stats">
-                <div class="stat">
-                    <div class="stat-value">50+</div>
-                    <div class="stat-label">Weekly Classes</div>
-                </div>
-                <div class="stat">
-                    <div class="stat-value">15+</div>
-                    <div class="stat-label">Elite Trainers</div>
-                </div>
-                <div class="stat">
-                    <div class="stat-value">2,000+</div>
-                    <div class="stat-label">Active Members</div>
-                </div>
-            </div>
-        </div>
-    </section>
+    <!-- Promo carousel (similar layout to commercial gym homepages) -->
+    <div class="hero-carousel-wrap">
+        <div class="hero-carousel" id="heroCarousel">
+            <button type="button" class="carousel-arrow prev" aria-label="Previous slide" onclick="changeHeroSlide(-1)">‹</button>
+            <button type="button" class="carousel-arrow next" aria-label="Next slide" onclick="changeHeroSlide(1)">›</button>
 
-    <!-- Featured Classes Section -->
-    <div class="featured-classes-section">
-        <div class="container">
-            <div class="section-title">
-                <h2>Signature Sessions</h2>
-                <p>Curated for the relentless</p>
-            </div>
-            <div class="class-grid" id="featured-classes">
-                <div style="text-align: center; grid-column: span 3; color: var(--gray);">Loading elite classes...</div>
+            <article class="hero-slide active" data-slide="0">
+                <div class="hero-slide-media">
+                    <video autoplay muted loop playsinline poster="images/hero-gym.jpg">
+                        <source src="images/hero-video.mp4" type="video/mp4">
+                    </video>
+                </div>
+                <div class="hero-slide-copy">
+                    <span class="eyebrow">Limited time</span>
+                    <h1>50% Off &amp; No Joining Fee</h1>
+                    <p>On monthly memberships. Train anytime with premium kit and no long-term contract.</p>
+                    <span class="hero-code">Use code: AURA50</span>
+                    <a href="membership.html" class="btn-primary-lg">Join now</a>
+                </div>
+            </article>
+
+            <article class="hero-slide" data-slide="1">
+                <div class="hero-slide-media" style="background: linear-gradient(135deg, #1e3a5f, #0a0b10);">
+                    <img src="images/modern-gym.jpg" alt="Members training" onerror="this.style.display='none'">
+                </div>
+                <div class="hero-slide-copy">
+                    <span class="eyebrow">New members</span>
+                    <h1>Free 7-Day Performance Pass</h1>
+                    <p>Try Aura Athletic before you commit. Full gym access, classes included.</p>
+                    <a href="login.html" class="btn-primary-lg">Claim free pass</a>
+                    <a href="schedule.html" class="btn-outline-lg">View class timetable</a>
+                </div>
+            </article>
+
+            <article class="hero-slide" data-slide="2">
+                <div class="hero-slide-media" style="background: linear-gradient(135deg, #2d1f3d, #0a0b10);">
+                    <img src="images/yoga-class.jpg" alt="Group fitness class" onerror="this.style.display='none'">
+                </div>
+                <div class="hero-slide-copy">
+                    <span class="eyebrow">Students</span>
+                    <h1>20% Off 12-Month Saver Plans</h1>
+                    <p>Valid student ID required. Flexible training that fits around your schedule.</p>
+                    <span class="hero-code">Use code: FLEX</span>
+                    <a href="membership.html" class="btn-primary-lg">Student memberships</a>
+                </div>
+            </article>
+            <div class="carousel-dots" id="heroDots">
+                <button type="button" class="carousel-dot active" aria-label="Slide 1" onclick="goHeroSlide(0)"></button>
+                <button type="button" class="carousel-dot" aria-label="Slide 2" onclick="goHeroSlide(1)"></button>
+                <button type="button" class="carousel-dot" aria-label="Slide 3" onclick="goHeroSlide(2)"></button>
             </div>
         </div>
     </div>
 
-    <!-- Footer -->
-    <footer class="footer">
-        <p>© 2025 AURA ATHLETIC — Train with intensity · Rise with aura</p>
+    <nav class="quick-links" aria-label="Quick links">
+        <div class="quick-links-inner">
+            <a href="membership.html" class="quick-link active">Memberships</a>
+            <a href="membership.html" class="quick-link">Students</a>
+            <a href="membership.html" class="quick-link">Deals &amp; offers</a>
+            <a href="day-pass.html" class="quick-link">Day passes</a>
+        </div>
+    </nav>
+
+    <section class="usp-bar" aria-label="Why Aura Athletic">
+        <div class="usp-bar-inner">
+            <div class="usp-item">
+                <div class="usp-icon">🏋️</div>
+                <h3>Top kit</h3>
+                <p>Premium racks, cardio &amp; free weights</p>
+            </div>
+            <div class="usp-item">
+                <div class="usp-icon">📋</div>
+                <h3>No contract</h3>
+                <p>Cancel anytime — stay on your terms</p>
+            </div>
+            <div class="usp-item">
+                <div class="usp-icon">💷</div>
+                <h3>Low cost</h3>
+                <p>Affordable monthly memberships</p>
+            </div>
+            <div class="usp-item">
+                <div class="usp-icon">🕐</div>
+                <h3>24 hour opening</h3>
+                <p>Train when it suits you*</p>
+            </div>
+        </div>
+    </section>
+
+    <section
+      class="find-gym"
+      id="find-gym"
+      style="--find-gym-py: clamp(2.5rem, 5vw, 4rem); --find-gym-px: var(--site-gutter); --find-gym-inner-max: 900px;"
+    >
+        <div class="find-gym-inner">
+            <h2>Find a gym near you</h2>
+            <p class="sub">5 clubs across Birmingham &amp; the West Midlands</p>
+            <form class="find-form" id="findGymForm" onsubmit="filterLocations(event)">
+                <input type="text" id="locationSearch" placeholder="Postcode or area (e.g. B29)" aria-label="Search location">
+                <select id="locationSelect" aria-label="Select club">
+                    <option value="">All locations</option>
+                    <option value="selly">Selly Oak</option>
+                    <option value="edgbaston">Edgbaston</option>
+                    <option value="city">City Centre</option>
+                    <option value="westbrom">West Bromwich</option>
+                    <option value="aura">Aura HQ</option>
+                </select>
+                <button type="submit" class="btn-primary-lg">Search</button>
+            </form>
+            <div class="location-results" id="locationResults"></div>
+        </div>
+    </section>
+
+    <section class="home-section alt">
+        <div class="home-section-inner">
+            <div class="section-head">
+                <h2>What's new at Aura Athletic</h2>
+                <p>Tips, training guides &amp; member stories</p>
+            </div>
+            <div class="news-grid">
+                <article class="news-card">
+                    <div class="news-card-img">🧘</div>
+                    <div class="news-card-body">
+                        <h3>Plan active holidays around fitness</h3>
+                        <p>From city breaks to retreat weekends — how members blend travel with training and gym access on the go.</p>
+                        <a href="classes.html">Get inspired →</a>
+                    </div>
+                </article>
+                <article class="news-card">
+                    <div class="news-card-img">⚡</div>
+                    <div class="news-card-body">
+                        <h3>What is circuit training?</h3>
+                        <p>Fast, full-body workouts that build strength and endurance. Perfect when time is tight.</p>
+                        <a href="classes.html">Master circuits →</a>
+                    </div>
+                </article>
+            </div>
+        </div>
+    </section>
+
+    <section class="home-section">
+        <div class="home-section-inner">
+            <div class="section-head">
+                <h2>Signature sessions</h2>
+                <p>Book HIIT, yoga, spin &amp; more from our live timetable</p>
+            </div>
+            <div class="class-grid" id="featured-classes">
+                <div style="text-align: center; grid-column: 1 / -1; color: var(--tgg-muted);">Loading classes…</div>
+            </div>
+            <p style="text-align: center; margin-top: 2rem;" class="signature-actions">
+                <a href="classes.html" class="btn-primary-lg">Explore classes</a>
+                <a href="schedule.html" class="btn-outline-lg">Book timetable</a>
+            </p>
+        </div>
+    </section>
+
+    <section class="home-section alt">
+        <div class="home-section-inner">
+            <div class="section-head">
+                <h2>More from Aura Athletic</h2>
+                <p>Everything you need beyond a great workout</p>
+            </div>
+            <div class="extras-grid">
+                <a href="day-pass.html" class="extra-card">
+                    <div class="icon">🎫</div>
+                    <h3>Guest pass</h3>
+                </a>
+                <a href="trainers.html" class="extra-card">
+                    <div class="icon">💪</div>
+                    <h3>Personal training</h3>
+                </a>
+                <a href="classes.html" class="extra-card">
+                    <div class="icon">📅</div>
+                    <h3>Group classes</h3>
+                </a>
+                <a href="shop.html" class="extra-card">
+                    <div class="icon">🛒</div>
+                    <h3>Shop &amp; merch</h3>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <section class="testimonials">
+        <div class="testimonials-inner">
+            <h2>Real members, real stories</h2>
+            <div class="testimonial-slide active" data-t="0">
+                <blockquote>"Really good gym — has everything you need for the perfect workout. I highly recommend the classes, especially if you're new to the gym."</blockquote>
+                <cite>— Milly J., member since 2024</cite>
+            </div>
+            <div class="testimonial-slide" data-t="1">
+                <blockquote>"Varied class timetable with great instructors who make sessions both challenging and fun. Great value for a regular routine."</blockquote>
+                <cite>— L.W., member since 2025</cite>
+            </div>
+            <div class="testimonial-slide" data-t="2">
+                <blockquote>"10/10 for a gym at this price point. Staff are lovely, equipment is well spread out, and it's always clean. Highly recommended."</blockquote>
+                <cite>— Tanya Y., member since 2025</cite>
+            </div>
+            <div class="testimonial-dots" id="testimonialDots">
+                <button type="button" class="carousel-dot active" aria-label="Review 1" onclick="goTestimonial(0)"></button>
+                <button type="button" class="carousel-dot" aria-label="Review 2" onclick="goTestimonial(1)"></button>
+                <button type="button" class="carousel-dot" aria-label="Review 3" onclick="goTestimonial(2)"></button>
+            </div>
+        </div>
+    </section>
+
+    <section class="cta-band">
+        <h2>Join Aura Athletic today</h2>
+        <p>No contract · 24/7 access · Classes included on selected plans</p>
+        <a href="membership.html" class="btn-primary-lg">See membership prices</a>
+    </section>
+
+    <footer class="site-footer" id="site-footer">
+        <div class="footer-grid">
+            <div class="footer-col">
+                <h4>About Aura Athletic</h4>
+                <ul>
+                    <li><a href="about.html">About us</a></li>
+                    <li><a href="membership.html">Membership rules</a></li>
+                    <li><a href="admin.html">Admin</a></li>
+                    <li><a href="gymnotif.html">Help &amp; support</a></li>
+                </ul>
+            </div>
+            <div class="footer-col">
+                <h4>The gyms</h4>
+                <ul>
+                    <li><a href="schedule.html">Classes</a></li>
+                    <li><a href="trainers.html">Personal training</a></li>
+                    <li><a href="#find-gym">Gym locations</a></li>
+                </ul>
+            </div>
+            <div class="footer-col">
+                <h4>Members</h4>
+                <ul>
+                    <li><a href="login.html">Sign in</a></li>
+                    <li><a href="member-dashboard.html">Member hub</a></li>
+                    <li><a href="my-membership.html">My membership</a></li>
+                </ul>
+            </div>
+            <div class="footer-col">
+                <h4>Legal</h4>
+                <ul>
+                    <li><a href="membership.html">Membership agreement</a></li>
+                    <li><a href="#">Privacy policy</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>© 2026 Aura Athletic — Train with intensity · Rise with aura</p>
+            <a href="#" class="back-to-top" onclick="window.scrollTo({top:0,behavior:'smooth'});return false;">Back to top ↑</a>
+        </div>
     </footer>
 
     <script>
-        // Mobile menu toggle
-        function toggleMobileMenu() {
-            const navLinks = document.getElementById('navLinks');
-            navLinks.classList.toggle('show');
-        }
-        
-        // Navbar scroll effect
+        const LOCATIONS = [
+            { id: 'selly', name: 'Selly Oak', area: 'B29', address: '12 Bristol Road, Selly Oak, Birmingham B29 6BD', hours: 'Open 24/7' },
+            { id: 'edgbaston', name: 'Edgbaston', area: 'B15', address: '45 Harborne Road, Edgbaston, Birmingham B15 3AA', hours: 'Open 24/7' },
+            { id: 'city', name: 'City Centre', area: 'B2', address: '88 Colmore Row, Birmingham B2 4BN', hours: '5am – 11pm' },
+            { id: 'westbrom', name: 'West Bromwich', area: 'B70', address: 'Unit 4, High Street, West Bromwich B70 7NJ', hours: 'Open 24/7' },
+            { id: 'aura', name: 'Aura HQ', area: 'B1', address: '1 Aura Way, Birmingham B1 1AA', hours: 'Open 24/7' }
+        ];
+
+        let heroIndex = 0;
+        let heroTimer;
+        let testimonialIndex = 0;
+        let testimonialTimer;
+
         window.addEventListener('scroll', () => {
-            const navbar = document.getElementById('navbar');
-            if (window.scrollY > 50) {
-                navbar.classList.add('scrolled');
-            } else {
-                navbar.classList.remove('scrolled');
-            }
+            document.getElementById('navbar').classList.toggle('scrolled', window.scrollY > 40);
         });
-        
-        // Format time function
+
+        function renderLocations(list) {
+            const el = document.getElementById('locationResults');
+            if (!list.length) {
+                el.innerHTML = '<p style="grid-column:1/-1;text-align:center;color:var(--tgg-muted);">No clubs match that search. Try B29, Edgbaston, or City.</p>';
+                return;
+            }
+            el.innerHTML = list.map((loc) => `
+                <div class="location-card">
+                    <h4>${loc.name}</h4>
+                    <p>${loc.address}<br>${loc.hours}</p>
+                    <a href="membership.html">Join this gym →</a>
+                </div>
+            `).join('');
+        }
+
+        function filterLocations(e) {
+            if (e) e.preventDefault();
+            const q = (document.getElementById('locationSearch').value || '').trim().toLowerCase();
+            const sel = document.getElementById('locationSelect').value;
+            let list = LOCATIONS;
+            if (sel) list = list.filter((l) => l.id === sel);
+            if (q) {
+                list = list.filter((l) =>
+                    l.name.toLowerCase().includes(q) ||
+                    l.area.toLowerCase().includes(q) ||
+                    l.address.toLowerCase().includes(q)
+                );
+            }
+            renderLocations(list);
+        }
+
+        function updateHeroSlide() {
+            const slides = document.querySelectorAll('.hero-slide');
+            const dots = document.querySelectorAll('#heroDots .carousel-dot');
+            slides.forEach((s, i) => s.classList.toggle('active', i === heroIndex));
+            dots.forEach((d, i) => d.classList.toggle('active', i === heroIndex));
+        }
+
+        function goHeroSlide(i) {
+            heroIndex = i;
+            updateHeroSlide();
+            resetHeroTimer();
+        }
+
+        function changeHeroSlide(dir) {
+            const slides = document.querySelectorAll('.hero-slide');
+            heroIndex = (heroIndex + dir + slides.length) % slides.length;
+            updateHeroSlide();
+            resetHeroTimer();
+        }
+
+        function resetHeroTimer() {
+            clearInterval(heroTimer);
+            heroTimer = setInterval(() => changeHeroSlide(1), 7000);
+        }
+
+        function goTestimonial(i) {
+            testimonialIndex = i;
+            document.querySelectorAll('.testimonial-slide').forEach((s, idx) => s.classList.toggle('active', idx === i));
+            document.querySelectorAll('#testimonialDots .carousel-dot').forEach((d, idx) => d.classList.toggle('active', idx === i));
+            resetTestimonialTimer();
+        }
+
+        function resetTestimonialTimer() {
+            clearInterval(testimonialTimer);
+            testimonialTimer = setInterval(() => {
+                const n = document.querySelectorAll('.testimonial-slide').length;
+                goTestimonial((testimonialIndex + 1) % n);
+            }, 6000);
+        }
+
         function formatTime(time) {
             if (!time) return 'N/A';
             const [hours, minutes] = time.split(':');
-            const hour = parseInt(hours);
+            const hour = parseInt(hours, 10);
             const ampm = hour >= 12 ? 'PM' : 'AM';
             const hour12 = hour % 12 || 12;
             return `${hour12}:${minutes} ${ampm}`;
         }
-        
-        // Get class image based on class name
+
         function getClassImage(className) {
             const name = className.toLowerCase();
             if (name.includes('yoga')) return 'images/yoga-class.jpg';
             if (name.includes('hiit')) return 'images/modern-gym.jpg';
             if (name.includes('spin')) return 'images/luxury-gym.jpg';
-            if (name.includes('strength')) return 'images/modern-gym.jpg';
-            if (name.includes('zumba')) return 'images/group_G.png';
             return 'images/modern-gym.jpg';
         }
-        
-        // Fetch and display featured classes
+
         async function loadFeaturedClasses() {
+            const container = document.getElementById('featured-classes');
             try {
                 const response = await fetch('/api/classes');
                 const classes = await response.json();
-                
-                const container = document.getElementById('featured-classes');
                 const featured = classes.slice(0, 3);
-                
-                if (featured.length === 0) {
-                    container.innerHTML = '<div style="text-align: center; grid-column: span 3; color: var(--gray);">No classes available.</div>';
+                if (!featured.length) {
+                    container.innerHTML = '<div style="grid-column:1/-1;text-align:center;color:var(--tgg-muted);">No classes scheduled yet.</div>';
                     return;
                 }
-                
-                container.innerHTML = featured.map(classItem => `
+                container.innerHTML = featured.map((classItem) => `
                     <div class="class-card">
                         <div class="class-image">
                             <img src="${getClassImage(classItem.name)}" alt="${classItem.name}" onerror="this.src='images/modern-gym.jpg'">
@@ -185,31 +414,24 @@
                             <div class="class-time">⏰ ${formatTime(classItem.time)}</div>
                             <div class="class-instructor">👨‍🏫 ${classItem.instructor}</div>
                             <div class="class-location">📍 ${classItem.location}</div>
-                            <p class="class-description">${classItem.description ? classItem.description.substring(0, 80) : 'Join this exciting class!'}...</p>
+                            <p class="class-description">${classItem.description ? classItem.description.substring(0, 80) : 'Join this class!'}…</p>
                             <span class="tag ${classItem.difficulty}">${classItem.difficulty}</span>
                         </div>
                     </div>
                 `).join('');
-                
-            } catch (error) {
-                console.error('Error loading classes:', error);
-                document.getElementById('featured-classes').innerHTML = `
-                    <div style="text-align: center; grid-column: span 3; color: var(--gray);">
-                        <p>Unable to load classes. Please make sure the server is running.</p>
-                    </div>
-                `;
+            } catch (err) {
+                console.error(err);
+                container.innerHTML = '<div style="grid-column:1/-1;text-align:center;color:var(--tgg-muted);">Start the server to load live classes.</div>';
             }
         }
-        
-        // Load classes when page loads
+
         document.addEventListener('DOMContentLoaded', () => {
+            renderLocations(LOCATIONS);
             loadFeaturedClasses();
-        });
-        
-        // Close mobile menu when clicking a link
-        document.querySelectorAll('#navLinks a').forEach(link => {
-            link.addEventListener('click', () => {
-                document.getElementById('navLinks').classList.remove('show');
+            resetHeroTimer();
+            resetTestimonialTimer();
+            document.querySelectorAll('#navLinks a').forEach((link) => {
+                link.addEventListener('click', () => document.getElementById('navLinks').classList.remove('show'));
             });
         });
     </script>

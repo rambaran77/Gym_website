@@ -9,6 +9,8 @@
         href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,600;14..32,800&family=Montserrat:wght@400;600;800&display=swap"
         rel="stylesheet">
     <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="site-theme.css">
+    <script src="site-chrome.js" defer></script>
     <script src="auth.js"></script>
     <style>
         .dashboard-container {
@@ -201,24 +203,12 @@
     </style>
 </head>
 
-<body>
-    <nav class="navbar">
-        <div class="nav-container">
-            <a href="/" class="logo">AURA ATHLETIC</a>
-            <ul class="nav-links">
-                
-                
-    
-            </ul>
-            <div class="nav-actions"></div>
-        </div>
-    </nav>
-
-    <div class="dashboard-container">
+<body class="site-page" data-page="trainers">
+<div class="dashboard-container">
         <div class="dashboard-header">
             <span class="welcome-badge">👨‍🏫 TRAINER PORTAL</span>
-            <h1>My Trainer Profile</h1>
-            <p>Manage your profile and view assigned classes</p>
+            <h1>Trainer hub</h1>
+            <p>Your profile, classes, and schedule — separate from the member membership area</p>
         </div>
 
         <!-- Profile Section -->
@@ -304,12 +294,7 @@
             </table>
         </div>
     </div>
-
-    <footer class="footer">
-        <p>© 2025 AURA ATHLETIC — Train with intensity · Rise with aura</p>
-    </footer>
-
-    <script>
+<script>
         // No API_BASE defined here (using from auth.js)
         let currentTrainer = null;
 
@@ -545,11 +530,8 @@
 
         // Initialize
         document.addEventListener('DOMContentLoaded', async () => {
+            if (!requireTrainer()) return;
             const user = getCurrentUser();
-            if (!user || user.role !== 'trainer') {
-                window.location.href = '/login.html';
-                return;
-            }
             await loadTrainerProfile();
             await loadTrainerClasses();
         });

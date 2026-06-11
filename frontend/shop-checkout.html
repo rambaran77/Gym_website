@@ -1,0 +1,473 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Shop checkout — Aura Athletic</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,500;14..32,600;14..32,700;14..32,800&family=Montserrat:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+  <link rel="stylesheet" href="site-theme.css" />
+  <link rel="stylesheet" href="checkout.css" />
+  <link rel="stylesheet" href="shop-checkout.css" />
+  <script src="plans-api.js"></script>
+  <script src="auth.js"></script>
+  <script src="site-chrome.js" defer></script>
+</head>
+<body class="site-page shop-checkout-page checkout-page" data-page="shop">
+  <main class="shop-checkout-shell checkout-shell">
+    <a class="shop-checkout-back checkout-back" href="shop.html">&#8592; Back to shop</a>
+
+    <nav class="checkout-steps" aria-label="Checkout progress">
+      <div class="checkout-step is-done"><span class="checkout-step-num">1</span> Basket</div>
+      <span class="checkout-step-divider" aria-hidden="true"></span>
+      <div class="checkout-step is-active"><span class="checkout-step-num">2</span> Delivery</div>
+      <span class="checkout-step-divider" aria-hidden="true"></span>
+      <div class="checkout-step"><span class="checkout-step-num">3</span> Payment</div>
+    </nav>
+
+    <header class="shop-checkout-header checkout-header">
+      <p class="eyebrow">Shop checkout</p>
+      <h1>How would you like to receive your order?</h1>
+      <p>Choose home delivery or collect from your nearest Aura Athletic club, then pay securely online with card.</p>
+    </header>
+
+    <div id="empty-basket" class="shop-empty-basket checkout-card" hidden>
+      <p>Your basket is empty.</p>
+      <p><a href="shop.html">Continue shopping</a></p>
+    </div>
+
+    <div class="checkout-layout" id="checkout-layout">
+      <div class="checkout-main">
+        <!-- Fulfillment -->
+        <section class="checkout-card">
+          <h2 class="checkout-card-title">
+            <span class="checkout-card-icon" aria-hidden="true">📦</span>
+            Delivery or collection
+          </h2>
+
+          <div class="fulfillment-toggle" role="radiogroup" aria-label="Fulfillment method">
+            <label class="fulfillment-option">
+              <input type="radio" name="fulfillment" value="delivery" checked />
+              <div class="fulfillment-option-card">
+                <span class="fulfillment-icon" aria-hidden="true">🚚</span>
+                <strong>Home delivery</strong>
+                <span>We deliver to your address within 3–5 working days.</span>
+              </div>
+            </label>
+            <label class="fulfillment-option">
+              <input type="radio" name="fulfillment" value="collect" />
+              <div class="fulfillment-option-card">
+                <span class="fulfillment-icon" aria-hidden="true">🏋️</span>
+                <strong>Collect from club</strong>
+                <span>Pick up at reception — usually ready within 24 hours.</span>
+              </div>
+            </label>
+          </div>
+
+          <div class="checkout-field-grid">
+            <div class="checkout-field full">
+              <label for="full-name">Full name</label>
+              <input id="full-name" type="text" placeholder="Alex Morgan" autocomplete="name" required />
+            </div>
+            <div class="checkout-field">
+              <label for="email">Email</label>
+              <input id="email" type="email" placeholder="you@example.com" autocomplete="email" required />
+            </div>
+            <div class="checkout-field">
+              <label for="phone">Phone</label>
+              <input id="phone" type="tel" placeholder="+44 7700 900123" autocomplete="tel" />
+            </div>
+          </div>
+
+          <div id="delivery-panel" class="fulfillment-panel is-visible">
+            <div class="checkout-field-grid" style="margin-top:1rem">
+              <div class="checkout-field full">
+                <label for="address-line1">Address line 1</label>
+                <input id="address-line1" type="text" placeholder="12 High Street" autocomplete="address-line1" />
+              </div>
+              <div class="checkout-field full">
+                <label for="address-line2">Address line 2 (optional)</label>
+                <input id="address-line2" type="text" placeholder="Flat 2" autocomplete="address-line2" />
+              </div>
+              <div class="checkout-field">
+                <label for="city">City</label>
+                <input id="city" type="text" placeholder="Birmingham" autocomplete="address-level2" />
+              </div>
+              <div class="checkout-field">
+                <label for="postcode">Postcode</label>
+                <input id="postcode" type="text" placeholder="B15 2TT" autocomplete="postal-code" />
+              </div>
+            </div>
+          </div>
+
+          <div id="collect-panel" class="fulfillment-panel">
+            <div class="checkout-field full" style="margin-top:1rem">
+              <label for="pickup-location">Collect from</label>
+              <select id="pickup-location">
+                <option value="">Select a club</option>
+              </select>
+            </div>
+            <p class="collect-info">Bring your order confirmation email and photo ID when collecting. We'll notify you when your items are ready.</p>
+          </div>
+        </section>
+
+        <!-- Payment -->
+        <section class="checkout-card">
+          <div class="checkout-payment-header">
+            <h2 class="checkout-card-title" style="margin-bottom:0">
+              <span class="checkout-card-icon" aria-hidden="true">💳</span>
+              Pay online
+            </h2>
+            <span class="checkout-secure-badge">🔒 Secure · Stripe</span>
+          </div>
+
+          <div class="checkout-card-brands" aria-hidden="true">
+            <span class="checkout-card-brand">VISA</span>
+            <span class="checkout-card-brand">MC</span>
+            <span class="checkout-card-brand">AMEX</span>
+          </div>
+
+          <div class="checkout-field full" style="margin-top:1rem">
+            <label for="card-number">Card number</label>
+            <div class="checkout-stripe-box" id="card-number-wrap">
+              <div id="card-number" class="checkout-stripe-field"></div>
+            </div>
+          </div>
+          <div class="checkout-field-grid" style="margin-top:0.85rem">
+            <div class="checkout-field">
+              <label for="card-expiry">Expiry date</label>
+              <div class="checkout-stripe-box" id="card-expiry-wrap">
+                <div id="card-expiry" class="checkout-stripe-field"></div>
+              </div>
+            </div>
+            <div class="checkout-field">
+              <label for="card-cvc">Security code (CVC)</label>
+              <div class="checkout-stripe-box" id="card-cvc-wrap">
+                <div id="card-cvc" class="checkout-stripe-field"></div>
+              </div>
+            </div>
+          </div>
+          <div id="card-errors" class="checkout-card-errors" role="alert"></div>
+
+          <div class="checkout-actions">
+            <a class="checkout-btn checkout-btn-secondary" href="shop.html">Back to shop</a>
+            <button type="button" class="checkout-btn checkout-btn-primary" id="pay-btn" onclick="handleShopPayment()">Pay now</button>
+          </div>
+        </section>
+      </div>
+
+      <aside class="checkout-sidebar">
+        <div class="checkout-summary-card">
+          <div class="checkout-plan-hero">
+            <span class="checkout-plan-tag">Your basket</span>
+            <h2 class="checkout-plan-name" id="basket-count">0 items</h2>
+            <p class="checkout-plan-desc">Review your order before paying.</p>
+            <p class="checkout-plan-price" id="basket-total">£0</p>
+          </div>
+          <div class="checkout-summary-body">
+            <ul class="shop-basket-list" id="basket-list"></ul>
+            <div class="checkout-totals" style="margin-top:1rem">
+              <div class="checkout-total-row grand">
+                <span>Total</span>
+                <span id="sidebar-total">£0</span>
+              </div>
+            </div>
+            <p class="checkout-plan-note" id="fulfillment-summary">Home delivery selected</p>
+            <div class="checkout-trust">
+              <span>✓ Secure payment</span>
+              <span>✓ Order confirmation</span>
+              <span>✓ Easy returns</span>
+            </div>
+          </div>
+        </div>
+      </aside>
+    </div>
+  </main>
+
+  <script>
+    const apiBase = window.location.protocol === 'file:' ? 'http://localhost:5001' : '';
+    let basket = { items: [], total: 0 };
+    let stripe = null;
+    let cardNumberElement = null;
+
+    function loadStripeJs() {
+      if (typeof window.Stripe === 'function') return Promise.resolve(window.Stripe);
+      return new Promise((resolve, reject) => {
+        const script = document.createElement('script');
+        script.src = 'https://js.stripe.com/v3/';
+        script.async = true;
+        script.onload = () => {
+          if (typeof window.Stripe === 'function') resolve(window.Stripe);
+          else reject(new Error('Stripe.js unavailable'));
+        };
+        script.onerror = () => reject(new Error('Could not load Stripe.js'));
+        document.head.appendChild(script);
+      });
+    }
+
+    function getFulfillmentType() {
+      const checked = document.querySelector('input[name="fulfillment"]:checked');
+      return checked ? checked.value : 'delivery';
+    }
+
+    function updateFulfillmentPanels() {
+      const type = getFulfillmentType();
+      document.getElementById('delivery-panel').classList.toggle('is-visible', type === 'delivery');
+      document.getElementById('collect-panel').classList.toggle('is-visible', type === 'collect');
+      document.getElementById('fulfillment-summary').textContent =
+        type === 'delivery' ? 'Home delivery selected' : 'Collect from club selected';
+    }
+
+    function buildFulfillmentPayload() {
+      const type = getFulfillmentType();
+      const payload = {
+        type,
+        contact: {
+          fullName: document.getElementById('full-name').value.trim(),
+          email: document.getElementById('email').value.trim(),
+          phone: document.getElementById('phone').value.trim()
+        }
+      };
+      if (type === 'delivery') {
+        payload.address = {
+          line1: document.getElementById('address-line1').value.trim(),
+          line2: document.getElementById('address-line2').value.trim(),
+          city: document.getElementById('city').value.trim(),
+          postcode: document.getElementById('postcode').value.trim()
+        };
+      } else {
+        payload.pickupLocation = document.getElementById('pickup-location').value;
+      }
+      return payload;
+    }
+
+    function validateForm() {
+      const f = buildFulfillmentPayload();
+      if (!f.contact.fullName || !f.contact.email) {
+        alert('Please enter your name and email.');
+        return null;
+      }
+      if (f.type === 'delivery') {
+        if (!f.address.line1 || !f.address.city || !f.address.postcode) {
+          alert('Please enter your full delivery address.');
+          return null;
+        }
+      } else if (!f.pickupLocation) {
+        alert('Please select a club for collection.');
+        return null;
+      }
+      return f;
+    }
+
+    function renderBasket() {
+      const raw = localStorage.getItem('shopCheckout');
+      if (!raw) {
+        document.getElementById('empty-basket').hidden = false;
+        document.getElementById('checkout-layout').hidden = true;
+        return false;
+      }
+      try {
+        basket = JSON.parse(raw);
+      } catch (e) {
+        basket = { items: [], total: 0 };
+      }
+      if (!basket.items || !basket.items.length) {
+        document.getElementById('empty-basket').hidden = false;
+        document.getElementById('checkout-layout').hidden = true;
+        return false;
+      }
+
+      const count = basket.items.reduce((s, i) => s + (i.qty || 1), 0);
+      const total = basket.total ?? basket.items.reduce((s, i) => s + i.price * (i.qty || 1), 0);
+      document.getElementById('basket-count').textContent = count + (count === 1 ? ' item' : ' items');
+      document.getElementById('basket-total').textContent = '£' + total.toFixed(2);
+      document.getElementById('sidebar-total').textContent = '£' + total.toFixed(2);
+
+      document.getElementById('basket-list').innerHTML = basket.items.map((item) => {
+        const qty = item.qty || 1;
+        const line = (item.price * qty).toFixed(2);
+        return '<li class="shop-basket-item">' +
+          '<div><div class="shop-basket-item-name">' + escapeHtml(item.name) + '</div>' +
+          '<div class="shop-basket-item-meta">Qty ' + qty + ' × £' + item.price.toFixed(2) + '</div></div>' +
+          '<span class="shop-basket-item-price">£' + line + '</span></li>';
+      }).join('');
+      return true;
+    }
+
+    function escapeHtml(str) {
+      return String(str)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;');
+    }
+
+    async function loadPickupLocations() {
+      try {
+        const res = await fetch(apiBase + '/api/shop/pickup-locations');
+        const data = await res.json();
+        const select = document.getElementById('pickup-location');
+        (data.locations || []).forEach((loc) => {
+          const opt = document.createElement('option');
+          opt.value = loc;
+          opt.textContent = loc;
+          select.appendChild(opt);
+        });
+      } catch (e) {
+        ['Selly Oak', 'Edgbaston', 'City centre', 'West Bromwich'].forEach((loc) => {
+          const opt = document.createElement('option');
+          opt.value = loc;
+          opt.textContent = loc;
+          document.getElementById('pickup-location').appendChild(opt);
+        });
+      }
+    }
+
+    function prefillFromSession() {
+      const user = typeof getCurrentUser === 'function' ? getCurrentUser() : null;
+      if (!user) return;
+      if (user.name) document.getElementById('full-name').value = user.name;
+      if (user.email) document.getElementById('email').value = user.email;
+    }
+
+    async function initShopCheckout() {
+      if (!renderBasket()) return;
+
+      document.querySelectorAll('input[name="fulfillment"]').forEach((el) => {
+        el.addEventListener('change', updateFulfillmentPanels);
+      });
+      updateFulfillmentPanels();
+      await loadPickupLocations();
+      prefillFromSession();
+
+      const payButton = document.getElementById('pay-btn');
+      const cardErrors = document.getElementById('card-errors');
+
+      if (window.location.protocol === 'file:') {
+        cardErrors.textContent = 'Open via http://localhost:5001/shop-checkout.html';
+        payButton.disabled = true;
+        return;
+      }
+
+      let pk;
+      try {
+        pk = await AuraPlansApi.fetchStripePublishableKey();
+      } catch (e) {
+        cardErrors.textContent = 'Card payment unavailable — check Stripe keys in backend/.env';
+        payButton.disabled = true;
+        return;
+      }
+
+      await loadStripeJs();
+      stripe = Stripe(pk);
+      const elements = stripe.elements();
+      const stripeFieldStyle = {
+        base: {
+          color: '#1a1a1a',
+          fontFamily: 'Inter, Montserrat, sans-serif',
+          fontSize: '16px',
+          lineHeight: '24px',
+          '::placeholder': { color: '#9a9a9a' }
+        },
+        invalid: { color: '#e94560' }
+      };
+      cardNumberElement = elements.create('cardNumber', { style: stripeFieldStyle, showIcon: true });
+      const cardExpiryElement = elements.create('cardExpiry', { style: stripeFieldStyle });
+      const cardCvcElement = elements.create('cardCvc', { style: stripeFieldStyle, placeholder: 'CVC' });
+
+      function wireStripeField(element, wrapId) {
+        const wrap = document.getElementById(wrapId);
+        element.on('focus', () => wrap.classList.add('is-focused'));
+        element.on('blur', () => wrap.classList.remove('is-focused'));
+        element.on('change', (event) => {
+          wrap.classList.toggle('is-invalid', !!event.error);
+          cardErrors.textContent = event.error ? event.error.message : '';
+        });
+        wrap.addEventListener('click', () => element.focus());
+      }
+
+      cardNumberElement.mount('#card-number');
+      cardExpiryElement.mount('#card-expiry');
+      cardCvcElement.mount('#card-cvc');
+      wireStripeField(cardNumberElement, 'card-number-wrap');
+      wireStripeField(cardExpiryElement, 'card-expiry-wrap');
+      wireStripeField(cardCvcElement, 'card-cvc-wrap');
+      payButton.disabled = false;
+    }
+
+    async function handleShopPayment() {
+      if (!stripe || !cardNumberElement) {
+        alert('Payment form is not ready.');
+        return;
+      }
+      const fulfillment = validateForm();
+      if (!fulfillment) return;
+
+      const payButton = document.getElementById('pay-btn');
+      payButton.disabled = true;
+      payButton.textContent = 'Processing…';
+
+      const items = basket.items.map((i) => ({ id: i.id, qty: i.qty || 1 }));
+
+      try {
+        const intentRes = await fetch(apiBase + '/api/shop/create-payment-intent', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ items, fulfillment })
+        });
+        const intentData = await intentRes.json();
+        if (!intentRes.ok) throw new Error(intentData.error || 'Could not start payment');
+
+        const billingDetails = {
+          name: fulfillment.contact.fullName,
+          email: fulfillment.contact.email,
+          phone: fulfillment.contact.phone || undefined
+        };
+        if (fulfillment.type === 'delivery' && fulfillment.address?.postcode) {
+          billingDetails.address = {
+            line1: fulfillment.address.line1,
+            line2: fulfillment.address.line2 || undefined,
+            city: fulfillment.address.city,
+            postal_code: fulfillment.address.postcode
+          };
+        }
+
+        const { error: stripeError, paymentIntent } = await stripe.confirmCardPayment(intentData.clientSecret, {
+          payment_method: { card: cardNumberElement, billing_details: billingDetails }
+        });
+        if (stripeError) throw new Error(stripeError.message);
+
+        const confirmRes = await fetch(apiBase + '/api/shop/confirm-order', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ paymentIntentId: paymentIntent.id, items, fulfillment })
+        });
+        const confirmData = await confirmRes.json();
+        if (!confirmRes.ok) throw new Error(confirmData.error || 'Could not confirm order');
+
+        localStorage.removeItem('cart');
+        localStorage.removeItem('shopCheckout');
+
+        const qs = new URLSearchParams({
+          orderId: confirmData.orderId || '',
+          total: String(confirmData.order?.total ?? basket.total),
+          fulfillment: fulfillment.type,
+          email: fulfillment.contact.email
+        });
+        if (fulfillment.type === 'collect') {
+          qs.set('pickup', fulfillment.pickupLocation);
+        }
+        window.location.href = 'shop-order-success.html?' + qs.toString();
+      } catch (err) {
+        payButton.disabled = false;
+        payButton.textContent = 'Pay now';
+        document.getElementById('card-errors').textContent = err.message || 'Payment failed';
+      }
+    }
+
+    initShopCheckout().catch((err) => {
+      document.getElementById('card-errors').textContent = err.message || 'Could not load checkout';
+    });
+  </script>
+</body>
+</html>

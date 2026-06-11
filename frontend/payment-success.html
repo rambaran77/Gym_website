@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Payment successful — Aura Athletic</title>
+  <meta name="description" content="Your Aura Athletic membership payment was successful." />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,500;14..32,600;14..32,700;14..32,800&family=Montserrat:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+  <link rel="stylesheet" href="site-theme.css" />
+  <link rel="stylesheet" href="payment-success.css" />
+  <script src="auth.js"></script>
+  <script src="site-chrome.js" defer></script>
+</head>
+<body class="site-page payment-success-page" data-page="members">
+  <main class="payment-success-shell">
+    <article class="payment-success-card" aria-labelledby="success-title">
+      <div class="payment-success-icon" aria-hidden="true">✓</div>
+      <span class="eyebrow">Payment complete</span>
+      <h1 id="success-title">You're all set!</h1>
+      <p class="lead">Your payment went through and your membership is active. Welcome to Aura Athletic — you can book classes and manage your plan from your member hub.</p>
+
+      <div class="payment-success-details" id="success-details" hidden></div>
+
+      <p id="email-line" class="payment-success-email" hidden>We've sent a confirmation email to your account address.</p>
+
+      <div class="payment-success-actions">
+        <a class="btn-primary-lg" href="member-dashboard.html">Go to member hub</a>
+        <a class="btn-outline-lg" href="schedule.html">Book a class</a>
+        <a class="btn-outline-lg" href="membership.html">View plans</a>
+      </div>
+
+      <p class="payment-success-footnote">Keep this page handy — your membership reference is shown above.</p>
+    </article>
+  </main>
+
+  <script>
+    const params = new URLSearchParams(window.location.search);
+    const planName = params.get("planName");
+    const planId = params.get("plan");
+    const membershipId = params.get("membershipId");
+    const startDate = params.get("startDate");
+    const endDate = params.get("endDate");
+    const status = params.get("status");
+    const emailSent = params.get("emailSent");
+
+    function formatDate(iso) {
+      if (!iso) return "";
+      const d = new Date(iso + "T12:00:00");
+      if (Number.isNaN(d.getTime())) return iso;
+      return d.toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "numeric" });
+    }
+
+    function escapeHtml(str) {
+      return String(str)
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;");
+    }
+
+    function addDetail(label, value, extraClass) {
+      if (!value) return;
+      const container = document.getElementById("success-details");
+      const row = document.createElement("div");
+      row.className = "payment-success-detail";
+      row.innerHTML =
+        '<span class="detail-label">' + escapeHtml(label) + '</span>' +
+        '<span class="detail-value' + (extraClass ? " " + extraClass : "") + '">' + escapeHtml(value) + "</span>";
+      container.appendChild(row);
+      container.hidden = false;
+    }
+
+    const displayPlan = planName || planId;
+    if (displayPlan) {
+      addDetail("Plan", displayPlan);
+    }
+    if (status) {
+      const label = status.charAt(0).toUpperCase() + status.slice(1);
+      addDetail("Status", label, status === "active" ? "status-active" : "");
+    }
+    if (startDate && endDate) {
+      addDetail("Access period", formatDate(startDate) + " → " + formatDate(endDate));
+    } else if (endDate) {
+      addDetail("Valid until", formatDate(endDate));
+    }
+    if (membershipId) {
+      const shortRef = membershipId.length > 12
+        ? membershipId.slice(0, 8) + "…" + membershipId.slice(-4)
+        : membershipId;
+      addDetail("Reference", shortRef);
+    }
+
+    if (emailSent === "1") {
+      document.getElementById("email-line").hidden = false;
+    }
+  </script>
+</body>
+</html>

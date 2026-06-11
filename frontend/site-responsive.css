@@ -1,0 +1,419 @@
+/* Aura Athletic — desktop / tablet / mobile layout system */
+
+/* ——— Desktop (1024px+) ——— */
+@media (min-width: 1024px) {
+  body.site-page .nav-links a {
+    padding: 0.5rem 0.75rem;
+    font-size: 0.875rem;
+  }
+
+  body.site-page .logo {
+    font-size: 1rem;
+  }
+
+  body.site-page .class-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.25rem;
+  }
+
+  .news-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .extras-grid {
+    grid-template-columns: repeat(4, 1fr);
+  }
+
+  .location-results {
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  }
+
+  body.site-page .schedule-landing {
+    padding: 2rem var(--site-gutter) 3rem;
+  }
+
+  body.site-page .admin-container,
+  body.site-page .dashboard-container {
+    padding: 2rem var(--site-gutter) 3rem;
+  }
+}
+
+@media (min-width: 1280px) {
+  body.site-page .nav-links a {
+    padding: 0.5rem 0.85rem;
+    font-size: 0.9rem;
+  }
+}
+
+/* ——— Tablet (769px–1023px) ——— */
+@media (min-width: 769px) and (max-width: 1023px) {
+  body.site-page .logo {
+    font-size: 0.88rem;
+  }
+
+  body.site-page .nav-links a {
+    font-size: 0.72rem;
+    padding: 0.35rem 0.45rem;
+  }
+
+  body.site-page .btn-login {
+    font-size: 0.78rem;
+    padding: 0.4rem 0.75rem;
+  }
+
+  body.site-page .nav-actions .user-greeting {
+    max-width: 8rem;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  body.site-page .class-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1rem;
+  }
+
+  .news-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .extras-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .schedule-table-wrap {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    border-radius: var(--tgg-radius);
+    border: 1px solid var(--tgg-line);
+  }
+
+  body.site-page .premium-schedule {
+    min-width: 720px;
+  }
+}
+
+/* ——— Mobile (768px and below) ——— */
+@media (max-width: 768px) {
+  :root {
+    --site-gutter: 1rem;
+    --site-promo-h: 2.15rem;
+  }
+
+  body.site-page .btn-outline-lg {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.65rem 1.15rem;
+    border: 2px solid var(--tgg-line);
+    color: var(--tgg-ink);
+    border-radius: 999px;
+    font-weight: 600;
+    text-decoration: none;
+    width: auto;
+  }
+
+  html {
+    font-size: 15px;
+  }
+
+  .promo-strip {
+    font-size: 0.7rem;
+    line-height: 1.35;
+    padding: 0.4rem 0.65rem;
+  }
+
+  body.site-page .logo {
+    font-size: 0.78rem;
+    letter-spacing: 0.05em;
+  }
+
+  body.site-page .nav-actions .user-greeting {
+    display: none;
+  }
+
+  body.site-page .nav-actions .btn-login {
+    font-size: 0.75rem;
+    padding: 0.38rem 0.65rem;
+  }
+
+  /* Beat legacy styles.css dark mobile nav */
+  body.site-page .nav-links {
+    display: none !important;
+    position: fixed !important;
+    top: var(--site-header-h) !important;
+    left: 0 !important;
+    right: 0 !important;
+    background: var(--tgg-white) !important;
+    border-bottom: 1px solid var(--tgg-line) !important;
+  }
+
+  body.site-page .nav-links.show {
+    display: flex !important;
+  }
+
+  body.site-page .menu-btn {
+    display: flex !important;
+  }
+
+  .home-section {
+    padding: 2.25rem var(--site-gutter);
+  }
+
+  .find-gym {
+    --find-gym-py: clamp(2rem, 6vw, 2.75rem);
+    --find-gym-px: max(1rem, var(--site-gutter));
+    --find-gym-form-gap: 0.65rem;
+    --find-gym-results-gap: 0.85rem;
+  }
+
+  .home-section-inner,
+  .membership-landing,
+  .classes-landing {
+    padding-left: 0;
+    padding-right: 0;
+  }
+
+  .news-grid,
+  .extras-grid,
+  body.site-page .class-grid {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+
+  .quick-links-inner {
+    justify-content: flex-start;
+    overflow-x: auto;
+    flex-wrap: nowrap;
+    padding-bottom: 0.5rem;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+  }
+
+  .quick-links-inner::-webkit-scrollbar {
+    display: none;
+  }
+
+  .quick-link {
+    flex-shrink: 0;
+  }
+
+  .footer-grid {
+    grid-template-columns: 1fr 1fr;
+    gap: 1.25rem;
+  }
+
+  .cta-band,
+  .testimonials {
+    padding: 2.25rem var(--site-gutter);
+  }
+
+  body.site-page .hero {
+    min-height: 52vh;
+    padding: 4.5rem 1rem 2.5rem;
+  }
+
+  body.site-page .hero h1 {
+    font-size: 1.75rem;
+  }
+
+  body.site-page .container {
+    padding: 1.25rem var(--site-gutter) 2rem;
+  }
+
+  body.site-page .schedule-landing {
+    padding-left: var(--site-gutter);
+    padding-right: var(--site-gutter);
+    padding-bottom: 2rem;
+  }
+
+  body.site-page .schedule-filters {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  body.site-page .schedule-search input,
+  body.site-page .schedule-filter select {
+    width: 100%;
+    min-width: 0;
+  }
+
+  /* Schedule: table → cards */
+  .schedule-table-wrap {
+    border: none;
+  }
+
+  body.site-page .premium-schedule.schedule-responsive {
+    display: block;
+    background: transparent;
+    border: none;
+    border-radius: 0;
+  }
+
+  body.site-page .premium-schedule.schedule-responsive thead {
+    display: none;
+  }
+
+  body.site-page .premium-schedule.schedule-responsive tbody {
+    display: flex;
+    flex-direction: column;
+    gap: 0.85rem;
+  }
+
+  body.site-page .premium-schedule.schedule-responsive tr {
+    display: block;
+    background: var(--tgg-white);
+    border: 1px solid var(--tgg-line);
+    border-radius: var(--tgg-radius);
+    padding: 0.85rem 1rem;
+    box-shadow: var(--tgg-shadow);
+  }
+
+  body.site-page .premium-schedule.schedule-responsive tr:hover td {
+    background: transparent;
+  }
+
+  body.site-page .premium-schedule.schedule-responsive td {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.45rem 0;
+    border: none;
+    font-size: 0.88rem;
+    text-align: right;
+  }
+
+  body.site-page .premium-schedule.schedule-responsive td::before {
+    content: attr(data-label);
+    font-weight: 700;
+    color: var(--tgg-muted);
+    font-size: 0.72rem;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    text-align: left;
+    flex-shrink: 0;
+  }
+
+  body.site-page .premium-schedule.schedule-responsive td:first-child {
+    padding-top: 0;
+    font-size: 1rem;
+  }
+
+  body.site-page .premium-schedule.schedule-responsive td:first-child::before {
+    display: none;
+  }
+
+  body.site-page .premium-schedule.schedule-responsive td:first-child strong {
+    display: block;
+    text-align: left;
+    width: 100%;
+  }
+
+  body.site-page .premium-schedule.schedule-responsive td:last-child {
+    padding-top: 0.65rem;
+    justify-content: stretch;
+  }
+
+  body.site-page .premium-schedule.schedule-responsive td:last-child::before {
+    display: none;
+  }
+
+  body.site-page .premium-schedule.schedule-responsive .btn-book-glass {
+    width: 100%;
+    text-align: center;
+  }
+
+  body.site-page .admin-container,
+  body.site-page .dashboard-container {
+    padding: 1rem var(--site-gutter) 2rem;
+  }
+
+  .signature-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 0.65rem;
+    align-items: center;
+  }
+
+  .signature-actions .btn-outline-lg {
+    margin-left: 0 !important;
+    border-color: var(--tgg-line);
+    color: var(--tgg-ink);
+  }
+}
+
+/* ——— Small phones (480px and below) ——— */
+@media (max-width: 480px) {
+  html {
+    font-size: 14px;
+  }
+
+  .promo-strip strong:last-of-type {
+    display: inline;
+  }
+
+  .footer-grid {
+    grid-template-columns: 1fr;
+  }
+
+  body.site-page .hero {
+    min-height: 46vh;
+  }
+
+  body.site-page .nav-actions .btn-login {
+    padding: 0.35rem 0.55rem;
+    font-size: 0.7rem;
+  }
+
+  .membership-hero-actions,
+  .classes-hero-actions,
+  .trainers-hero-actions,
+  .trainers-cta-actions,
+  .classes-filter-bar {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .membership-hero-actions a,
+  .classes-hero-actions a,
+  .trainers-hero-actions a,
+  .trainers-cta-actions a,
+  .classes-filter-btn {
+    width: 100%;
+    text-align: center;
+  }
+
+  body.site-page .trainers-landing {
+    padding-left: var(--site-gutter);
+    padding-right: var(--site-gutter);
+    padding-bottom: 2rem;
+  }
+}
+
+/* ——— Desktop-only: hide mobile menu artifacts ——— */
+@media (min-width: 769px) {
+  body.site-page .nav-links {
+    display: flex !important;
+    position: static !important;
+    max-height: none !important;
+    overflow: visible !important;
+    flex-direction: row !important;
+    padding: 0 !important;
+    box-shadow: none !important;
+    border-bottom: none !important;
+  }
+
+  body.site-page .menu-btn {
+    display: none !important;
+  }
+
+  body.site-page .mobile-nav-backdrop,
+  body.site-page.menu-open .mobile-nav-backdrop {
+    display: none !important;
+  }
+
+  body.site-page.menu-open {
+    overflow: auto;
+  }
+}

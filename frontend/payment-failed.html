@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,500;14..32,600;14..32,700;14..32,800&family=Montserrat:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="site-theme.css">
+    <script src="site-chrome.js" defer></script>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Payment unsuccessful</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --bg: #0a0b10;
+      --ink: #ffffff;
+      --muted: #b7b0a1;
+      --line: rgba(212, 175, 55, 0.2);
+      --accent: #d4af37;
+      --panel: rgba(20, 22, 28, 0.95);
+      --bad: #f07178;
+      --bad-soft: rgba(240, 113, 120, 0.12);
+    }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      min-height: 100vh;
+      background: linear-gradient(135deg, #0a0b10 0%, #14161c 100%);
+      color: var(--ink);
+      padding: 2rem 1rem;
+      display: grid;
+      place-items: center;
+    }
+    .card {
+      width: min(100%, 520px);
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 24px;
+      padding: 2rem 1.75rem;
+      box-shadow: 0 24px 60px rgba(0, 0, 0, 0.4);
+      text-align: center;
+    }
+    .icon-wrap {
+      width: 72px;
+      height: 72px;
+      margin: 0 auto 1.25rem;
+      border-radius: 50%;
+      background: var(--bad-soft);
+      border: 1px solid rgba(240, 113, 120, 0.35);
+      display: grid;
+      place-items: center;
+      font-size: 2rem;
+      line-height: 1;
+    }
+    h1 {
+      font-size: clamp(1.5rem, 4vw, 1.85rem);
+      font-weight: 650;
+      margin-bottom: 0.65rem;
+      color: #fff;
+    }
+    p.lead {
+      color: var(--muted);
+      font-size: 15px;
+      line-height: 1.6;
+      margin-bottom: 1rem;
+    }
+    #detail {
+      text-align: left;
+      font-size: 14px;
+      color: var(--muted);
+      line-height: 1.55;
+      padding: 0.9rem 1rem;
+      border-radius: 14px;
+      background: rgba(0, 0, 0, 0.35);
+      border: 1px solid rgba(240, 113, 120, 0.2);
+      color: #e8e4dc;
+      word-break: break-word;
+    }
+    #detail:empty {
+      display: none;
+    }
+    .actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.75rem;
+      justify-content: center;
+      margin-top: 1.75rem;
+    }
+    a.button {
+      appearance: none;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 999px;
+      padding: 0.9rem 1.35rem;
+      font-size: 14px;
+      font-weight: 600;
+      text-decoration: none;
+      cursor: pointer;
+      border: 0;
+    }
+    a.button.primary {
+      background: linear-gradient(135deg, #d4af37, #b8960c);
+      color: #0a0b10;
+    }
+    a.button.secondary {
+      background: rgba(255, 255, 255, 0.08);
+      color: #fff;
+      border: 1px solid rgba(212, 175, 55, 0.2);
+    }
+  </style>
+    <script src="auth.js"></script>
+</head>
+<body class="site-page" data-page="members">
+  <div class="card">
+    <div class="icon-wrap" aria-hidden="true">!</div>
+    <h1>Payment unsuccessful</h1>
+    <p class="lead">Your payment was declined or could not be completed. You have not been charged.</p>
+    <p id="detail"></p>
+    <div class="actions">
+      <a class="button primary" id="retry-link" href="membership.html">Try again</a>
+      <a class="button secondary" href="index.html">Back to home</a>
+    </div>
+  </div>
+  <script>
+    const params = new URLSearchParams(window.location.search);
+    const msg = params.get("msg");
+    const plan = params.get("plan");
+    const detail = document.getElementById("detail");
+    if (msg) {
+      detail.textContent = msg;
+    }
+    const retry = document.getElementById("retry-link");
+    if (plan) {
+      retry.href = "checkout.html?plan=" + encodeURIComponent(plan);
+      retry.textContent = "Return to checkout";
+    }
+  </script>
+</body>
+</html>

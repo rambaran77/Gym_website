@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Group Fitness Classes | Expert Trainers | Aura Athletic</title>
+  <meta name="description" content="Book yoga, HIIT, spin, strength and dance classes at Aura Athletic. Each session is led by a certified coach — view the timetable and reserve your spot." />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,500;14..32,600;14..32,700;14..32,800&family=Montserrat:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+  <link rel="stylesheet" href="site-theme.css" />
+  <link rel="stylesheet" href="classes-landing.css" />
+  <script src="auth.js"></script>
+  <script src="site-chrome.js" defer></script>
+</head>
+<body class="site-page classes-landing-page" data-page="classes">
+  <main class="classes-landing">
+    <section class="classes-hero" aria-labelledby="classes-hero-title">
+      <div class="classes-hero-copy">
+        <span class="eyebrow">Group fitness</span>
+        <h1 id="classes-hero-title">Classes led by expert coaches</h1>
+        <p class="lead">From yoga and HIIT to spin and strength — every session is assigned to a specialist trainer who guides you from warm-up to finish.</p>
+        <div class="classes-hero-actions">
+          <a href="schedule.html" class="btn-primary-lg">Book a class</a>
+          <a href="#class-catalog" class="btn-outline-lg">Browse by type</a>
+        </div>
+      </div>
+      <div class="classes-hero-visual">
+        <img src="images/yoga-class.jpg" alt="Group fitness class in session" onerror="this.src='images/modern-gym.jpg'" />
+      </div>
+    </section>
+
+    <div class="classes-filter-bar" id="classFilters" role="tablist" aria-label="Filter classes">
+      <button type="button" class="classes-filter-btn active" data-filter="all">All classes</button>
+      <button type="button" class="classes-filter-btn" data-filter="yoga">Yoga</button>
+      <button type="button" class="classes-filter-btn" data-filter="hiit">HIIT</button>
+      <button type="button" class="classes-filter-btn" data-filter="cardio">Cardio &amp; spin</button>
+      <button type="button" class="classes-filter-btn" data-filter="strength">Strength</button>
+      <button type="button" class="classes-filter-btn" data-filter="dance">Dance</button>
+      <button type="button" class="classes-filter-btn" data-filter="pilates">Pilates</button>
+    </div>
+
+    <section id="class-catalog" class="classes-grid" aria-live="polite">
+      <p class="classes-empty">Loading classes and trainers…</p>
+    </section>
+
+    <section class="classes-coaches" aria-labelledby="coaches-title">
+      <h2 id="coaches-title">Your class coaches</h2>
+      <p class="sub">Each discipline has a dedicated trainer — tap to view their profile.</p>
+      <div class="coaches-strip" id="coachesStrip"></div>
+    </section>
+
+    <section class="classes-bottom-cta">
+      <h2>Reserve your spot on the timetable</h2>
+      <p>Members on eligible plans get classes included. Day-pass holders can add a session at checkout.</p>
+      <a href="schedule.html" class="btn-primary-lg">Open class schedule</a>
+    </section>
+  </main>
+
+  <script>
+    const TRAINER_CATALOG = [
+      { id: "static_1", slug: "sarah-johnson", name: "Sarah Johnson", title: "Senior Yoga Instructor", image: "images/yoga.png", specialties: ["Yoga", "Pilates"] },
+      { id: "static_2", slug: "mike-chen", name: "Mike Chen", title: "HIIT & Strength Coach", image: "images/HIIT.png", specialties: ["HIIT", "Strength Training"] },
+      { id: "static_3", slug: "emma-davis", name: "Emma Davis", title: "Spin & Cycling Specialist", image: "images/luxury-gym.jpg", specialties: ["Spin", "Cardio"] },
+      { id: "static_4", slug: "alex-rodriguez", name: "Alex Rodriguez", title: "Strength & Conditioning Expert", image: "images/bb.png", specialties: ["Strength", "Bodybuilding"] },
+      { id: "static_5", slug: "maria-garcia", name: "Maria Garcia", title: "Dance Fitness Instructor", image: "images/zumba.png", specialties: ["Zumba", "Dance"] },
+      { id: "static_6", slug: "lisa-thompson", name: "Lisa Thompson", title: "Pilates & Core Specialist", image: "images/powerspin.png", specialties: ["Pilates", "Core Training"] }
+    ];
+
+    const CLASS_CATALOG = [
+      {
+        id: "yoga-flow",
+        category: "yoga",
+        name: "Morning Yoga Flow",
+        desc: "Start the day with Vinyasa-style movement, breath work, and mobility for all levels.",
+        image: "images/yoga-class.jpg",
+        difficulty: "Beginner friendly",
+        duration: "60 min",
+        location: "Studio A",
+        trainerId: "static_1",
+        instructor: "Sarah Johnson"
+      },
+      {
+        id: "hiit-intensity",
+        category: "hiit",
+        name: "HIIT Intensity",
+        desc: "High-energy intervals combining cardio and strength to push your limits safely.",
+        image: "images/modern-gym.jpg",
+        difficulty: "Advanced",
+        duration: "45 min",
+        location: "Main Gym",
+        trainerId: "static_2",
+        instructor: "Mike Chen"
+      },
+      {
+        id: "power-spin",
+        category: "cardio",
+        name: "Power Spin",
+        desc: "Rhythm-based cycling with climbs, sprints, and curated playlists.",
+        image: "images/luxury-gym.jpg",
+        difficulty: "Intermediate",
+        duration: "45 min",
+        location: "Cycle Studio",
+        trainerId: "static_3",
+        instructor: "Emma Davis"
+      },
+      {
+        id: "strength-training",
+        category: "strength",
+        name: "Strength & Conditioning",
+        desc: "Barbell and functional strength blocks focused on form, power, and progression.",
+        image: "images/bb.png",
+        difficulty: "All levels",
+        duration: "60 min",
+        location: "Weights Floor",
+        trainerId: "static_4",
+        instructor: "Alex Rodriguez"
+      },
+      {
+        id: "zumba",
+        category: "dance",
+        name: "Zumba Dance Fitness",
+        desc: "Latin-inspired dance cardio that makes training feel like a party.",
+        image: "images/zumba.png",
+        difficulty: "All levels",
+        duration: "55 min",
+        location: "Studio B",
+        trainerId: "static_5",
+        instructor: "Maria Garcia"
+      },
+      {
+        id: "pilates-core",
+        category: "pilates",
+        name: "Pilates & Core",
+        desc: "Controlled movements for core stability, posture, and full-body control.",
+        image: "images/powerspin.png",
+        difficulty: "Beginner friendly",
+        duration: "50 min",
+        location: "Studio A",
+        trainerId: "static_6",
+        instructor: "Lisa Thompson"
+      }
+    ];
+
+    let activeFilter = "all";
+    let trainersByName = new Map();
+    let apiClassAssignments = [];
+
+    function escapeHtml(str) {
+      if (!str) return "";
+      return String(str).replace(/[&<>"]/g, (m) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[m]));
+    }
+
+    function trainerById(id) {
+      return TRAINER_CATALOG.find((t) => t.id === id);
+    }
+
+    function resolveTrainer(classItem) {
+      const fromCatalog = trainerById(classItem.trainerId);
+      if (fromCatalog) return fromCatalog;
+      const byName = trainersByName.get((classItem.instructor || "").toLowerCase());
+      if (byName) return byName;
+      return {
+        id: "unknown",
+        slug: "",
+        name: classItem.instructor || "Aura Coach",
+        title: "Class instructor",
+        image: "images/modern-gym.jpg",
+        specialties: []
+      };
+    }
+
+    function mergeApiAssignments(apiClasses) {
+      const seen = new Set(CLASS_CATALOG.map((c) => c.name.toLowerCase()));
+      const extras = [];
+      apiClasses.forEach((c) => {
+        const key = (c.name || "").toLowerCase();
+        if (!key || seen.has(key)) return;
+        seen.add(key);
+        const tags = (c.tags || []).map((t) => String(t).toLowerCase());
+        let category = "strength";
+        if (tags.some((t) => t.includes("yoga"))) category = "yoga";
+        else if (tags.some((t) => t.includes("hiit") || t.includes("cardio"))) category = "hiit";
+        else if (tags.some((t) => t.includes("spin"))) category = "cardio";
+        else if (tags.some((t) => t.includes("dance") || t.includes("zumba"))) category = "dance";
+        else if (tags.some((t) => t.includes("pilates"))) category = "pilates";
+
+        extras.push({
+          id: c._id || key,
+          category,
+          name: c.name,
+          desc: c.description || "Book this session on the live timetable.",
+          image: "images/modern-gym.jpg",
+          difficulty: c.difficulty || "All levels",
+          duration: c.duration ? `${c.duration} min` : "60 min",
+          location: c.location || "Main Gym",
+          trainerId: null,
+          instructor: c.instructor
+        });
+      });
+      return [...CLASS_CATALOG, ...extras];
+    }
+
+    function renderClassCard(classItem) {
+      const trainer = resolveTrainer(classItem);
+      const trainerLink = trainer.slug ? `trainers.html#${trainer.slug}` : "trainers.html";
+      const scheduleLink = `schedule.html?search=${encodeURIComponent(classItem.name)}`;
+
+      return `
+        <article class="class-showcase-card" data-category="${escapeHtml(classItem.category)}">
+          <div class="class-showcase-media">
+            <img src="${escapeHtml(classItem.image)}" alt="${escapeHtml(classItem.name)}" onerror="this.src='images/modern-gym.jpg'" />
+            <span class="class-showcase-tag">${escapeHtml(classItem.category)}</span>
+          </div>
+          <div class="class-showcase-body">
+            <h3>${escapeHtml(classItem.name)}</h3>
+            <p class="desc">${escapeHtml(classItem.desc)}</p>
+            <div class="class-meta-row">
+              <span>${escapeHtml(classItem.difficulty)}</span>
+              <span>${escapeHtml(classItem.duration)}</span>
+              <span>${escapeHtml(classItem.location)}</span>
+            </div>
+            <div class="class-trainer-row">
+              <img src="${escapeHtml(trainer.image)}" alt="${escapeHtml(trainer.name)}" onerror="this.src='images/modern-gym.jpg'" />
+              <div>
+                <div class="trainer-label">Assigned trainer</div>
+                <p class="trainer-name">${escapeHtml(trainer.name)}</p>
+                <p class="trainer-title">${escapeHtml(trainer.title)}</p>
+              </div>
+            </div>
+            <div class="class-showcase-actions">
+              <a class="btn-book" href="${scheduleLink}">Book session</a>
+              <a class="btn-trainer" href="${trainerLink}">View coach</a>
+            </div>
+          </div>
+        </article>`;
+    }
+
+    function renderCatalog(allClasses) {
+      const grid = document.getElementById("class-catalog");
+      const filtered = activeFilter === "all"
+        ? allClasses
+        : allClasses.filter((c) => c.category === activeFilter);
+
+      if (!filtered.length) {
+        grid.innerHTML = '<p class="classes-empty">No classes in this category yet. Try another filter or check the schedule.</p>';
+        return;
+      }
+      grid.innerHTML = filtered.map(renderClassCard).join("");
+    }
+
+    function renderCoaches() {
+      const strip = document.getElementById("coachesStrip");
+      strip.innerHTML = TRAINER_CATALOG.map((t) => `
+        <a class="coach-chip" href="trainers.html#${t.slug}">
+          <img src="${escapeHtml(t.image)}" alt="${escapeHtml(t.name)}" onerror="this.src='images/modern-gym.jpg'" />
+          <strong>${escapeHtml(t.name.split(" ")[0])}</strong>
+          <span>${escapeHtml(t.specialties[0] || "Coach")}</span>
+        </a>`).join("");
+    }
+
+    function setupFilters(allClasses) {
+      document.querySelectorAll(".classes-filter-btn").forEach((btn) => {
+        btn.addEventListener("click", () => {
+          document.querySelectorAll(".classes-filter-btn").forEach((b) => b.classList.remove("active"));
+          btn.classList.add("active");
+          activeFilter = btn.dataset.filter;
+          renderCatalog(allClasses);
+        });
+      });
+    }
+
+    async function loadDynamicTrainers() {
+      try {
+        const res = await fetch("/api/trainers");
+        if (!res.ok) return;
+        const list = await res.json();
+        list.forEach((t) => {
+          trainersByName.set((t.name || "").toLowerCase(), {
+            id: t._id,
+            slug: "",
+            name: t.name,
+            title: t.specialty || "Fitness Trainer",
+            image: t.profileImage || `https://ui-avatars.com/api/?name=${encodeURIComponent(t.name)}&background=e94560&color=fff&size=96`,
+            specialties: t.specialties || [t.specialty].filter(Boolean)
+          });
+        });
+      } catch (e) {
+        console.warn("Could not load trainers from API", e);
+      }
+    }
+
+    async function init() {
+      TRAINER_CATALOG.forEach((t) => trainersByName.set(t.name.toLowerCase(), t));
+      await loadDynamicTrainers();
+
+      let apiClasses = [];
+      try {
+        const res = await fetch("/api/classes");
+        if (res.ok) apiClasses = await res.json();
+      } catch (e) {
+        console.warn("Could not load classes from API", e);
+      }
+
+      const allClasses = mergeApiAssignments(apiClasses);
+      renderCoaches();
+      setupFilters(allClasses);
+      renderCatalog(allClasses);
+    }
+
+    init();
+  </script>
+</body>
+</html>

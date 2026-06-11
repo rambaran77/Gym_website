@@ -3,367 +3,170 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Checkout</title>
-  <script src="https://js.stripe.com/v3/"></script>
-  <style>
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-    :root {
-      --bg: #0a0b10;
-      --ink: #ffffff;
-      --muted: #b7b0a1;
-      --line: rgba(212, 175, 55, 0.2);
-      --accent: #d4af37;
-      --accent-soft: rgba(212, 175, 55, 0.15);
-      --panel: rgba(20, 22, 28, 0.95);
-    }
-    body {
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-      min-height: 100vh;
-      background: linear-gradient(135deg, #0a0b10 0%, #14161c 100%);
-      color: var(--ink);
-      padding: 2rem 1rem;
-    }
-    .shell {
-      max-width: 1080px;
-      margin: 0 auto;
-    }
-    .back-link {
-      display: inline-flex;
-      align-items: center;
-      gap: 0.45rem;
-      text-decoration: none;
-      color: var(--accent);
-      font-size: 14px;
-      margin-bottom: 1rem;
-    }
-    .eyebrow {
-      font-size: 12px;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-      color: var(--accent);
-      margin-bottom: 0.6rem;
-    }
-    .header {
-      margin-bottom: 1.5rem;
-    }
-    .header h1 {
-      font-size: clamp(2rem, 5vw, 3.75rem);
-      line-height: 0.96;
-      font-weight: 650;
-      margin-bottom: 0.65rem;
-      color: #fff;
-    }
-    .header p {
-      color: var(--muted);
-      max-width: 56ch;
-      line-height: 1.6;
-      font-size: 15px;
-    }
-    .layout {
-      display: grid;
-      grid-template-columns: 1.25fr 0.9fr;
-      gap: 1rem;
-      align-items: start;
-    }
-    .panel {
-      background: var(--panel);
-      border: 1px solid var(--line);
-      border-radius: 24px;
-      box-shadow: 0 24px 60px rgba(0, 0, 0, 0.4);
-    }
-    .form-panel {
-      padding: 1.4rem;
-    }
-    .summary-panel {
-      padding: 1.25rem;
-      position: sticky;
-      top: 1rem;
-    }
-    .section-title {
-      font-size: 1rem;
-      font-weight: 600;
-      margin-bottom: 1rem;
-    }
-    .field-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 0.9rem;
-      margin-bottom: 1rem;
-    }
-    .field {
-      display: grid;
-      gap: 0.45rem;
-    }
-    .field.full {
-      grid-column: 1 / -1;
-    }
-    label {
-      font-size: 13px;
-      color: var(--muted);
-    }
-    input, select {
-      width: 100%;
-      border: 1px solid var(--line);
-      border-radius: 14px;
-      padding: 0.95rem 1rem;
-      font-size: 14px;
-      background: rgba(0, 0, 0, 0.45);
-      color: var(--ink);
-      outline: none;
-    }
-    input:focus, select:focus {
-      border-color: rgba(212, 175, 55, 0.55);
-      box-shadow: 0 0 0 4px rgba(212, 175, 55, 0.12);
-    }
-    .payment-strip {
-      display: flex;
-      gap: 0.65rem;
-      flex-wrap: wrap;
-      margin-bottom: 1rem;
-    }
-    .payment-chip {
-      border: 1px solid rgba(212, 175, 55, 0.2);
-      background: rgba(255, 255, 255, 0.08);
-      color: #fff;
-      border-radius: 999px;
-      padding: 0.65rem 0.9rem;
-      font-size: 13px;
-    }
-    .actions {
-      display: flex;
-      gap: 0.8rem;
-      flex-wrap: wrap;
-      margin-top: 1.1rem;
-    }
-    .button {
-      appearance: none;
-      border: 0;
-      border-radius: 999px;
-      padding: 0.95rem 1.2rem; 
-      font-size: 14px;
-      cursor: pointer;
-      text-decoration: none;
-      text-align: center;
-    }
-    .button.primary {
-      flex: 1 1 240px;
-      background: linear-gradient(135deg, #d4af37, #b8960c);
-      color: #0a0b10;
-    }
-    .button.secondary {
-      flex: 1 1 180px;
-      background: rgba(255, 255, 255, 0.08);
-      color: #fff;
-      border: 1px solid rgba(212, 175, 55, 0.2);
-    }
-    .plan-card {
-      background: rgba(20, 22, 28, 0.95);
-      color: #fff;
-      border-radius: 20px;
-      padding: 1.1rem;
-      margin-bottom: 1rem;
-      transition: all 0.3s ease;
-      cursor: pointer;
-      border: 1px solid rgba(212, 175, 55, 0.1);
-    }
-    .plan-card:hover {
-      transform: translateY(-5px);
-      box-shadow: 0 10px 30px rgba(212, 175, 55, 0.3);
-      border-color: rgba(212, 175, 55, 0.4);
-      background: rgba(30, 32, 39, 0.98);
-    }
-    .plan-card .tag {
-      display: inline-flex;
-      background: rgba(212, 175, 55, 0.12);
-      color: #d4af37;
-      border-radius: 999px;
-      padding: 0.4rem 0.7rem;
-      font-size: 12px;
-      margin-bottom: 0.9rem;
-    }
-    .plan-card h2 {
-      font-size: 1.35rem;
-      margin-bottom: 0.35rem;
-    }
-    .plan-card p {
-      color: rgba(255, 255, 255, 0.8);
-      line-height: 1.5;
-      font-size: 14px;
-    }
-    .price {
-      font-size: 2rem;
-      font-weight: 650;
-      margin-top: 1rem;
-    }
-    .price span {
-      font-size: 0.95rem;
-      font-weight: 400;
-      color: rgba(255, 255, 255, 0.72);
-    }
-    .summary-list {
-      list-style: none;
-      display: grid;
-      gap: 0.75rem;
-      margin: 1rem 0 1.2rem;
-      color: var(--muted);
-      font-size: 14px;
-    }
-    .summary-list li {
-      display: flex;
-      align-items: center;
-      gap: 0.65rem;
-    }
-    .summary-list li::before {
-      content: "";
-      width: 10px;
-      height: 10px;
-      border-radius: 999px;
-      background: var(--accent);
-      flex-shrink: 0;
-    }
-    .totals {
-      border-top: 1px solid var(--line);
-      padding-top: 1rem;
-      display: grid;
-      gap: 0.75rem;
-    }
-    .row {
-      display: flex;
-      justify-content: space-between;
-      gap: 1rem;
-      font-size: 14px;
-      color: var(--muted);
-    }
-    .row.total {
-      font-size: 1rem;
-      font-weight: 600;
-      color: var(--ink);
-    }
-    .status {
-      margin-top: 1rem;
-      background: rgba(212, 175, 55, 0.1);
-      color: #fff;
-      border-radius: 16px;
-      padding: 0.9rem 1rem;
-      font-size: 13px;
-      line-height: 1.5;
-    }
-    @media (max-width: 860px) {
-      .layout {
-        grid-template-columns: 1fr;
-      }
-      .summary-panel {
-        position: static;
-      }
-    }
-    @media (max-width: 640px) {
-      .field-grid {
-        grid-template-columns: 1fr;
-      }
-    }
-  </style>
+  <title>Checkout — Aura Athletic</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,500;14..32,600;14..32,700;14..32,800&family=Montserrat:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+  <link rel="stylesheet" href="site-theme.css" />
+  <link rel="stylesheet" href="checkout.css" />
+  <script src="plans-api.js"></script>
+  <script src="auth.js"></script>
+  <script src="site-chrome.js" defer></script>
 </head>
+<body class="site-page checkout-page" data-page="checkout">
+  <main class="checkout-shell">
+    <a class="checkout-back" id="back-link" href="membership.html">&#8592; Back to plan</a>
 
-<body>
-  <main class="shell">
-    <a class="back-link" id="back-link" href="gym-plans.html">&#8592; Back</a>
-    <header class="header">
-      <p class="eyebrow">Checkout</p>
-      <h1>Complete your membership.</h1>
-      <p>Review the selected plan, enter your details, and continue to payment. This page is ready to act as the next step after any day, weekly, or monthly plan selection.</p>
+    <nav class="checkout-steps" aria-label="Checkout progress">
+      <div class="checkout-step is-done"><span class="checkout-step-num">1</span> Choose plan</div>
+      <span class="checkout-step-divider" aria-hidden="true"></span>
+      <div class="checkout-step is-active"><span class="checkout-step-num">2</span> Your details</div>
+      <span class="checkout-step-divider" aria-hidden="true"></span>
+      <div class="checkout-step"><span class="checkout-step-num">3</span> Payment</div>
+    </nav>
+
+    <header class="checkout-header">
+      <p class="eyebrow">Secure checkout</p>
+      <h1>Complete your membership</h1>
+      <p>Sign in as a <strong>member</strong> to continue. Your account email is used for membership and billing.</p>
     </header>
 
-    <section class="layout">
-      <div class="panel form-panel">
-        <h2 class="section-title">Member details</h2>
-        <div class="field-grid">
-          <div class="field">
-            <label for="first-name">First name</label>
-            <input id="first-name" type="text" placeholder="first name" />
-          </div>
-          <div class="field">
-            <label for="last-name">Last name</label>
-            <input id="last-name" type="text" placeholder="surname" />
-          </div>
-          <div class="field full">
-            <label for="email">Email address</label>
-            <input id="email" type="email" placeholder="alex@email.com" />
-          </div>
-          <div class="field">
-            <label for="phone">Phone number</label>
-            <input id="phone" type="tel" placeholder="+44 7700 900123" />
-          </div>
-          <div class="field">
-            <label for="start-date">Start date</label>
-            <input id="start-date" type="date" />
-          </div>
-        </div>
+    <div id="login-notice" class="checkout-notice" role="status"></div>
 
-        <h2 class="section-title">Payment method</h2>
-        <div class="payment-strip">
-          <span class="payment-chip">Visa</span>
-          <span class="payment-chip">Mastercard</span>
-          <span class="payment-chip">Apple Pay</span>
-        </div>
-        <div id="card-element" class="field full">
-          <!-- Stripe Card Element will be inserted here -->
-        </div>
-        <div id="card-errors" role="alert" class="field full" style="color: red; font-size: 14px;"></div>
-        <div class="field-grid">
-          <div class="field full">
-            <label for="postcode">Postcode</label>
-            <input id="postcode" type="text" placeholder="SW1A 1AA" />
+    <div class="checkout-layout">
+      <div class="checkout-main">
+        <!-- Member details -->
+        <section class="checkout-card">
+          <h2 class="checkout-card-title">
+            <span class="checkout-card-icon" aria-hidden="true">👤</span>
+            Member details
+          </h2>
+          <div class="checkout-field-grid">
+            <div class="checkout-field">
+              <label for="first-name">First name</label>
+              <input id="first-name" type="text" placeholder="Alex" autocomplete="given-name" />
+            </div>
+            <div class="checkout-field">
+              <label for="last-name">Last name</label>
+              <input id="last-name" type="text" placeholder="Morgan" autocomplete="family-name" />
+            </div>
+            <div class="checkout-field full">
+              <label for="email">Email (verified from your account)</label>
+              <input id="email" type="email" placeholder="you@example.com" autocomplete="email" />
+            </div>
+            <div class="checkout-field">
+              <label for="phone">Phone number</label>
+              <input id="phone" type="tel" placeholder="+44 7700 900123" autocomplete="tel" />
+            </div>
+            <div class="checkout-field">
+              <label for="start-date">Membership start date</label>
+              <input id="start-date" type="date" />
+            </div>
+            <div class="checkout-field full">
+              <label for="postcode">Postcode</label>
+              <input id="postcode" type="text" placeholder="SW1A 1AA" autocomplete="postal-code" />
+            </div>
+            <div class="checkout-field full">
+              <label for="location">Preferred club location</label>
+              <select id="location">
+                <option>Selly Oak</option>
+                <option>Edgbaston</option>
+                <option>City centre</option>
+                <option>West Bromwich</option>
+              </select>
+            </div>
           </div>
-          <div class="field full">
-            <label for="location">Preferred club location</label>
-            <select id="location">
-              <option>Selly Oak</option>
-              <option>Edgbaston </option>
-              <option>City centre </option>
-              <option>West bromich</option>
-            </select>
-          </div>
-        </div>
+        </section>
 
-        <div class="actions">
-          <a class="button secondary" id="change-plan-link" href="gym-plans.html">Change plan</a>
-          <button class="button primary" onclick="handlePayment()">Pay now</button>
-        </div>
+        <!-- Payment -->
+        <section class="checkout-card">
+          <div class="checkout-payment-header">
+            <h2 class="checkout-card-title" style="margin-bottom:0">
+              <span class="checkout-card-icon" aria-hidden="true">💳</span>
+              Card details
+            </h2>
+            <span class="checkout-secure-badge">🔒 Secure · Stripe</span>
+          </div>
+
+          <div class="checkout-card-visual" aria-hidden="true">
+            <p class="checkout-card-visual-label">Aura Athletic membership</p>
+            <div class="checkout-card-visual-chip"></div>
+            <p class="checkout-card-visual-hint">Enter your card below to pay securely</p>
+          </div>
+
+          <div class="checkout-card-brands" aria-hidden="true">
+            <span class="checkout-card-brand">VISA</span>
+            <span class="checkout-card-brand">MC</span>
+            <span class="checkout-card-brand">AMEX</span>
+          </div>
+
+          <div class="checkout-field full" style="margin-top:1rem">
+            <label for="card-number">Card number</label>
+            <div class="checkout-stripe-box" id="card-number-wrap">
+              <div id="card-number" class="checkout-stripe-field"></div>
+            </div>
+          </div>
+          <div class="checkout-field-grid" style="margin-top:0.85rem">
+            <div class="checkout-field">
+              <label for="card-expiry">Expiry date</label>
+              <div class="checkout-stripe-box" id="card-expiry-wrap">
+                <div id="card-expiry" class="checkout-stripe-field"></div>
+              </div>
+            </div>
+            <div class="checkout-field">
+              <label for="card-cvc">Security code (CVC)</label>
+              <div class="checkout-stripe-box" id="card-cvc-wrap">
+                <div id="card-cvc" class="checkout-stripe-field"></div>
+              </div>
+            </div>
+          </div>
+          <div id="card-errors" class="checkout-card-errors" role="alert"></div>
+
+          <div class="checkout-actions">
+            <a class="checkout-btn checkout-btn-secondary" id="change-plan-link" href="membership.html">Change plan</a>
+            <button type="button" class="checkout-btn checkout-btn-primary" id="pay-btn" onclick="handlePayment()">Pay now</button>
+          </div>
+        </section>
       </div>
 
-      <aside class="panel summary-panel">
-        <div class="plan-card">
-          <span class="tag" id="plan-tag">Selected plan</span>
-          <h2 id="plan-name">Single day</h2>
-          <p id="plan-desc">One-time gym access for solo training, cardio, or strength work.</p>
-          <p class="price" id="plan-price">£8 <span>/ day</span></p>
+      <aside class="checkout-sidebar">
+        <div class="checkout-summary-card">
+          <div class="checkout-plan-hero">
+            <span class="checkout-plan-tag" id="plan-tag">Selected plan</span>
+            <h2 class="checkout-plan-name" id="plan-name">Day + class</h2>
+            <p class="checkout-plan-desc" id="plan-desc">A day pass with one instructor-led class included.</p>
+            <p class="checkout-plan-price" id="plan-price">£12 <span>/ day</span></p>
+          </div>
+          <div class="checkout-summary-body">
+            <p class="checkout-summary-title">Your order includes</p>
+            <ul class="checkout-feature-list" id="feature-list"></ul>
+            <div class="checkout-totals">
+              <div class="checkout-total-row">
+                <span>Subtotal</span>
+                <span id="subtotal">£12</span>
+              </div>
+              <div class="checkout-total-row">
+                <span>Joining fee</span>
+                <span id="joining-fee">£0</span>
+              </div>
+              <div class="checkout-total-row grand">
+                <span>Total today</span>
+                <span id="total-price">£12</span>
+              </div>
+            </div>
+            <p class="checkout-plan-note" id="plan-note">Your selected membership is ready for payment.</p>
+            <div class="checkout-trust">
+              <span>✓ Instant activation</span>
+              <span>✓ Email receipt</span>
+              <span>✓ Cancel anytime</span>
+            </div>
+          </div>
         </div>
-
-        <h2 class="section-title">Your order includes</h2>
-        <ul class="summary-list" id="feature-list"></ul>
-
-        <div class="totals">
-          <div class="row">
-            <span>Subtotal</span>
-            <span id="subtotal">£8</span>
-          </div>
-          <div class="row">
-            <span>Joining fee</span>
-            <span id="joining-fee">£0</span>
-          </div>
-          <div class="row total">
-            <span>Total today</span>
-            <span id="total-price">£8</span>
-          </div>
-        </div>
-
-        <p class="status" id="plan-note">Your selected membership is ready for payment and setup.</p>
       </aside>
-    </section>
+    </div>
   </main>
 
   <script>
-    const plans = {
+    const plansFallback = {
       "single-day": {
         family: "day-pass.html",
         tag: "Day pass",
@@ -372,11 +175,7 @@
         price: "£8",
         per: "/ day",
         note: "A quick one-visit pass with no recurring commitment.",
-        features: [
-          "Full gym access",
-          "Locker and shower",
-          "Fast check-in at reception"
-        ]
+        features: ["Full gym access", "Locker and shower", "Fast check-in at reception"]
       },
       "day-class": {
         family: "day-pass.html",
@@ -386,11 +185,7 @@
         price: "£12",
         per: "/ day",
         note: "Flexible access plus one group class in a single booking.",
-        features: [
-          "Full gym access",
-          "Locker and shower",
-          "1 group class included"
-        ]
+        features: ["Full gym access", "Locker and shower", "1 group class included"]
       },
       "basic-weekly": {
         family: "weekly-plan.html",
@@ -400,11 +195,7 @@
         price: "£30",
         per: "/ week",
         note: "A focused weekly plan for short-term routines or travel.",
-        features: [
-          "Full gym access",
-          "Locker and shower",
-          "7-day access window"
-        ]
+        features: ["Full gym access", "Locker and shower", "7-day access window"]
       },
       "standard-weekly": {
         family: "weekly-plan.html",
@@ -414,11 +205,7 @@
         price: "£45",
         per: "/ week",
         note: "A full weekly setup with classes included throughout the week.",
-        features: [
-          "Full gym access",
-          "Locker and shower",
-          "Unlimited classes"
-        ]
+        features: ["Full gym access", "Locker and shower", "Unlimited classes"]
       },
       "premium-weekly": {
         family: "weekly-plan.html",
@@ -428,11 +215,7 @@
         price: "£65",
         per: "/ week",
         note: "A guided weekly option with coaching support included.",
-        features: [
-          "Full gym access",
-          "Unlimited classes",
-          "1 PT session included"
-        ]
+        features: ["Full gym access", "Unlimited classes", "1 PT session included"]
       },
       "basic-monthly": {
         family: "monthly-plan.html",
@@ -442,11 +225,7 @@
         price: "£25",
         per: "/ month",
         note: "A recurring monthly membership for consistent training.",
-        features: [
-          "Full gym access",
-          "Locker and shower",
-          "Monthly savings"
-        ]
+        features: ["Full gym access", "Locker and shower", "Monthly savings"]
       },
       "standard-monthly": {
         family: "monthly-plan.html",
@@ -456,11 +235,7 @@
         price: "£45",
         per: "/ month",
         note: "A balanced monthly option for members who want variety and routine.",
-        features: [
-          "Full gym access",
-          "Unlimited classes",
-          "Locker and shower"
-        ]
+        features: ["Full gym access", "Unlimited classes", "Locker and shower"]
       },
       "premium-monthly": {
         family: "monthly-plan.html",
@@ -470,56 +245,180 @@
         price: "£75",
         per: "/ month",
         note: "A top-tier monthly membership with coaching built in.",
-        features: [
-          "Full gym access",
-          "Unlimited classes",
-          "4 PT sessions per month"
-        ]
+        features: ["Full gym access", "Unlimited classes", "4 PT sessions per month"]
       }
     };
-    const apiBase = 'http://localhost:5000'; 
+
+    let plans = { ...plansFallback };
+    let plan = null;
+    let planKey = '';
+    let stripe = null;
+    let cardNumberElement = null;
+    const apiBase = window.location.protocol === 'file:' ? 'http://localhost:5001' : '';
+
+    function loadStripeJs() {
+      if (typeof window.Stripe === 'function') return Promise.resolve(window.Stripe);
+      return new Promise((resolve, reject) => {
+        const existing = document.querySelector('script[data-stripe-js="true"]');
+        if (existing) {
+          existing.addEventListener('load', () => {
+            if (typeof window.Stripe === 'function') resolve(window.Stripe);
+            else reject(new Error('Stripe.js loaded but is unavailable.'));
+          });
+          if (typeof window.Stripe === 'function') resolve(window.Stripe);
+          return;
+        }
+        const script = document.createElement('script');
+        script.src = 'https://js.stripe.com/v3/';
+        script.async = true;
+        script.dataset.stripeJs = 'true';
+        script.onload = () => {
+          if (typeof window.Stripe === 'function') resolve(window.Stripe);
+          else reject(new Error('Stripe.js loaded but is unavailable.'));
+        };
+        script.onerror = () => {
+          reject(new Error('Could not load Stripe.js. Open checkout via http://localhost:5001/checkout.html'));
+        };
+        document.head.appendChild(script);
+      });
+    }
+
     const params = new URLSearchParams(window.location.search);
-    const selectedPlan = params.get("plan");
-    const plan = plans[selectedPlan] || plans["single-day"];
-    const planKey = selectedPlan || "single-day";
+    const selectedPlan = params.get('plan');
 
-    document.getElementById("plan-tag").textContent = plan.tag;
-    document.getElementById("plan-name").textContent = plan.name;
-    document.getElementById("plan-desc").textContent = plan.desc;
-    document.getElementById("plan-price").innerHTML = `${plan.price} <span>${plan.per}</span>`;
-    document.getElementById("subtotal").textContent = plan.price;
-    document.getElementById("total-price").textContent = plan.price;
-    document.getElementById("plan-note").textContent = plan.note;
-    document.getElementById("feature-list").innerHTML = plan.features.map((feature) => `<li>${feature}</li>`).join("");
-    document.getElementById("back-link").href = `${plan.family}?plan=${encodeURIComponent(planKey)}`;
-    document.getElementById("change-plan-link").href = `${plan.family}?plan=${encodeURIComponent(planKey)}`;
+    function renderPlanUI() {
+      plan = plans[planKey] || plans['day-class'];
+      if (!plan) return;
+      document.getElementById('plan-tag').textContent = plan.tag;
+      document.getElementById('plan-name').textContent = plan.name;
+      document.getElementById('plan-desc').textContent = plan.desc;
+      document.getElementById('plan-price').innerHTML = `${plan.price} <span>${plan.per}</span>`;
+      document.getElementById('subtotal').textContent = plan.price;
+      document.getElementById('total-price').textContent = plan.price;
+      document.getElementById('plan-note').textContent = plan.note;
+      document.getElementById('feature-list').innerHTML = plan.features.map((f) => `<li>${f}</li>`).join('');
+      document.getElementById('back-link').href = `${plan.family}?plan=${encodeURIComponent(planKey)}`;
+      document.getElementById('change-plan-link').href = `${plan.family}?plan=${encodeURIComponent(planKey)}`;
+    }
 
-    const dateField = document.getElementById("start-date");
-    const today = new Date();
-    const offset = today.getTimezoneOffset();
-    const localDate = new Date(today.getTime() - offset * 60000).toISOString().split("T")[0];
-    dateField.value = localDate;
+    let checkoutUser = null;
 
-    // Initialize Stripe
-    const stripe = Stripe('pk_test_51TUcIx3ijFJ1k2Yx3qyBVSOrrInFtOf1nKxIRHTMT1uqgY67ojwM1Mm9QktpQ4QsQ60xCUJyLz7L7GjGkDgvz8wk00TYuWjEoq'); 
-    const elements = stripe.elements();
-    const cardElement = elements.create('card', { hidePostalCode: true });
-    cardElement.mount('#card-element');
+    function setupVerifiedMemberCheckout() {
+      checkoutUser = requireMemberForCheckout();
+      if (!checkoutUser) return false;
 
-    cardElement.on('change', function(event) {
-      const displayError = document.getElementById('card-errors');
-      if (event.error) {
-        displayError.textContent = event.error.message;
-      } else {
-        displayError.textContent = '';
+      const notice = document.getElementById('login-notice');
+      notice.classList.add('is-visible');
+      notice.innerHTML = `Signed in as <strong>${checkoutUser.name}</strong> (${checkoutUser.email}). This email will be used for your membership.`;
+
+      const nameParts = (checkoutUser.name || '').split(' ');
+      const emailInput = document.getElementById('email');
+      if (nameParts[0]) document.getElementById('first-name').value = nameParts[0];
+      if (nameParts.length > 1) document.getElementById('last-name').value = nameParts.slice(1).join(' ');
+      if (checkoutUser.email) {
+        emailInput.value = checkoutUser.email;
+        emailInput.readOnly = true;
+        emailInput.title = 'Email is verified from your logged-in member account';
       }
+      return true;
+    }
+
+    async function initCheckout() {
+      if (!setupVerifiedMemberCheckout()) return;
+      planKey = selectedPlan || 'day-class';
+      try {
+        plans = await AuraPlansApi.fetchPlans();
+      } catch (e) {
+        console.warn('Using fallback plans', e);
+        plans = { ...plansFallback };
+      }
+      if (!plans[planKey]) planKey = 'day-class';
+      renderPlanUI();
+
+      const dateField = document.getElementById('start-date');
+      const today = new Date();
+      const offset = today.getTimezoneOffset();
+      dateField.value = new Date(today.getTime() - offset * 60000).toISOString().split('T')[0];
+
+      const payButton = document.getElementById('pay-btn');
+      const cardErrors = document.getElementById('card-errors');
+      let pk = null;
+      try {
+        pk = await AuraPlansApi.fetchStripePublishableKey();
+      } catch (e) {
+        console.warn('Stripe config API failed', e);
+      }
+      if (!pk) {
+        cardErrors.textContent = 'Card payment unavailable: set STRIPE_PUBLISHABLE_KEY in backend/.env and restart the server.';
+        if (payButton) payButton.disabled = true;
+        return;
+      }
+      if (window.location.protocol === 'file:') {
+        cardErrors.textContent = 'Open checkout through the server: http://localhost:5001/checkout.html';
+        if (payButton) payButton.disabled = true;
+        return;
+      }
+      try {
+        await loadStripeJs();
+      } catch (loadErr) {
+        cardErrors.textContent = loadErr.message || 'Stripe.js failed to load.';
+        if (payButton) payButton.disabled = true;
+        return;
+      }
+      stripe = Stripe(pk);
+      const elements = stripe.elements();
+      const stripeFieldStyle = {
+        base: {
+          color: '#1a1a1a',
+          fontFamily: 'Inter, Montserrat, sans-serif',
+          fontSize: '16px',
+          lineHeight: '24px',
+          '::placeholder': { color: '#9a9a9a' }
+        },
+        invalid: { color: '#e94560' }
+      };
+      cardNumberElement = elements.create('cardNumber', { style: stripeFieldStyle, showIcon: true });
+      const cardExpiryElement = elements.create('cardExpiry', { style: stripeFieldStyle });
+      const cardCvcElement = elements.create('cardCvc', { style: stripeFieldStyle, placeholder: 'CVC' });
+
+      function wireStripeField(element, wrapId) {
+        const wrap = document.getElementById(wrapId);
+        element.on('focus', () => wrap.classList.add('is-focused'));
+        element.on('blur', () => wrap.classList.remove('is-focused'));
+        element.on('change', (event) => {
+          wrap.classList.toggle('is-invalid', !!event.error);
+          cardErrors.textContent = event.error ? event.error.message : '';
+        });
+        wrap.addEventListener('click', () => element.focus());
+      }
+
+      cardNumberElement.mount('#card-number');
+      cardExpiryElement.mount('#card-expiry');
+      cardCvcElement.mount('#card-cvc');
+      wireStripeField(cardNumberElement, 'card-number-wrap');
+      wireStripeField(cardExpiryElement, 'card-expiry-wrap');
+      wireStripeField(cardCvcElement, 'card-cvc-wrap');
+      if (payButton) payButton.disabled = false;
+    }
+
+    initCheckout().catch((err) => {
+      document.getElementById('card-errors').textContent = err.message || 'Could not load checkout';
     });
 
     async function handlePayment() {
+      if (!stripe || !cardNumberElement) {
+        alert('Payment form is not ready. Add STRIPE_PUBLISHABLE_KEY to backend/.env and refresh.');
+        return;
+      }
       const firstName = document.getElementById('first-name').value;
       const lastName = document.getElementById('last-name').value;
-      const email = document.getElementById('email').value;
+      const email = document.getElementById('email').value.trim();
       const phone = document.getElementById('phone').value;
+
+      if (checkoutUser && email.toLowerCase() !== checkoutUser.email.toLowerCase()) {
+        alert('Email must match your logged-in account.');
+        return;
+      }
       const startDate = document.getElementById('start-date').value;
       const postcode = document.getElementById('postcode').value;
       const location = document.getElementById('location').value;
@@ -529,48 +428,45 @@
         return;
       }
 
-      // Disable button
-      const payButton = document.querySelector('.button.primary');
+      const payButton = document.getElementById('pay-btn');
       payButton.disabled = true;
-      payButton.textContent = 'Processing...';
+      payButton.textContent = 'Processing…';
 
       try {
-        // Create payment intent
         const response = await fetch(`${apiBase}/api/create-payment-intent`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
             amount: plan.price,
             planId: planKey,
-            userDetails: { firstName, lastName, email, phone, startDate, location }
+            userDetails: {
+              firstName, lastName, email, phone, startDate, location,
+              accountUserId: checkoutUser?._id || checkoutUser?.id
+            }
           })
         });
 
-        const { clientSecret, error } = await response.json();
+        const intentData = await response.json();
+        if (!response.ok) throw new Error(intentData.error || 'Could not start payment');
+        const { clientSecret, error } = intentData;
         if (error) throw new Error(error);
 
-        // Confirm payment
         const billingDetails = {
           name: `${firstName} ${lastName}`,
           email: email,
           phone: phone || undefined
         };
-        if (postcode) {
-          billingDetails.address = { postal_code: postcode };
-        }
+        if (postcode) billingDetails.address = { postal_code: postcode };
 
         const { error: stripeError, paymentIntent } = await stripe.confirmCardPayment(clientSecret, {
           payment_method: {
-            card: cardElement,
+            card: cardNumberElement,
             billing_details: billingDetails
           }
         });
 
-        if (stripeError) {
-          throw new Error(stripeError.message);
-        }
+        if (stripeError) throw new Error(stripeError.message);
 
-        // Confirm on backend
         const confirmResponse = await fetch(`${apiBase}/api/confirm-payment`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
@@ -582,15 +478,33 @@
         });
 
         const confirmData = await confirmResponse.json();
-        if (confirmData.error) throw new Error(confirmData.error);
+        if (!confirmResponse.ok || confirmData.error) throw new Error(confirmData.error || 'Could not create membership');
+        if (confirmData.membership && confirmData.membership.status !== 'active') {
+          throw new Error('Membership was not activated');
+        }
 
-        alert('Payment successful! Membership activated.');
-        window.location.href = 'index.html'; // Redirect to home
-
+        const okQs = new URLSearchParams({
+          plan: planKey,
+          planName: plan.name,
+          status: 'active'
+        });
+        if (confirmData.membershipId) okQs.set('membershipId', confirmData.membershipId);
+        if (confirmData.membership?.startDate) {
+          okQs.set('startDate', new Date(confirmData.membership.startDate).toISOString().split('T')[0]);
+        }
+        if (confirmData.membership?.endDate) {
+          okQs.set('endDate', new Date(confirmData.membership.endDate).toISOString().split('T')[0]);
+        }
+        if (confirmData.emailConfirmation?.sent || confirmData.emailConfirmation?.mode === 'console') {
+          okQs.set('emailSent', '1');
+        }
+        window.location.href = 'payment-success.html?' + okQs.toString();
       } catch (error) {
-        alert('Payment failed: ' + error.message);
-        payButton.disabled = false;
-        payButton.textContent = 'Pay now';
+        const failQs = new URLSearchParams({
+          plan: planKey,
+          msg: error.message || 'Payment was unsuccessful'
+        });
+        window.location.href = 'payment-failed.html?' + failQs.toString();
       }
     }
   </script>

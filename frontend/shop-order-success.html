@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Order confirmed — Aura Athletic Shop</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,500;14..32,600;14..32,700;14..32,800&family=Montserrat:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+  <link rel="stylesheet" href="site-theme.css" />
+  <link rel="stylesheet" href="payment-success.css" />
+  <script src="site-chrome.js" defer></script>
+</head>
+<body class="site-page payment-success-page" data-page="shop">
+  <main class="payment-success-shell">
+    <article class="payment-success-card" aria-labelledby="success-title">
+      <div class="payment-success-icon" aria-hidden="true">✓</div>
+      <span class="eyebrow">Order confirmed</span>
+      <h1 id="success-title">Thank you for your order!</h1>
+      <p class="lead" id="success-lead">Your payment was successful. We'll prepare your items and send updates to your email.</p>
+
+      <div class="payment-success-details" id="success-details"></div>
+
+      <div class="payment-success-actions">
+        <a class="btn-primary-lg" href="shop.html">Continue shopping</a>
+        <a class="btn-outline-lg" href="index.html">Back to home</a>
+      </div>
+
+      <p class="payment-success-footnote">Save your order reference for collection or delivery enquiries.</p>
+    </article>
+  </main>
+
+  <script>
+    const params = new URLSearchParams(window.location.search);
+    const orderId = params.get('orderId');
+    const total = params.get('total');
+    const fulfillment = params.get('fulfillment');
+    const pickup = params.get('pickup');
+    const email = params.get('email');
+
+    function escapeHtml(str) {
+      return String(str)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;');
+    }
+
+    function addDetail(label, value, extraClass) {
+      if (!value) return;
+      const container = document.getElementById('success-details');
+      const row = document.createElement('div');
+      row.className = 'payment-success-detail';
+      row.innerHTML =
+        '<span class="detail-label">' + escapeHtml(label) + '</span>' +
+        '<span class="detail-value' + (extraClass ? ' ' + extraClass : '') + '">' + escapeHtml(value) + '</span>';
+      container.appendChild(row);
+    }
+
+    if (fulfillment === 'collect') {
+      document.getElementById('success-lead').textContent =
+        'Your payment was successful. We\'ll email you when your order is ready to collect from club reception.';
+    }
+
+    if (total) addDetail('Total paid', '£' + parseFloat(total).toFixed(2));
+    if (fulfillment === 'delivery') {
+      addDetail('Delivery', 'Home delivery (3–5 working days)');
+    } else if (fulfillment === 'collect' && pickup) {
+      addDetail('Collection', pickup + ' club');
+    }
+    if (email) addDetail('Confirmation sent to', email);
+    if (orderId) {
+      const shortRef = orderId.length > 12
+        ? orderId.slice(0, 8) + '…' + orderId.slice(-4)
+        : orderId;
+      addDetail('Order reference', shortRef);
+    }
+  </script>
+</body>
+</html>

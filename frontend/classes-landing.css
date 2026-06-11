@@ -1,0 +1,409 @@
+/* Group fitness classes landing (classes.html) */
+
+body.site-page.classes-landing-page {
+  display: block;
+  padding-bottom: 0;
+  background: var(--tgg-bg);
+  color: var(--tgg-ink);
+}
+
+.classes-landing {
+  max-width: var(--site-max);
+  margin: 0 auto;
+  padding: 0 var(--site-gutter) 3rem;
+}
+
+.classes-hero {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2rem;
+  align-items: center;
+  margin: 1rem 0 2rem;
+  padding: clamp(1.5rem, 3vw, 2.5rem);
+  border-radius: 16px;
+  background: linear-gradient(135deg, #12141f 0%, #1a2840 50%, #1f1530 100%);
+  color: #fff;
+  box-shadow: var(--tgg-shadow);
+  position: relative;
+  overflow: hidden;
+}
+
+.classes-hero::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at 10% 90%, rgba(233, 69, 96, 0.2), transparent 50%);
+  pointer-events: none;
+}
+
+.classes-hero-copy,
+.classes-hero-visual {
+  position: relative;
+  z-index: 1;
+}
+
+.classes-hero-copy .eyebrow {
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--tgg-gold);
+  display: block;
+  margin-bottom: 0.65rem;
+}
+
+.classes-hero-copy h1 {
+  font-size: clamp(1.75rem, 4vw, 2.65rem);
+  font-weight: 800;
+  line-height: 1.12;
+  color: #fff !important;
+  margin: 0 0 0.75rem;
+}
+
+.classes-hero-copy .lead {
+  font-size: 0.98rem;
+  line-height: 1.6;
+  color: rgba(255, 255, 255, 0.82);
+  max-width: 38ch;
+  margin: 0 0 1.25rem;
+}
+
+.classes-hero-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.65rem;
+}
+
+.classes-hero-actions .btn-primary-lg {
+  padding: 0.7rem 1.35rem;
+  font-size: 0.9rem;
+}
+
+.classes-hero-actions .btn-outline-lg {
+  padding: 0.65rem 1.25rem;
+  font-size: 0.88rem;
+  border-color: rgba(255, 255, 255, 0.45);
+  color: #fff;
+}
+
+.classes-hero-visual {
+  border-radius: 12px;
+  overflow: hidden;
+  min-height: 220px;
+}
+
+.classes-hero-visual img {
+  width: 100%;
+  height: 100%;
+  min-height: 220px;
+  object-fit: cover;
+  display: block;
+}
+
+.classes-filter-bar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.classes-filter-btn {
+  padding: 0.5rem 1rem;
+  border-radius: 999px;
+  border: 2px solid var(--tgg-line);
+  background: var(--tgg-white);
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--tgg-ink);
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.classes-filter-btn:hover {
+  border-color: var(--tgg-accent);
+  color: var(--tgg-accent);
+}
+
+.classes-filter-btn.active {
+  background: var(--tgg-accent);
+  border-color: var(--tgg-accent);
+  color: #fff;
+}
+
+.classes-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 1.25rem;
+  margin-bottom: 2.5rem;
+}
+
+.class-showcase-card {
+  background: var(--tgg-white);
+  border: 1px solid var(--tgg-line);
+  border-radius: 16px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.class-showcase-card:hover {
+  transform: translateY(-3px);
+  box-shadow: var(--tgg-shadow);
+}
+
+.class-showcase-media {
+  position: relative;
+  height: 160px;
+  background: linear-gradient(135deg, #2a2d3d, #1a1c28);
+}
+
+.class-showcase-media img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.class-showcase-tag {
+  position: absolute;
+  top: 0.75rem;
+  left: 0.75rem;
+  padding: 0.25rem 0.65rem;
+  border-radius: 999px;
+  background: rgba(0, 0, 0, 0.55);
+  color: #fff;
+  font-size: 0.7rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.class-showcase-body {
+  padding: 1.15rem 1.25rem 1.25rem;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.class-showcase-body h3 {
+  font-size: 1.15rem;
+  font-weight: 800;
+  color: var(--tgg-ink);
+  margin: 0;
+}
+
+.class-showcase-body .desc {
+  font-size: 0.88rem;
+  color: var(--tgg-muted);
+  line-height: 1.5;
+  margin: 0;
+}
+
+.class-meta-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  font-size: 0.75rem;
+  color: var(--tgg-muted);
+}
+
+.class-meta-row span {
+  padding: 0.2rem 0.55rem;
+  border-radius: 6px;
+  background: var(--tgg-bg);
+  border: 1px solid var(--tgg-line);
+}
+
+.class-trainer-row {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.75rem;
+  border-radius: 12px;
+  background: var(--tgg-bg);
+  border: 1px solid var(--tgg-line);
+}
+
+.class-trainer-row img {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  object-fit: cover;
+  flex-shrink: 0;
+  border: 2px solid var(--tgg-white);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+.class-trainer-row .trainer-label {
+  font-size: 0.68rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--tgg-muted);
+  font-weight: 700;
+}
+
+.class-trainer-row .trainer-name {
+  font-size: 0.92rem;
+  font-weight: 700;
+  color: var(--tgg-ink);
+  margin: 0.1rem 0 0;
+}
+
+.class-trainer-row .trainer-title {
+  font-size: 0.78rem;
+  color: var(--tgg-muted);
+  margin: 0;
+}
+
+.class-showcase-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-top: auto;
+}
+
+.class-showcase-actions a {
+  flex: 1;
+  min-width: 120px;
+  text-align: center;
+  padding: 0.6rem 0.85rem;
+  border-radius: 999px;
+  font-size: 0.82rem;
+  font-weight: 700;
+  text-decoration: none;
+  transition: opacity 0.15s ease;
+}
+
+.class-showcase-actions a:hover {
+  opacity: 0.9;
+}
+
+.class-showcase-actions .btn-book {
+  background: var(--tgg-accent);
+  color: #fff !important;
+}
+
+.class-showcase-actions .btn-trainer {
+  background: var(--tgg-white);
+  color: var(--tgg-ink) !important;
+  border: 2px solid var(--tgg-line);
+}
+
+.classes-coaches {
+  margin-bottom: 2rem;
+  padding: 2rem;
+  background: var(--tgg-white);
+  border: 1px solid var(--tgg-line);
+  border-radius: 16px;
+}
+
+.classes-coaches h2 {
+  font-size: 1.45rem;
+  font-weight: 800;
+  color: var(--tgg-ink);
+  margin: 0 0 0.35rem;
+  text-align: center;
+}
+
+.classes-coaches .sub {
+  text-align: center;
+  color: var(--tgg-muted);
+  font-size: 0.9rem;
+  margin: 0 0 1.5rem;
+}
+
+.coaches-strip {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+  gap: 1rem;
+}
+
+.coach-chip {
+  text-align: center;
+  padding: 0.75rem 0.5rem;
+  border-radius: 12px;
+  border: 1px solid var(--tgg-line);
+  background: var(--tgg-bg);
+  text-decoration: none;
+  color: inherit;
+  transition: border-color 0.15s ease, transform 0.15s ease;
+}
+
+.coach-chip:hover {
+  border-color: var(--tgg-accent);
+  transform: translateY(-2px);
+}
+
+.coach-chip img {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  object-fit: cover;
+  margin-bottom: 0.5rem;
+}
+
+.coach-chip strong {
+  display: block;
+  font-size: 0.82rem;
+  color: var(--tgg-ink);
+}
+
+.coach-chip span {
+  font-size: 0.72rem;
+  color: var(--tgg-muted);
+}
+
+.classes-bottom-cta {
+  text-align: center;
+  padding: 2.25rem 1.5rem;
+  border-radius: 16px;
+  background: linear-gradient(135deg, var(--tgg-accent) 0%, var(--tgg-accent-dark) 100%);
+  color: #fff;
+}
+
+.classes-bottom-cta h2 {
+  font-size: clamp(1.3rem, 3vw, 1.75rem);
+  font-weight: 800;
+  color: #fff;
+  margin: 0 0 0.5rem;
+}
+
+.classes-bottom-cta p {
+  color: rgba(255, 255, 255, 0.92);
+  margin: 0 0 1.15rem;
+  font-size: 0.92rem;
+}
+
+.classes-bottom-cta .btn-primary-lg {
+  background: #fff;
+  color: var(--tgg-accent) !important;
+  box-shadow: none;
+}
+
+.classes-empty {
+  grid-column: 1 / -1;
+  text-align: center;
+  padding: 2rem;
+  color: var(--tgg-muted);
+  background: var(--tgg-white);
+  border-radius: 12px;
+  border: 1px dashed var(--tgg-line);
+}
+
+@media (max-width: 900px) {
+  .classes-hero {
+    grid-template-columns: 1fr;
+  }
+
+  .classes-hero-visual {
+    order: -1;
+    min-height: 180px;
+  }
+}
+
+@media (max-width: 480px) {
+  .class-showcase-actions a {
+    flex: 1 1 100%;
+  }
+}
