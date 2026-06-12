@@ -180,6 +180,39 @@ function getDatabase() {
     return db;
 }
 
+function getDeploymentConfig() {
+    return {
+        MONGODB_URI: Boolean(uri),
+        STRIPE_SECRET_KEY: Boolean(stripeSecretKey),
+        STRIPE_PUBLISHABLE_KEY: Boolean(stripePublishableKey),
+        STRIPE_WEBHOOK_SECRET: Boolean(process.env.STRIPE_WEBHOOK_SECRET && process.env.STRIPE_WEBHOOK_SECRET.trim())
+    };
+}
+
+function logDeploymentConfig() {
+    const checks = getDeploymentConfig();
+    const missing = Object.entries(checks).filter(([, ok]) => !ok).map(([k]) => k);
+    if (missing.length) {
+        console.warn('⚠️ Missing env on this server (add in Render → Environment):', missing.join(', '));
+        console.warn('   Local backend/.env is NOT deployed — copy values into Render Dashboard.');
+    }
+    return checks;
+}
+
+// API routes that need MongoDB (local .env does not run on Render)
+app.use((req, res, next) => {
+    if (!req.path.startsWith('/api/')) return next();
+    const publicApi = ['/api/health', '/api/plans', '/api/config/stripe'];
+    if (publicApi.includes(req.path)) return next();
+    if (!db) {
+        return res.status(503).json({
+            error: 'Database not connected',
+            hint: 'In Render Dashboard → Environment, add MONGODB_URI (copy from your local backend/.env). Allow 0.0.0.0/0 in MongoDB Atlas → Network Access.'
+        });
+    }
+    next();
+});
+
 
 // USER AUTHENTICATION ROUTES
 
@@ -542,10 +575,15 @@ app.get('/api/admin/stats', async (req, res) => {
 
 // Health check for Render / uptime monitors
 app.get('/api/health', (req, res) => {
+    const config = getDeploymentConfig();
+    const missing = Object.entries(config).filter(([, ok]) => !ok).map(([k]) => k);
     res.json({
         ok: true,
         service: 'aura-athletic',
-        database: db ? 'connected' : 'disconnected'
+        database: db ? 'connected' : 'disconnected',
+        config,
+        missingEnv: missing.length ? missing : undefined,
+        url: process.env.RENDER_EXTERNAL_URL || process.env.APP_BASE_URL || null
     });
 });
 
@@ -1004,11 +1042,15 @@ app.get('/', (req, res) => {
 // START SERVER
 
 async function startServer() {
+    logDeploymentConfig();
     app.listen(PORT, '0.0.0.0', () => {
         console.log(`\n🚀 AuraAthletic Server running on port ${PORT}`);
         console.log(`   Frontend: ${FRONTEND_DIR}`);
         console.log(`   Health: /api/health`);
         console.log(`   API: /api/classes`);
+        if (process.env.RENDER_EXTERNAL_URL) {
+            console.log(`   Public URL: ${process.env.RENDER_EXTERNAL_URL}`);
+        }
     });
 
     // Connect DB after listen so Render health checks pass while Atlas connects
