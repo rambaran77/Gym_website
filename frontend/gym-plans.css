@@ -227,11 +227,27 @@ body.site-page.gym-plans-page .savings-note {
 
 @media (max-width: 640px) {
   body.site-page.gym-plans-page .plans-wrap {
-    margin: 1rem auto 2rem;
-    padding: 1.15rem;
+    width: 100%;
+    max-width: 100%;
+    margin: 0 auto 2rem;
+    padding: 1rem;
+    box-sizing: border-box;
+    border-radius: 12px;
   }
 
   body.site-page.gym-plans-page .plans-grid {
     grid-template-columns: 1fr;
+    gap: 0.85rem;
+  }
+
+  body.site-page.gym-plans-page .tab-row {
+    gap: 0.45rem;
+  }
+
+  body.site-page.gym-plans-page .tab-btn {
+    flex: 1 1 auto;
+    min-width: 0;
+    padding: 0.5rem 0.65rem;
+    font-size: 0.82rem;
   }
 }

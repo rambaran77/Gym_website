@@ -152,12 +152,25 @@ body.site-page.membership-landing-page {
 
 .membership-plans-section {
   scroll-margin-top: calc(var(--site-header-h) + 1rem);
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .membership-plans-section .plans-wrap {
-  max-width: none;
-  margin: 0;
-  padding: clamp(1.25rem, 3vw, 2rem);
+  max-width: 960px;
+  width: 100%;
+  margin: 0 auto;
+  padding: clamp(1.25rem, 4vw, 2rem);
+  box-sizing: border-box;
+  background: var(--tgg-white);
+  border: 1px solid var(--tgg-line);
+  border-radius: 16px;
+  box-shadow: var(--tgg-shadow);
+}
+
+.membership-plans-section .plans-grid {
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .membership-steps {
@@ -302,6 +315,54 @@ body.site-page.membership-landing-page {
   }
 }
 
+@media (max-width: 768px) {
+  body.site-page.membership-landing-page .membership-landing {
+    padding-left: max(1rem, env(safe-area-inset-left, 0px));
+    padding-right: max(1rem, env(safe-area-inset-right, 0px));
+    overflow-x: hidden;
+  }
+
+  .membership-plans-section .plans-wrap {
+    padding: 1rem 1rem 1.25rem;
+    border-radius: 12px;
+  }
+
+  .membership-plans-section .tab-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.45rem;
+    margin-bottom: 1.25rem;
+  }
+
+  .membership-plans-section .tab-btn {
+    flex: 1 1 calc(33.333% - 0.35rem);
+    min-width: 5.5rem;
+    padding: 0.5rem 0.5rem;
+    font-size: 0.8rem;
+    text-align: center;
+  }
+
+  .membership-plans-section .section-title {
+    font-size: clamp(1.35rem, 5vw, 1.75rem);
+  }
+
+  .membership-plans-section .section-sub {
+    font-size: 0.9rem;
+    margin-bottom: 1.25rem;
+  }
+
+  .membership-steps,
+  .membership-faq,
+  .membership-bottom-cta {
+    margin-left: 0;
+    margin-right: 0;
+  }
+
+  .membership-steps {
+    padding: 1.25rem 1rem;
+  }
+}
+
 @media (max-width: 480px) {
   .membership-perks {
     grid-template-columns: 1fr;
@@ -309,5 +370,13 @@ body.site-page.membership-landing-page {
 
   .membership-landing {
     padding-bottom: 2rem;
+  }
+
+  .membership-plans-section .tab-btn {
+    flex: 1 1 100%;
+  }
+
+  .membership-plans-section .plan-card {
+    padding: 1.1rem;
   }
 }
