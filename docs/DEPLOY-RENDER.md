@@ -17,13 +17,21 @@ After deploy succeeds, `https://YOUR-SERVICE.onrender.com/api/health` must retur
 
 ## 1. Push code to GitHub
 
-Code must be on GitHub: `https://github.com/Ram404-coder/Gym_Website`
+Code must be on GitHub: `https://github.com/rambaran77/Gym_website`
+
+## “Couldn't find package.json” / `yarn start` error?
+
+Render was building from the **repo root** with default `yarn start`. This repo now includes a **root `package.json`** that installs and starts `backend/` automatically.
+
+After pulling latest `main`, click **Manual Deploy** → **Deploy latest commit**.
+
+**Or** in Render → **Settings** set **Root Directory** to `backend`, **Build** to `npm install`, **Start** to `npm start`.
 
 ## 2. Create Render account
 
 1. Go to [render.com](https://render.com) and sign up (GitHub login is easiest).
 2. **New** → **Blueprint**.
-3. Connect repo **Ram404-coder/Gym_Website** (branch **main**).
+3. Connect repo **rambaran77/Gym_website** (branch **main**).
 4. Render reads `render.yaml` and creates the **aura-athletic** web service.
 5. Click **Apply** and wait for the first deploy (Build → Deploying → Live).
 

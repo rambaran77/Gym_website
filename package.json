@@ -1,0 +1,12 @@
+{
+  "name": "aura-athletic",
+  "private": true,
+  "description": "Root wrapper for Render — app runs from backend/",
+  "scripts": {
+    "start": "npm start --prefix backend",
+    "postinstall": "npm install --prefix backend"
+  },
+  "engines": {
+    "node": "20.x"
+  }
+}
