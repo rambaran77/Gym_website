@@ -17,6 +17,28 @@ body.site-page.gym-plans-page .plans-wrap {
   box-shadow: var(--tgg-shadow);
 }
 
+/* membership.html — full-width edge-to-edge sections */
+body.site-page.membership-landing-page.gym-plans-page .plans-wrap {
+  max-width: none;
+  width: 100%;
+  margin: 0;
+  padding-left: 0;
+  padding-right: 0;
+  border-radius: 0;
+  box-shadow: none;
+}
+
+body.site-page.membership-landing-page.gym-plans-page .plans-grid {
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 260px), 1fr));
+  gap: 0;
+}
+
+body.site-page.membership-landing-page.gym-plans-page .plan-card {
+  border-radius: 0;
+  border-left: none;
+  border-right: none;
+}
+
 body.site-page.gym-plans-page .section-label {
   font-size: 0.75rem;
   color: var(--tgg-accent);

@@ -174,8 +174,8 @@
   }
 
   body.site-page.membership-landing-page .membership-landing {
-    padding-left: var(--site-gutter);
-    padding-right: var(--site-gutter);
+    padding-left: 0;
+    padding-right: 0;
   }
 
   .news-grid,

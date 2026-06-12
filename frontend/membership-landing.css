@@ -8,9 +8,10 @@ body.site-page.membership-landing-page {
 }
 
 .membership-landing {
-  max-width: var(--site-max);
-  margin: 0 auto;
-  padding: 0 var(--site-gutter) 3rem;
+  max-width: none;
+  width: 100%;
+  margin: 0;
+  padding: 0 0 3rem;
 }
 
 .membership-hero {
@@ -18,9 +19,9 @@ body.site-page.membership-landing-page {
   grid-template-columns: 1.1fr 0.9fr;
   gap: 2rem;
   align-items: center;
-  margin: 1rem 0 2.5rem;
+  margin: 0 0 0;
   padding: clamp(1.5rem, 3vw, 2.5rem);
-  border-radius: 16px;
+  border-radius: 0;
   background: linear-gradient(135deg, var(--tgg-dark) 0%, #1a2035 55%, #2a1f35 100%);
   color: #fff;
   overflow: hidden;
@@ -119,14 +120,15 @@ body.site-page.membership-landing-page {
 .membership-perks {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
-  gap: 1rem;
-  margin-bottom: 2.5rem;
+  gap: 0;
+  margin: 0 0 0;
+  width: 100%;
 }
 
 .membership-perk {
   background: var(--tgg-white);
   border: 1px solid var(--tgg-line);
-  border-radius: var(--tgg-radius);
+  border-radius: 0;
   padding: 1.15rem 1rem;
   text-align: center;
 }
@@ -153,32 +155,50 @@ body.site-page.membership-landing-page {
 .membership-plans-section {
   scroll-margin-top: calc(var(--site-header-h) + 1rem);
   width: 100%;
+  margin: 0;
+  padding: 0;
   box-sizing: border-box;
 }
 
 .membership-plans-section .plans-wrap {
-  max-width: 960px;
+  max-width: none;
   width: 100%;
-  margin: 0 auto;
-  padding: clamp(1.25rem, 4vw, 2rem);
+  margin: 0;
+  padding: clamp(1.25rem, 3vw, 2rem) 0;
   box-sizing: border-box;
   background: var(--tgg-white);
-  border: 1px solid var(--tgg-line);
-  border-radius: 16px;
-  box-shadow: var(--tgg-shadow);
+  border: none;
+  border-top: 1px solid var(--tgg-line);
+  border-bottom: 1px solid var(--tgg-line);
+  border-radius: 0;
+  box-shadow: none;
 }
 
+.membership-plans-section .section-label,
+.membership-plans-section .section-title,
+.membership-plans-section .section-sub,
+.membership-plans-section .tab-row,
+.membership-plans-section #plans-container,
 .membership-plans-section .plans-grid {
   width: 100%;
   box-sizing: border-box;
+  padding-left: 0;
+  padding-right: 0;
+}
+
+.membership-plans-section .plans-grid {
+  padding-bottom: 0.25rem;
 }
 
 .membership-steps {
-  margin: 2.5rem 0;
-  padding: 2rem;
+  margin: 0;
+  padding: 2rem 0;
   background: var(--tgg-white);
-  border: 1px solid var(--tgg-line);
-  border-radius: 16px;
+  border: none;
+  border-top: 1px solid var(--tgg-line);
+  border-radius: 0;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .membership-steps h2 {
@@ -229,7 +249,10 @@ body.site-page.membership-landing-page {
 }
 
 .membership-faq {
-  margin-bottom: 2rem;
+  margin: 0;
+  padding: 0 0 2rem;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .membership-faq h2 {
@@ -267,8 +290,11 @@ body.site-page.membership-landing-page {
 
 .membership-bottom-cta {
   text-align: center;
-  padding: 2.5rem 1.5rem;
-  border-radius: 16px;
+  padding: 2.5rem 0;
+  margin: 0;
+  border-radius: 0;
+  width: 100%;
+  box-sizing: border-box;
   background: linear-gradient(135deg, var(--tgg-accent) 0%, var(--tgg-accent-dark) 100%);
   color: #fff;
 }
@@ -317,14 +343,23 @@ body.site-page.membership-landing-page {
 
 @media (max-width: 768px) {
   body.site-page.membership-landing-page .membership-landing {
-    padding-left: max(1rem, env(safe-area-inset-left, 0px));
-    padding-right: max(1rem, env(safe-area-inset-right, 0px));
+    padding-left: 0;
+    padding-right: 0;
     overflow-x: hidden;
   }
 
   .membership-plans-section .plans-wrap {
-    padding: 1rem 1rem 1.25rem;
-    border-radius: 12px;
+    padding-top: 1rem;
+    padding-bottom: 1.25rem;
+  }
+
+  .membership-plans-section .section-label,
+  .membership-plans-section .section-title,
+  .membership-plans-section .section-sub,
+  .membership-plans-section .tab-row,
+  .membership-plans-section .plans-grid {
+    padding-left: 0;
+    padding-right: 0;
   }
 
   .membership-plans-section .tab-row {
@@ -332,14 +367,17 @@ body.site-page.membership-landing-page {
     flex-wrap: wrap;
     gap: 0.45rem;
     margin-bottom: 1.25rem;
+    padding-left: 0;
+    padding-right: 0;
   }
 
   .membership-plans-section .tab-btn {
     flex: 1 1 calc(33.333% - 0.35rem);
-    min-width: 5.5rem;
-    padding: 0.5rem 0.5rem;
+    min-width: 0;
+    padding: 0.5rem 0.35rem;
     font-size: 0.8rem;
     text-align: center;
+    border-radius: 0;
   }
 
   .membership-plans-section .section-title {
@@ -351,15 +389,29 @@ body.site-page.membership-landing-page {
     margin-bottom: 1.25rem;
   }
 
-  .membership-steps,
-  .membership-faq,
-  .membership-bottom-cta {
-    margin-left: 0;
-    margin-right: 0;
+  .membership-steps {
+    padding: 1.25rem 0;
   }
 
-  .membership-steps {
-    padding: 1.25rem 1rem;
+  .membership-faq {
+    padding-left: 0;
+    padding-right: 0;
+  }
+
+  .membership-bottom-cta {
+    padding-left: 0;
+    padding-right: 0;
+  }
+
+  body.site-page.membership-landing-page .plans-grid {
+    gap: 0;
+    grid-template-columns: 1fr;
+  }
+
+  body.site-page.membership-landing-page .plan-card {
+    border-radius: 0;
+    border-left: none;
+    border-right: none;
   }
 }
 
@@ -374,9 +426,5 @@ body.site-page.membership-landing-page {
 
   .membership-plans-section .tab-btn {
     flex: 1 1 100%;
-  }
-
-  .membership-plans-section .plan-card {
-    padding: 1.1rem;
   }
 }
