@@ -5,7 +5,8 @@ services:
   - type: web
     name: aura-athletic
     runtime: node
-    repo: https://github.com/Ram404-coder/Gym_Website
+    # Update after migrating: https://github.com/YOUR_USER/YOUR_NEW_REPO
+    repo: https://github.com/Ram404-coder/Aura-Athletic
     branch: main
     rootDir: backend
     buildCommand: npm install
