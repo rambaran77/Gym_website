@@ -104,16 +104,17 @@ app.use(express.static(FRONTEND_DIR));
 // ========================================
 // MONGODB CONNECTION
 // ========================================
-const uri = process.env.MONGODB_URI;
-const client = new MongoClient(uri);
+const uri = process.env.MONGODB_URI && String(process.env.MONGODB_URI).trim();
+let client = null;
 let db;
 
 async function connectDB() {
-    if (!uri || !String(uri).trim()) {
+    if (!uri) {
         console.warn('⚠️ MONGODB_URI not set — site will load but login/API need a database');
         return;
     }
     try {
+        client = new MongoClient(uri);
         await client.connect();
         db = client.db('fitzone_db');
         console.log('✅ Connected to MongoDB Atlas');
