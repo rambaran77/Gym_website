@@ -97,8 +97,9 @@ app.post(
 app.use(express.json({ limit: '10mb' })); // To handle larger payloads (e.g., trainer profile images)
 app.use(express.urlencoded({ extended: true, limit: '10mb' })); // For form data
 
-// Serve frontend files
-app.use(express.static(path.join(__dirname, '../frontend')));
+// Serve frontend files (repo root /frontend — sibling of /backend on Render)
+const FRONTEND_DIR = path.join(__dirname, '..', 'frontend');
+app.use(express.static(FRONTEND_DIR));
 
 // ========================================
 // MONGODB CONNECTION
@@ -108,6 +109,10 @@ const client = new MongoClient(uri);
 let db;
 
 async function connectDB() {
+    if (!uri || !String(uri).trim()) {
+        console.warn('⚠️ MONGODB_URI not set — site will load but login/API need a database');
+        return;
+    }
     try {
         await client.connect();
         db = client.db('fitzone_db');
@@ -991,28 +996,27 @@ app.post('/api/shop/confirm-order', async (req, res) => {
 // FRONTEND ROUTE
 
 app.get('/', (req, res) => {
-    res.sendFile(path.join(__dirname, '../frontend/index.html'));
+    res.sendFile(path.join(FRONTEND_DIR, 'index.html'));
 });
 
 
 // START SERVER
 
 async function startServer() {
+    app.listen(PORT, '0.0.0.0', () => {
+        console.log(`\n🚀 AuraAthletic Server running on port ${PORT}`);
+        console.log(`   Frontend: ${FRONTEND_DIR}`);
+        console.log(`   Health: /api/health`);
+        console.log(`   API: /api/classes`);
+    });
+
+    // Connect DB after listen so Render health checks pass while Atlas connects
     await connectDB();
     const database = getDatabase();
     if (database) {
         startMembershipExpiryJob(database);
         console.log('   MB-10: Membership auto-expiry job started (every 1 hour)');
     }
-    app.listen(PORT, () => {
-        console.log(`\n🚀 AuraAthletic Server running on http://localhost:${PORT}`);
-        console.log(`   API: http://localhost:${PORT}/api/classes`);
-        console.log(`   Auth: http://localhost:${PORT}/api/register`);
-        console.log(`   Plans: http://localhost:${PORT}/api/plans`);
-        console.log(`   Memberships: http://localhost:${PORT}/api/memberships/:email`);
-        console.log(`   Stripe webhook: http://localhost:${PORT}/api/stripe/webhook`);
-        console.log(`   Shop checkout: http://localhost:${PORT}/shop-checkout.html`);
-    });
 }
 
 // Get all trainers (for trainers page)
