@@ -1,8 +1,6 @@
 # Move project to a new GitHub repo
 
-Current repo: **https://github.com/Ram404-coder/gym_website**
-
-(GitHub treats `gym_website` and `Gym_Website` as the same repository.)
+Current repo: **https://github.com/rambaran77/Gym_website**
 
 ## 3. Update Render
 

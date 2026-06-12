@@ -5,7 +5,7 @@ services:
   - type: web
     name: aura-athletic
     runtime: node
-    repo: https://github.com/Ram404-coder/gym_website
+    repo: https://github.com/rambaran77/Gym_website
     branch: main
     rootDir: backend
     buildCommand: npm install
